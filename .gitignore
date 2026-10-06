@@ -1,0 +1,11 @@
+# old or temporary material, not part of the site or the workflow
+_archive/
+_backups/
+data/inbox/
+__pycache__/
+.claude/launch.json
+.claude/settings.local.json
+
+# the developer's verbatim release text stays on your machine (re-download with: python tools/notes.py fetch)
+data/release_notes.md
+data/normalized/sources.jsonl

@@ -1,0 +1,202 @@
+from,to,reason,kind,confidence,recommend
+Account Card,Account Card,"same entity name in 2 systems (Online, UI); 3 records",exact,auto,merge
+Aiming,Aiming,"same entity name in 2 systems (Combat, UI); 9 records",exact,auto,merge
+Apothecary,Apothecary,"same entity name in 2 systems (Online, UI); 7 records",exact,auto,merge
+Area Spells,Area Spells,"same entity name in 2 systems (Combat, Graphics); 4 records",exact,auto,merge
+Arena Bouts,Arena Bouts,"same entity name in 4 systems (Graphics, Online, UI, World); 20 records",exact,auto,merge
+Arena Crowd,Arena Crowd,"same entity name in 2 systems (Graphics, World); 11 records",exact,auto,merge
+Arena Gate,Arena Gate,"same entity name in 2 systems (UI, World); 4 records",exact,auto,merge
+Arena Ladder,Arena Ladder,"same entity name in 2 systems (Online, World); 8 records",exact,auto,merge
+Arena of Daggerfall,Arena of Daggerfall,"same entity name in 5 systems (Engine, Graphics, Items, Online, World); 18 records",exact,auto,merge
+Arena Titles,Arena Titles,"same entity name in 3 systems (Online, UI, World); 3 records",exact,auto,merge
+Arrows,Arrows,"same entity name in 2 systems (Combat, Items); 2 records",exact,auto,merge
+Auras,Auras,"same entity name in 3 systems (Graphics, Online, UI); 40 records",exact,auto,merge
+Banishment,Banishment,"same entity name in 2 systems (Online, World); 3 records",exact,auto,merge
+Bank,Bank,"same entity name in 3 systems (Engine, Online, UI); 7 records",exact,auto,merge
+Banners,Banners,"same entity name in 4 systems (Graphics, Online, UI, World); 9 records",exact,auto,merge
+Basic Roads,Basic Roads,"same entity name in 2 systems (Engine, World); 5 records",exact,auto,merge
+Basket,Basket,"same entity name in 2 systems (Controls, UI); 7 records",exact,auto,merge
+Beautiful Cities,Beautiful Cities,"same entity name in 2 systems (Graphics, UI); 2 records",exact,auto,merge
+Blood,Blood,"same entity name in 2 systems (Combat, Graphics); 10 records",exact,auto,merge
+Boarding,Boarding,"same entity name in 3 systems (Combat, UI, World); 29 records",exact,auto,merge
+Bounties,Bounties,"same entity name in 3 systems (Online, UI, World); 27 records",exact,auto,merge
+Bounty Boards,Bounty Boards,"same entity name in 2 systems (UI, World); 5 records",exact,auto,merge
+Bounty Hunts,Bounty Hunts,"same entity name in 2 systems (UI, World); 19 records",exact,auto,merge
+Bounty Rewards,Bounty Rewards,"same entity name in 3 systems (Items, UI, World); 13 records",exact,auto,merge
+Bow,Bow,"same entity name in 2 systems (Combat, Graphics); 2 records",exact,auto,merge
+Campfire,Campfire,"same entity name in 2 systems (Items, UI); 8 records",exact,auto,merge
+Carpentry,Carpentry,"same entity name in 2 systems (Character, Items); 19 records",exact,auto,merge
+Cast When Used,Cast When Used,"same entity name in 2 systems (Combat, UI); 3 records",exact,auto,merge
+Characters,Characters,"same entity name in 2 systems (Engine, Online); 5 records",exact,auto,merge
+Chronicle,Chronicle,"same entity name in 2 systems (Online, UI); 3 records",exact,auto,merge
+City Watch,City Watch,"same entity name in 4 systems (Combat, Graphics, Online, World); 8 records",exact,auto,merge
+Climates & Calories,Climates & Calories,"same entity name in 3 systems (Mods, Online, UI); 16 records",exact,auto,merge
+Climbing,Climbing,"same entity name in 4 systems (Character, Controls, Engine, Online); 43 records",exact,auto,merge
+Companions,Companions,"same entity name in 5 systems (Combat, Engine, Graphics, Online, UI); 30 records",exact,auto,merge
+Controller Bindings,Controller Bindings,"same entity name in 2 systems (Controls, UI); 2 records",exact,auto,merge
+Cooking,Cooking,"same entity name in 3 systems (Character, Items, UI); 11 records",exact,auto,merge
+Crafting,Crafting,"same entity name in 3 systems (Items, Online, UI); 8 records",exact,auto,merge
+Crew,Crew,"same entity name in 3 systems (Combat, Graphics, UI); 24 records",exact,auto,merge
+Crew Roles,Crew Roles,"same entity name in 2 systems (Graphics, UI); 5 records",exact,auto,merge
+Crown Sieges,Crown Sieges,"same entity name in 2 systems (Graphics, Online); 2 records",exact,auto,merge
+Customs,Customs,"same entity name in 2 systems (Online, World); 6 records",exact,auto,merge
+Death Penalty,Death Penalty,"same entity name in 2 systems (Online, UI); 6 records",exact,auto,merge
+Death Screen,Death Screen,"same entity name in 2 systems (Online, UI); 3 records",exact,auto,merge
+Decks,Decks,"same entity name in 2 systems (Graphics, World); 4 records",exact,auto,merge
+Decorate,Decorate,"same entity name in 2 systems (Online, UI); 7 records",exact,auto,merge
+Decorator,Decorator,"same entity name in 2 systems (Online, UI); 5 records",exact,auto,merge
+Discord,Discord,"same entity name in 2 systems (Online, UI); 5 records",exact,auto,merge
+Docked Ships,Docked Ships,"same entity name in 2 systems (Online, World); 3 records",exact,auto,merge
+Dungeon Campfires,Dungeon Campfires,"same entity name in 2 systems (UI, World); 5 records",exact,auto,merge
+Dying,Dying,"same entity name in 2 systems (Character, World); 2 records",exact,auto,merge
+Ember Jar,Ember Jar,"same entity name in 2 systems (Graphics, Items); 2 records",exact,auto,merge
+Enchanting,Enchanting,"same entity name in 3 systems (Character, Items, UI); 6 records",exact,auto,merge
+Enhanced Climbing,Enhanced Climbing,"same entity name in 3 systems (Controls, Online, UI); 3 records",exact,auto,merge
+Enhanced Lighting,Enhanced Lighting,"same entity name in 3 systems (Engine, Graphics, Online); 25 records",exact,auto,merge
+Exterior,Exterior,"same entity name in 2 systems (Graphics, Online); 7 records",exact,auto,merge
+Eye of the Beholder,Eye of the Beholder,"same entity name in 2 systems (Graphics, Mods); 10 records",exact,auto,merge
+First-Person Arms,First-Person Arms,"same entity name in 2 systems (Graphics, UI); 8 records",exact,auto,merge
+Fishing,Fishing,"same entity name in 4 systems (Character, Items, UI, World); 19 records",exact,auto,merge
+Foraging,Foraging,"same entity name in 2 systems (Controls, Mods); 31 records",exact,auto,merge
+Forge,Forge,"same entity name in 2 systems (Items, Online); 8 records",exact,auto,merge
+Furniture,Furniture,"same entity name in 2 systems (Items, World); 3 records",exact,auto,merge
+Gathering,Gathering,"same entity name in 4 systems (Controls, Graphics, Items, UI); 18 records",exact,auto,merge
+Gathering Spots,Gathering Spots,"same entity name in 2 systems (Graphics, UI); 2 records",exact,auto,merge
+Grass,Grass,"same entity name in 2 systems (Graphics, UI); 19 records",exact,auto,merge
+Grip,Grip,"same entity name in 2 systems (Controls, UI); 7 records",exact,auto,merge
+Guild Hall,Guild Hall,"same entity name in 2 systems (Online, UI); 24 records",exact,auto,merge
+Guild Treasury,Guild Treasury,"same entity name in 2 systems (Online, UI); 5 records",exact,auto,merge
+Guilds,Guilds,"same entity name in 3 systems (Character, Online, World); 6 records",exact,auto,merge
+Gunnery,Gunnery,"same entity name in 2 systems (Combat, UI); 22 records",exact,auto,merge
+Hall of Records,Hall of Records,"same entity name in 2 systems (Online, World); 4 records",exact,auto,merge
+Handheld Torches,Handheld Torches,"same entity name in 3 systems (Controls, Items, Mods); 24 records",exact,auto,merge
+Harbours,Harbours,"same entity name in 2 systems (Online, World); 9 records",exact,auto,merge
+Helm Controls,Helm Controls,"same entity name in 2 systems (Controls, UI); 6 records",exact,auto,merge
+Heraldry,Heraldry,"same entity name in 3 systems (Graphics, Online, UI); 7 records",exact,auto,merge
+Herbalism,Herbalism,"same entity name in 2 systems (UI, World); 13 records",exact,auto,merge
+Hired Traders,Hired Traders,"same entity name in 2 systems (Online, UI); 5 records",exact,auto,merge
+Hit Feedback,Hit Feedback,"same entity name in 2 systems (Graphics, UI); 2 records",exact,auto,merge
+Holdings,Holdings,"same entity name in 2 systems (Online, UI); 12 records",exact,auto,merge
+Home Prices,Home Prices,"same entity name in 2 systems (Online, UI); 5 records",exact,auto,merge
+Honours,Honours,"same entity name in 2 systems (Items, Online); 3 records",exact,auto,merge
+Horse Cart and Cargo,Horse Cart and Cargo,"same entity name in 2 systems (Mods, Online); 4 records",exact,auto,merge
+Houses,Houses,"same entity name in 2 systems (Online, World); 7 records",exact,auto,merge
+Hunting,Hunting,"same entity name in 2 systems (UI, World); 17 records",exact,auto,merge
+Immersive Travel,Immersive Travel,"same entity name in 2 systems (Mods, Online); 8 records",exact,auto,merge
+Jewelcrafting,Jewelcrafting,"same entity name in 3 systems (Character, Items, UI); 21 records",exact,auto,merge
+Leaps,Leaps,"same entity name in 2 systems (Character, Controls); 8 records",exact,auto,merge
+Living World,Living World,"same entity name in 4 systems (Engine, Online, UI, World); 16 records",exact,auto,merge
+Logging,Logging,"same entity name in 2 systems (UI, World); 17 records",exact,auto,merge
+Login,Login,"same entity name in 2 systems (Engine, Online); 2 records",exact,auto,merge
+Low Poly Trees,Low Poly Trees,"same entity name in 4 systems (Graphics, Mods, UI, World); 10 records",exact,auto,merge
+Lycanthropy,Lycanthropy,"same entity name in 2 systems (Character, Online); 3 records",exact,auto,merge
+Market,Market,"same entity name in 2 systems (Online, UI); 87 records",exact,auto,merge
+Masonry,Masonry,"same entity name in 2 systems (Character, Items); 6 records",exact,auto,merge
+Master Skills,Master Skills,"same entity name in 2 systems (Character, UI); 16 records",exact,auto,merge
+Materials Bag,Materials Bag,"same entity name in 2 systems (Items, UI); 9 records",exact,auto,merge
+Mining,Mining,"same entity name in 3 systems (Controls, UI, World); 26 records",exact,auto,merge
+Morrowind Body,Morrowind Body,"same entity name in 2 systems (Graphics, Online); 7 records",exact,auto,merge
+Motherlodes,Motherlodes,"same entity name in 2 systems (UI, World); 8 records",exact,auto,merge
+Naval Combat,Naval Combat,"same entity name in 4 systems (Combat, Graphics, UI, World); 28 records",exact,auto,merge
+Naval Law,Naval Law,"same entity name in 2 systems (UI, World); 4 records",exact,auto,merge
+Notice Board,Notice Board,"same entity name in 2 systems (Online, UI); 23 records",exact,auto,merge
+Oblivion Gates,Oblivion Gates,"same entity name in 6 systems (Controls, Graphics, Items, Online, UI, World); 44 records",exact,auto,merge
+Online Quests,Online Quests,"same entity name in 2 systems (UI, World); 18 records",exact,auto,merge
+Outfitting,Outfitting,"same entity name in 2 systems (Character, Items); 7 records",exact,auto,merge
+Overworld,Overworld,"same entity name in 5 systems (Controls, Engine, Graphics, UI, World); 74 records",exact,auto,merge
+Pack,Pack,"same entity name in 2 systems (Engine, UI); 2 records",exact,auto,merge
+Party Rest,Party Rest,"same entity name in 3 systems (Online, UI, World); 12 records",exact,auto,merge
+Party Travel,Party Travel,"same entity name in 2 systems (Online, UI); 5 records",exact,auto,merge
+Performance,Performance,"same entity name in 2 systems (Engine, Graphics); 3 records",exact,auto,merge
+Phone Controls,Phone Controls,"same entity name in 2 systems (Controls, UI); 5 records",exact,auto,merge
+Plunder,Plunder,"same entity name in 2 systems (Combat, UI); 15 records",exact,auto,merge
+Private Sessions,Private Sessions,"same entity name in 2 systems (Online, UI); 10 records",exact,auto,merge
+Professions,Professions,"same entity name in 4 systems (Character, Controls, Online, UI); 28 records",exact,auto,merge
+Quays,Quays,"same entity name in 2 systems (Graphics, Online); 4 records",exact,auto,merge
+Quest Timers,Quest Timers,"same entity name in 3 systems (Engine, Online, World); 5 records",exact,auto,merge
+Quests,Quests,"same entity name in 3 systems (Online, UI, World); 23 records",exact,auto,merge
+Quick Loot,Quick Loot,"same entity name in 2 systems (Items, UI); 4 records",exact,auto,merge
+Raw Tokens,Raw Tokens,"same entity name in 2 systems (Engine, UI); 2 records",exact,auto,merge
+Real Forests,Real Forests,"same entity name in 3 systems (Online, UI, World); 10 records",exact,auto,merge
+Realm,Realm,"same entity name in 2 systems (Engine, Online); 2 records",exact,auto,merge
+Rented Rooms,Rented Rooms,"same entity name in 2 systems (Online, World); 4 records",exact,auto,merge
+Repair Kits,Repair Kits,"same entity name in 2 systems (Items, UI); 14 records",exact,auto,merge
+Resting,Resting,"same entity name in 3 systems (Online, UI, World); 22 records",exact,auto,merge
+Retro Mode,Retro Mode,"same entity name in 2 systems (Mods, UI); 4 records",exact,auto,merge
+Revenants,Revenants,"same entity name in 8 systems (Combat, Controls, Engine, Graphics, Items, Online, UI, World); 50 records",exact,auto,merge
+Roads,Roads,"same entity name in 2 systems (Engine, World); 2 records",exact,auto,merge
+Sailing,Sailing,"same entity name in 2 systems (Online, World); 3 records",exact,auto,merge
+Salvage,Salvage,"same entity name in 2 systems (Online, World); 6 records",exact,auto,merge
+Saving,Saving,"same entity name in 2 systems (Engine, Online); 4 records",exact,auto,merge
+Sea Serpent,Sea Serpent,"same entity name in 2 systems (Online, UI); 16 records",exact,auto,merge
+Sea Update,Sea Update,"same entity name in 3 systems (Engine, Graphics, Mods); 5 records",exact,auto,merge
+Searchables,Searchables,"same entity name in 2 systems (Online, World); 2 records",exact,auto,merge
+Seats,Seats,"same entity name in 3 systems (Graphics, Online, UI); 10 records",exact,auto,merge
+Ship Damage,Ship Damage,"same entity name in 2 systems (Graphics, World); 4 records",exact,auto,merge
+Ship Fires,Ship Fires,"same entity name in 2 systems (Combat, Graphics); 3 records",exact,auto,merge
+Ship Repairs,Ship Repairs,"same entity name in 2 systems (UI, World); 18 records",exact,auto,merge
+Ships,Ships,"same entity name in 3 systems (Graphics, UI, World); 7 records",exact,auto,merge
+Ships at Sea,Ships at Sea,"same entity name in 4 systems (Graphics, Online, UI, World); 40 records",exact,auto,merge
+Shops,Shops,"same entity name in 2 systems (Online, World); 4 records",exact,auto,merge
+Sieges,Sieges,"same entity name in 2 systems (Online, UI); 9 records",exact,auto,merge
+Sigil Sets,Sigil Sets,"same entity name in 2 systems (Items, Online); 2 records",exact,auto,merge
+Sigil Stones,Sigil Stones,"same entity name in 2 systems (Engine, Items); 2 records",exact,auto,merge
+Silver,Silver,"same entity name in 2 systems (Items, Online); 2 records",exact,auto,merge
+Silver Finds,Silver Finds,"same entity name in 2 systems (Online, UI); 6 records",exact,auto,merge
+Sinking,Sinking,"same entity name in 2 systems (Graphics, Online); 6 records",exact,auto,merge
+Sky,Sky,"same entity name in 2 systems (Graphics, World); 3 records",exact,auto,merge
+Small Ship,Small Ship,"same entity name in 2 systems (Combat, Graphics); 11 records",exact,auto,merge
+Smithing,Smithing,"same entity name in 2 systems (Character, Items); 22 records",exact,auto,merge
+Spells,Spells,"same entity name in 2 systems (Combat, UI); 3 records",exact,auto,merge
+Standing,Standing,"same entity name in 3 systems (Online, UI, World); 6 records",exact,auto,merge
+Stores,Stores,"same entity name in 3 systems (Items, Online, UI); 12 records",exact,auto,merge
+Sun Baby,Sun Baby,"same entity name in 2 systems (Graphics, Online); 7 records",exact,auto,merge
+Telegraphed Attacks,Telegraphed Attacks,"same entity name in 3 systems (Combat, Graphics, Online); 17 records",exact,auto,merge
+Terrain,Terrain,"same entity name in 2 systems (Graphics, World); 2 records",exact,auto,merge
+Texture Mods,Texture Mods,"same entity name in 3 systems (Graphics, Mods, UI); 26 records",exact,auto,merge
+Texture Overhaul,Texture Overhaul,"same entity name in 2 systems (Graphics, UI); 5 records",exact,auto,merge
+Town Layouts,Town Layouts,"same entity name in 4 systems (Engine, Graphics, Online, World); 16 records",exact,auto,merge
+Town Watch,Town Watch,"same entity name in 2 systems (Online, World); 14 records",exact,auto,merge
+Travel,Travel,"same entity name in 3 systems (Online, UI, World); 12 records",exact,auto,merge
+Travel Map,Travel Map,"same entity name in 2 systems (Engine, UI); 20 records",exact,auto,merge
+Travel Options,Travel Options,"same entity name in 4 systems (Engine, Mods, Online, World); 13 records",exact,auto,merge
+UI Choice,UI Choice,"same entity name in 2 systems (Online, UI); 3 records",exact,auto,merge
+Underground Load,Underground Load,"same entity name in 2 systems (Engine, Online); 2 records",exact,auto,merge
+Upkeep,Upkeep,"same entity name in 2 systems (Online, UI); 3 records",exact,auto,merge
+Vault,Vault,"same entity name in 2 systems (Character, Controls); 6 records",exact,auto,merge
+Volumetric Clouds,Volumetric Clouds,"same entity name in 2 systems (Engine, Graphics); 8 records",exact,auto,merge
+Wagon,Wagon,"same entity name in 3 systems (Graphics, Online, World); 3 records",exact,auto,merge
+Wallet,Wallet,"same entity name in 2 systems (Items, UI); 7 records",exact,auto,merge
+Weapons,Weapons,"same entity name in 2 systems (Combat, Graphics); 2 records",exact,auto,merge
+Weather,Weather,"same entity name in 2 systems (Graphics, World); 16 records",exact,auto,merge
+World of Daggerfall,World of Daggerfall,"same entity name in 3 systems (Graphics, Mods, Online); 7 records",exact,auto,merge
+Banks,Bank,plural variant; both about the bank,near,high,merge
+Sieges,Siege,"plural variant; same version (0.1.5580), same tags online/seats/siege",near,high,merge
+Harbour,Harbours,singular variant; same tags naval/online,near,high,merge
+Helm Panels,Helm Panel,"plural variant; same version (0.1.4897), same tags naval/water",near,high,merge
+Pre-Merge Audit,Pre-Merge Audits,"singular variant; both Engine, tag audit",near,high,merge
+Bank of the Empire,Bank,brief example; both Online; Bank is the shorter name,near,medium,merge
+Coast,Coasts,"singular variant; different systems (Graphics, World), tag water",near,medium,merge
+Morrowind Bodies,Morrowind Body,"plural variant; both Graphics, tag morrowind",near,medium,merge
+Companions Page,Companions,"brief example; UI page of the same feature, tag companions",near,medium,merge
+Standing Page,Standing,"UI page of the same feature, tag law",near,medium,merge
+Vampirism and Lycanthropy,Vampirism,"same system (Character), identical tags",near,medium,merge
+Fealty and Pacts,Fealty,"same system (Online), identical tags",near,medium,merge
+Leveling Screen,Leveling,"UI screen of the same feature, identical tags",near,medium,merge
+Renown Bar,Renown,"UI bar of the same feature, tag overlap",near,medium,merge
+Mods Pane,Mods,"UI pane of the same feature, tag overlap",near,medium,merge
+Features Home,Features,"both UI, both untagged; one home for the same feature list",near,medium,merge
+Character Creator,Character Creation,"both Character, one record each side",near,medium,merge
+Classic Interface,Classic UI,"both UI, tag classic-mode",near,medium,merge
+Terrain Generation,Terrain,tag overlap; Graphics and World,near,medium,merge
+Beautiful Villages of Daggerfall,Beautiful Villages,"long-form name; Graphics vs Mods, both from the same mod name",near,low,review
+Beautiful Cities of Daggerfall,Beautiful Cities,long-form name; Graphics/UI vs Mods,near,low,review
+Horse and Cart,Horse,"different systems (Graphics, Combat); Horse has one record",near,low,review
+Marks Report,Marks,"Marks Report is one record, Online",near,low,review
+Saves Picker,Saves,UI phone path vs Engine save-clock fixes; may be different things,near,low,review
+Charcoal Burner,Charcoal,one record each; Character vs Items,near,low,review
+Seasons of the Iliac Bay,Seasons,DO NOT MERGE: Online war seasons vs a ported mod of that name,near,n/a,keep
+Siege Receipt,Siege,sub-aspect of sieges; keep as its own topic and link as related,near,n/a,keep
+Siege Clock,Siege,sub-aspect of sieges; keep as its own topic and link as related,near,n/a,keep
+Siege Camp,Siege,sub-aspect of sieges; keep as its own topic and link as related,near,n/a,keep
+Siege Bar,Siege,UI element of sieges; keep as its own topic and link as related,near,n/a,keep

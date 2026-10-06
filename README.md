@@ -1,0 +1,81 @@
+# UDFOP: Unofficial Daggerfall Online Pages (Patch Notes Wiki)
+
+An unofficial, fan-made wiki of what has changed in **Daggerfall Online**, patch by patch and topic by topic.
+It is a static site in plain HTML, CSS and JavaScript: open `web/index.html`, or visit the published site
+at `https://tau-samsara.github.io/udfop/`.
+
+- **Topics:** every change is filed under a topic (Revenants, Market, Climbing and so on) with a short description of how it works now, a full history table and a breakdown by type.
+- **Patches:** one page per release, with links to the pull requests it came from.
+- **Browse and search:** categories, game systems, recent changes and full-text search.
+
+All changes come from the project's public
+[release notes](https://github.com/Lattymoy/daggerfall-js-source/releases), rewritten in short plain sentences.
+The release notes remain the authoritative record. The opening description on each topic was written with the help of an AI assistant (Claude) from that topic's change history, so it can be wrong or out of date; the History table is the thing to trust.
+
+## Corrections and contributions
+
+Spotted a mistake? Open an issue or a pull request. The easiest fixes are:
+- **A wrong or unclear description:** edit its line in `data/descriptions/` (`Topic ||| text`).
+- **A change filed under the wrong topic:** edit its row in `data/normalized/all.jsonl`, or merge two topics in `data/merges.csv`.
+- **A topic in the wrong category:** edit its line in `data/hub_assignment.csv`.
+
+Then run `python tools/notes.py build` and open `web/index.html` to check the result.
+
+## Licence
+
+- **Code** (the site, the tools, the workflow): [MIT](LICENSE).
+- **Original text** (topic descriptions, About page, this README): [CC BY 4.0](LICENSE-CONTENT.md). Credit "UDFOP (Unofficial Daggerfall Online Pages), by tau".
+- **The change data** is derived from the developers' release notes and is not licensed by this project; see [LICENSE-CONTENT.md](LICENSE-CONTENT.md).
+
+UDFOP is not affiliated with or endorsed by the developers of Daggerfall Online, Bethesda Softworks or ZeniMax. *The Elder Scrolls* and *Daggerfall* belong to their respective owners.
+
+---
+
+# Maintaining the wiki
+
+```
+web/        the site: index.html, style.css, app.js, data.js (generated)
+data/       normalized/ (rows), descriptions/, merges.csv, hub_assignment.csv, inbox/ (working files)
+tools/      notes.py (the workflow), update_data.py (rebuilds web/data.js)
+.claude/skills/add-release-notes/   the instructions Claude follows for the review steps
+```
+
+The developers' original release text is not stored in this repository. `python tools/notes.py fetch`
+downloads it into `data/release_notes.md` (git-ignored), and the verbatim bullet text kept for the tools lives in
+`data/normalized/sources.jsonl` (also git-ignored). Most commands work without them; `selftest` and `backtest` need them.
+
+## Adding new release notes
+
+Needs Python 3 only. Run from this folder. The quickest route is to ask Claude: **"add the new release notes"**.
+
+| Step | Command | Who |
+|---|---|---|
+| 1. See where things stand | `python tools/notes.py status` | script |
+| 2. Pull new GitHub releases | `python tools/notes.py fetch` (`--dry-run` to preview) | script |
+| 3. Pack them and pre-fill a draft | `python tools/notes.py prepare` | script |
+| 4. Review the draft rows | edit `data/inbox/rows.draft.jsonl`, then `python tools/notes.py approve` | Claude or a person |
+| 5. Validate and append | `python tools/notes.py ingest` | script |
+| 6. Rewrite descriptions of changed topics | write `data/descriptions/patch-<version>.txt` from `data/inbox/describe.md` | Claude or a person |
+| 7. Rebuild the site data | `python tools/notes.py build` | script |
+
+### What each step produces
+- **fetch** prepends only releases whose tag is not already in `data/release_notes.md`. It uses the public GitHub API; set `GITHUB_TOKEN` if you hit rate limits.
+- **prepare** writes `data/inbox/pending.md` (raw notes, PR titles, allowed values), `topics.txt` (existing topics to reuse), `rows.draft.jsonl` (a pre-filled draft) and `skipped.txt` (bullets left out). The draft has the original text, ids, dates and defaults filled in plus guesses for `entity`, `system`, `change_type` and `tags`; each row's `_review` list names the fields to check. `approve` strips `_review` and writes `rows.jsonl`, refusing while any `entity` is still `TODO`. Re-running `prepare` keeps an existing draft unless you add `--force`.
+- **rows.jsonl** has one change per line: `id, version, date, system, entity, change_type, direction, summary, tags, platforms, dev_note, source`. The rules are in the skill file.
+- **ingest** checks ids, dates, taxonomy values and the `Entity: ` summary prefix; if anything fails it prints every error and writes nothing. If it passes it appends to `data/normalized/` (the original text goes only to the local `sources.jsonl`), puts new topics into `data/hub_assignment.csv` with a guessed hub (check it), archives the rows and writes `data/inbox/describe.md`.
+- **describe** lists topics whose change count has grown since their description was written, with their history and current description.
+- **build** regenerates `web/data.js`, then reports topics with no description, descriptions for unknown topics, and stale ones.
+
+### Descriptions
+`data/descriptions/*.txt`, one `Topic ||| text` per line. Files are read in alphabetical order and a later file overrides an earlier one, so new work goes in `patch-<version>.txt` files. A topic with no description falls back to an auto-generated sentence.
+
+### Testing it safely
+- `python tools/notes.py selftest` copies the project to a temp folder, simulates the three newest releases as new, runs every step (including a deliberately bad batch that must be rejected and a dry run that must write nothing) and checks your real files are unchanged. Run it after changing `tools/notes.py`. It needs `data/release_notes.md` (run `fetch` first on a fresh clone).
+- `python tools/notes.py backup` snapshots `data/` and `web/` into `_backups/` (git-ignored).
+- Write-nothing commands on real data: `status`, `backtest`, `fetch --dry-run`, `ingest --dry-run`.
+
+### How reliable is the draft?
+`python tools/notes.py backtest` scores it against releases already ingested. On the last 25 releases it found a drafted bullet for 97% of the real rows. `change_type` was right 96% of the time when the draft did not flag it (about 10% of rows) and about half the time otherwise, `entity` about a quarter of the time overall (44% of the real entities were brand-new topics), and `system` about half the time. So the draft saves the copying, numbering and skipping, but every flagged field still needs a decision.
+
+### Publishing on GitHub Pages
+`.github/workflows/pages.yml` publishes `web/` on every push to `main`. First time: create an empty public repository, `git remote add origin https://github.com/tau-samsara/udfop.git`, `git push -u origin main`, then set Settings, Pages, Source to **GitHub Actions**. After each batch of notes: `git add -A`, `git commit`, `git push`.
