@@ -89,7 +89,7 @@ html[data-skin="oblivion"][data-theme="dark"] {
   }
 }
 * { box-sizing: border-box; }
-html { scroll-padding-top: 64px; }
+html { scroll-padding-top: calc(var(--head-h, 4rem) + .5rem); }
 html[data-size="small"] { font-size: 90%; }
 html[data-size="large"] { font-size: 115%; }
 body { margin: 0; background: var(--page); color: var(--fg); font: .9375rem/1.6 var(--sans); }
