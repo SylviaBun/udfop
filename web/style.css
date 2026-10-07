@@ -330,3 +330,7 @@ ol.refs li { margin: 2px 0; }
 #preview .pk { font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
 #preview .pt { margin: 1px 0 3px; font-size: .95rem; font-weight: 700; }
 #preview .pm { margin-top: 5px; font-size: .78rem; color: var(--muted); }
+#preview ul.pl { list-style: none; margin: 4px 0 0; padding: 0; min-width: 15rem; }
+#preview ul.pl li { display: flex; justify-content: space-between; gap: 14px; padding: 1px 0; border-bottom: 1px dotted var(--line); }
+#preview ul.pl li:last-child { border-bottom: 0; }
+#preview ul.pl b { font-variant-numeric: tabular-nums; color: var(--muted); }

@@ -792,8 +792,9 @@
       }
       if (m[1] === "patch") {
         var pl = byVersion[arg]; if (!pl) return null;
-        var rel = D.releases[arg], tn = uniq(pl.map(function (r) { return r.e; })).length;
-        return { kind: "Patch", title: "Patch " + arg, text: plural(pl.length, "change") + " to " + plural(tn, "topic") + ".",
+        var rel = D.releases[arg], per = group(pl, "e"), names = Object.keys(per).sort(function (a, b) { return per[b].length - per[a].length || a.localeCompare(b); });
+        return { kind: "Patch", title: "Patch " + arg, text: plural(pl.length, "change") + " to " + plural(names.length, "topic") + ":",
+          items: names.slice(0, 10).map(function (t) { return [t, per[t].length]; }), more: Math.max(0, names.length - 10),
           meta: "Released " + dateOf(arg) + (rel && rel.prs.length ? " · " + plural(rel.prs.length, "pull request") : "") };
       }
       if (m[1] === "hub") {
@@ -819,7 +820,9 @@
       var c = content(a.getAttribute("href"));
       if (!c || !enabled()) return;
       box.innerHTML = '<div class="pk">' + esc(c.kind) + '</div><div class="pt">' + esc(c.title) + "</div>" +
-        (c.text ? "<div>" + esc(c.text) + "</div>" : "") + (c.meta ? '<div class="pm">' + esc(c.meta) + "</div>" : "");
+        (c.text ? "<div>" + esc(c.text) + "</div>" : "") +
+        (c.items ? '<ul class="pl">' + c.items.map(function (i) { return "<li><span>" + esc(i[0]) + '</span><b>' + i[1] + "</b></li>"; }).join("") + "</ul>" +
+          (c.more ? '<div class="pm">and ' + plural(c.more, "more topic") + "</div>" : "") : "") + (c.meta ? '<div class="pm">' + esc(c.meta) + "</div>" : "");
       box.hidden = false; a.setAttribute("aria-describedby", "preview"); shownFor = a;
       var rects = a.getClientRects(), r = rects[0];
       if (ev && ev.clientY != null) Array.prototype.forEach.call(rects, function (x) { if (ev.clientY >= x.top && ev.clientY <= x.bottom) r = x; });
