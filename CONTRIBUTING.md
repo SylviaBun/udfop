@@ -15,6 +15,10 @@ The short version: a page is one Markdown file in `web/guide/`. Use **Write a pa
 
 The starter template is [`web/guide/_template.md`](web/guide/_template.md). It is the only copy: the site's **Write a page** link loads it, so edit that file to change what new pages start with.
 
+## Code of Conduct
+
+Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md): be respectful, be welcoming, be honest. Maintainers may edit or remove contributions that break it.
+
 ## Licence of what you contribute
 
 By submitting a Game Guide page you agree that your writing is released under [CC BY 4.0](LICENSE-CONTENT.md), credited to "UDFOP contributors". Use your own words and your own pictures: do not paste the developers' release text, or text or images from other sites. Code contributions are under the [MIT licence](LICENSE).

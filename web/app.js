@@ -322,7 +322,7 @@
       "<p>The change tables are compiled from the release notes with a small script. The opening paragraph of each topic was written with the help of an AI assistant (Claude) from that topic's change history, and describes how the topic works as of its latest change. These paragraphs can be wrong or out of date, so the <b>History</b> table on each page is the thing to trust. Corrections are welcome.</p>";
     h += sec("Credits and licence", "Credits and licence", 2) +
       "<p>Started and maintained by <b>tau</b>, with Game Guide pages written by their contributors. The site code is released under the MIT licence and the topic descriptions and other original text are licensed CC BY 4.0. The change data is derived from the developer's release notes, and the game and its names belong to their owners.</p>";
-    h += sec("Feedback", "Feedback", 2) + '<p>Found a mistake or a bug? See <a href="#/feedback">Feedback and bugs</a>.</p>';
+    h += sec("Feedback and conduct", "Feedback and conduct", 2) + '<p>Found a mistake or a bug? See <a href="#/feedback">Feedback and bugs</a>. Everyone contributing or reporting is asked to follow the <a href="' + REPO + '/blob/main/CODE_OF_CONDUCT.md" rel="noopener">Code of Conduct</a>. Pages are written by their contributors, may be wrong or out of date, and carry no warranty.</p>';
     h += sec("Coverage", "Coverage", 2) + "<p>" + rows.length.toLocaleString() + " changes in " + topics.length + " topics across " + versions.length + " patches, from " + esc(versions[versions.length - 1]) + " (" + esc(dateOf(versions[versions.length - 1])) + ") to " + esc(latest) + " (" + esc(dateOf(latest)) + ").</p>";
     return { title: "About UDFOP", html: page("About UDFOP", h, { hat: '<a href="#/">Main page</a> › About' }) };
   };
@@ -588,7 +588,7 @@
       '<div class="portal"><h3>Suggestion or feedback</h3><div><p>An idea, a request, or what you think of the site.</p><p><a class="btn" data-issue="feedback.yml" data-prefix="[Feedback] " href="' + issueUrl("feedback.yml", "[Feedback] ") + '" rel="noopener">Give feedback</a></p></div></div>' +
       "</div>";
     h += sec("Rather fix it yourself?", "Rather fix it yourself?", 2) +
-      '<p>Anyone can correct or add a Game Guide page: <a href="#/guide/how-to-write-a-page">how to write a guide page</a>. Please do not put personal details in a report, since it is public.</p>';
+      '<p>Anyone can correct or add a Game Guide page: <a href="#/guide/how-to-write-a-page">how to write a guide page</a>. Please do not put personal details in a report, since it is public. Everyone taking part follows the <a href="' + REPO + '/blob/main/CODE_OF_CONDUCT.md" rel="noopener">Code of Conduct</a>.</p>';
     return { title: "Feedback and bugs", html: page("Feedback and bugs", h, { hat: '<a href="#/">Main page</a> › Feedback and bugs' }), toc: false };
   };
 

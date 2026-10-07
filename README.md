@@ -21,6 +21,10 @@ Want to write or fix a Game Guide page? See [CONTRIBUTING.md](CONTRIBUTING.md). 
 
 Then run `python tools/notes.py build` and open `web/index.html` to check the result.
 
+## Code of Conduct
+
+Everyone taking part in this project is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## Licence
 
 - **Code** (the site, the tools, the workflow): [MIT](LICENSE).
