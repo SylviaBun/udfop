@@ -271,9 +271,9 @@ body.settings-open #settings-panel { display: block; }
 }
 
 /* theme picker: a 2 x 2 grid with a small color dot */
-.seg.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
+.seg.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); }
 .seg.grid label + label { border-left: 0; }
-.seg.grid span { display: flex; align-items: center; gap: 8px; padding: 8px 10px; }
+.seg.grid span { display: flex; align-items: center; gap: 6px; padding: 8px 8px; white-space: nowrap; font-size: .92em; }
 .dot { flex: none; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--line); }
 
 /* narrow phones: the infobox takes the full width above the text */
