@@ -316,3 +316,7 @@ a.missing, a.missing:visited { color: var(--nerf); }
 /* buttons that are links */
 a.btn, a.btn:visited { display: inline-block; padding: 6px 14px; border: 1px solid var(--accent); border-radius: 3px; background: var(--accent); color: var(--paper); font-weight: 700; text-decoration: none; }
 a.btn:hover { filter: brightness(1.1); text-decoration: none; }
+
+/* link-type markers: PN = Patch Notes page, arrow = another website */
+sup.lt { font-size: .62em; line-height: 0; margin-left: 1px; font-weight: 700; letter-spacing: .02em; color: var(--muted); }
+.related sup.lt { display: none; }

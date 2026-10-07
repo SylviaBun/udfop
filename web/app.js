@@ -397,14 +397,17 @@
     if (/^[a-z][a-z0-9+.-]*:/i.test(u) || u.indexOf("//") === 0) return "";
     return u;
   }
+  /* small superscripts say where a link goes; links to other guide pages are the default and carry none */
+  var MARK_PN = '<sup class="lt" title="Patch Notes page" aria-label="(Patch Notes)">PN</sup>';
+  var MARK_EXT = '<sup class="lt" title="Opens another website" aria-label="(external site)">\u2197</sup>';
   function wikiLink(target, label) {
     var raw = target.trim(), low = raw.toLowerCase(), t;
-    if (low.indexOf("topic:") === 0) { t = topicByLower[low.slice(6).trim()]; return t ? tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") : esc(label || raw.slice(6)); }
-    if (low.indexOf("patch:") === 0) { var v = raw.slice(6).trim(); return byVersion[v] ? '<a href="#/patch/' + enc(v) + '">' + esc(label || v) + "</a>" : esc(label || v); }
+    if (low.indexOf("topic:") === 0) { t = topicByLower[low.slice(6).trim()]; return t ? tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") + MARK_PN : esc(label || raw.slice(6)); }
+    if (low.indexOf("patch:") === 0) { var v = raw.slice(6).trim(); return byVersion[v] ? '<a href="#/patch/' + enc(v) + '">' + esc(label || v) + "</a>" + MARK_PN : esc(label || v); }
     var g = guideByTitle[low] || guideBySlug[low];
     if (g) return '<a href="#/guide/' + g.slug.split("/").map(enc).join("/") + '">' + esc(label || g.title) + "</a>";
     t = topicByLower[low];
-    if (t) return tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<");
+    if (t) return tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") + MARK_PN;
     return '<a class="missing" href="' + newPageUrl(raw) + '"' + newAttr(raw) + ' rel="noopener" title="No page called this yet. Click to create it.">' + esc(label || raw) + "</a>";
   }
   function inline(s) {
@@ -420,7 +423,7 @@
     s = s.replace(/\[([^\]]+)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g, function (m, text, url) {
       url = safeUrl(url); if (!url) return text;
       var ext = /^https?:/i.test(url);
-      return keep('<a href="' + esc(url) + '"' + (ext ? ' rel="noopener"' : "") + ">" + inlineBasic(text) + "</a>");
+      return keep('<a href="' + esc(url) + '"' + (ext ? ' rel="noopener"' : "") + ">" + inlineBasic(text) + "</a>" + (ext ? MARK_EXT : ""));
     });
     s = inlineBasic(s);
     return s.replace(/\u0000(\d+)\u0000/g, function (m, i) { return stash[+i]; });
@@ -444,7 +447,11 @@
   var mdBase = "";   /* folder of the page being rendered, so pictures resolve next to it */
   function markdown(src, title) {
     var lines = src.replace(/\r\n?/g, "\n").split("\n"), out = [], i = 0, first = true;
-    function para(buf) { if (buf.length) out.push("<p>" + inline(buf.join(" ")) + "</p>"); }
+    function para(buf) {
+      if (!buf.length) return;
+      var text = buf.join(" ");
+      out.push((/^\*Patch notes:\*/.test(text) ? '<p class="related">' : "<p>") + inline(text) + "</p>");
+    }
     while (i < lines.length) {
       var l = lines[i], m;
       if (!l.trim()) { i++; continue; }

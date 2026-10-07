@@ -78,10 +78,12 @@ In short: **a guide page is found through its category, its title, search and th
 |---|---|
 | `[[Party rest]]` | a link to the guide page titled "Party rest" |
 | `[[Party rest\|resting]]` | the same page, shown as "resting" |
-| `[[topic:Revenants]]` | a link to the Patch Notes topic "Revenants" |
-| `[[patch:0.1.6646]]` | a link to that patch's page |
-| `[text](https://example.com)` | an outside link |
+| `[[topic:Revenants]]` | a link to the Patch Notes topic "Revenants", marked with a small **PN** |
+| `[[patch:0.1.6646]]` | a link to that patch's page, also marked **PN** |
+| `[text](https://example.com)` | an outside link, marked with a small **↗** |
 | `![what it shows](images/party-rest-camp.png)` | a picture (see below) |
+
+The small raised marker after a link says where it goes. **PN** means a Patch Notes page and **↗** means another website. Links to other guide pages have no marker. The markers are added for you; do not type them. A line starting with *Patch notes:* that lists only Patch Notes links hides the markers, since the label already says so.
 
 ## Formatting
 
