@@ -59,7 +59,8 @@ html[data-width="wide"] body.settings-open .head-in { max-width: none; }
 #suggest small { color: var(--muted); }
 
 /* sidebar */
-#side { padding: 16px 8px 24px 12px; font-size: .85rem; }
+#side { padding: 16px 8px 24px 12px; font-size: .85rem; position: sticky; top: var(--head-h, 3.6rem); align-self: start;
+  height: calc(100vh - var(--head-h, 3.6rem)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 #side h3 { margin: 14px 0 4px 8px; font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
 #side ul { list-style: none; margin: 0; padding: 0; }
 #side li a { display: block; padding: 2px 8px; border-left: 3px solid transparent; }
@@ -144,7 +145,7 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
   #page { grid-template-columns: 1fr; }
   #menu { display: block; }
   #logo { width: auto; } .name small { display: none; }
-  #side { display: none; position: fixed; top: 0; left: 0; bottom: 0; width: 15em; z-index: 15; background: var(--paper);
+  #side { display: none; position: fixed; top: 0; left: 0; bottom: 0; height: auto; align-self: auto; width: 15em; z-index: 15; background: var(--paper);
     border-right: 1px solid var(--line); overflow: auto; }
   body.menu-open #side { display: block; }
   #content { padding: 14px 14px 0; border-left: 0; border-right: 0; }
