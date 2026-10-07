@@ -1,0 +1,20 @@
+name: Suggestion or feedback
+description: An idea, a request, or general feedback about the site
+title: "[Feedback] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue will be **public**: please do not include personal details.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to tell us?
+      description: A suggestion, something you liked, or something that confused you.
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page address (optional)
+      description: The page you are talking about, if there is one.

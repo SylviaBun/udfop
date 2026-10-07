@@ -1,0 +1,24 @@
+name: Wrong or missing information
+description: A guide page or patch note is wrong, out of date or missing something
+title: "[Content] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue will be **public**. If you can fix the page yourself, that is even better: see [how to write a guide page](https://tau-samsara.github.io/udfop/#/guide/how-to-write-a-page).
+  - type: input
+    id: page
+    attributes:
+      label: Page address
+      description: The page with the problem (filled in for you if you came from the site).
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What is wrong or missing?
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: What should it say, and how do you know?
+      description: Where the correct information comes from (testing in the game, a patch number, a developer post).

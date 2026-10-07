@@ -322,6 +322,7 @@
       "<p>The change tables are compiled from the release notes with a small script. The opening paragraph of each topic was written with the help of an AI assistant (Claude) from that topic's change history, and describes how the topic works as of its latest change. These paragraphs can be wrong or out of date, so the <b>History</b> table on each page is the thing to trust. Corrections are welcome.</p>";
     h += sec("Credits and licence", "Credits and licence", 2) +
       "<p>Started and maintained by <b>tau</b>, with Game Guide pages written by their contributors. The site code is released under the MIT licence and the topic descriptions and other original text are licensed CC BY 4.0. The change data is derived from the developer's release notes, and the game and its names belong to their owners.</p>";
+    h += sec("Feedback", "Feedback", 2) + '<p>Found a mistake or a bug? See <a href="#/feedback">Feedback and bugs</a>.</p>';
     h += sec("Coverage", "Coverage", 2) + "<p>" + rows.length.toLocaleString() + " changes in " + topics.length + " topics across " + versions.length + " patches, from " + esc(versions[versions.length - 1]) + " (" + esc(dateOf(versions[versions.length - 1])) + ") to " + esc(latest) + " (" + esc(dateOf(latest)) + ").</p>";
     return { title: "About UDFOP", html: page("About UDFOP", h, { hat: '<a href="#/">Main page</a> › About' }) };
   };
@@ -574,6 +575,23 @@
     return { title: "Main Page", html: page("Main Page", h), toc: false };
   };
 
+  /* ---------- feedback: GitHub issue forms, pre-filled with the page the reader came from ---------- */
+  function issueUrl(template, prefix) {
+    return REPO + "/issues/new?template=" + template + "&title=" + enc(prefix) + "&page=" + enc(feedbackPage);
+  }
+  var feedbackPage = location.href;
+  views.feedback = function () {
+    var h = "<p>Found something broken, wrong or confusing? Tell us. Reports are made on GitHub, so they are public and need a free GitHub account. The site itself collects nothing about you.</p>";
+    h += '<div class="portals">' +
+      '<div class="portal"><h3>Report a bug</h3><div><p>The site is broken, looks wrong, or does not work on your device.</p><p><a class="btn" data-issue="bug.yml" data-prefix="[Bug] " href="' + issueUrl("bug.yml", "[Bug] ") + '" rel="noopener">Report a bug</a></p></div></div>' +
+      '<div class="portal"><h3>Wrong or missing information</h3><div><p>A guide page or patch note is wrong, out of date or incomplete.</p><p><a class="btn" data-issue="content.yml" data-prefix="[Content] " href="' + issueUrl("content.yml", "[Content] ") + '" rel="noopener">Report an error</a></p></div></div>' +
+      '<div class="portal"><h3>Suggestion or feedback</h3><div><p>An idea, a request, or what you think of the site.</p><p><a class="btn" data-issue="feedback.yml" data-prefix="[Feedback] " href="' + issueUrl("feedback.yml", "[Feedback] ") + '" rel="noopener">Give feedback</a></p></div></div>' +
+      "</div>";
+    h += sec("Rather fix it yourself?", "Rather fix it yourself?", 2) +
+      '<p>Anyone can correct or add a Game Guide page: <a href="#/guide/how-to-write-a-page">how to write a guide page</a>. Please do not put personal details in a report, since it is public.</p>';
+    return { title: "Feedback and bugs", html: page("Feedback and bugs", h, { hat: '<a href="#/">Main page</a> › Feedback and bugs' }), toc: false };
+  };
+
   views.random = function () {
     location.replace("#/topic/" + enc(topics[Math.floor(Math.random() * topics.length)]));
     return null;
@@ -728,7 +746,10 @@
     if (!res) return;
     app.innerHTML = res.html;
     document.title = (name === "home" ? SITE : res.title + " – " + SHORT);
-    var nav = { home: "home", guide: "guide", patchnotes: "patchnotes", recent: "recent", topics: "topics", topic: "topics", hubs: "hubs", hub: "hubs", systems: "systems", system: "systems", patches: "patches", patch: "patches", about: "about" }[name];
+    if (name !== "feedback") feedbackPage = location.href;
+    var fr = document.getElementById("foot-report");
+    if (fr) { fr.href = "#/feedback"; }
+    var nav = { home: "home", feedback: "feedback", guide: "guide", patchnotes: "patchnotes", recent: "recent", topics: "topics", topic: "topics", hubs: "hubs", hub: "hubs", systems: "systems", system: "systems", patches: "patches", patch: "patches", about: "about" }[name];
     var keys = [nav];
     if (name === "guide") {
       if (arg.indexOf("category/") === 0) keys = ["cat:" + arg.slice(9)];
@@ -736,6 +757,7 @@
     } else if (name === "hub") keys = ["hub:" + arg, nav];
     else if (name === "topic" && D.hubs[arg]) keys = ["hub:" + D.hubs[arg], nav];
     setNav(keys);
+    Array.prototype.forEach.call(app.querySelectorAll("a[data-issue]"), function (a) { a.href = issueUrl(a.getAttribute("data-issue"), a.getAttribute("data-prefix")); });
     if (res.toc !== false) buildToc();
     if (res.after) res.after();
     setMenu(false); sug.hidden = true;

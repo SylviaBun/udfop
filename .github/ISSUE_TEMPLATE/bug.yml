@@ -1,0 +1,30 @@
+name: Bug report
+description: Something on the site is broken or looks wrong
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping. This issue will be **public**: please do not include passwords, personal details or anything private.
+  - type: textarea
+    id: what
+    attributes:
+      label: What went wrong?
+      description: What did you expect, and what happened instead? A screenshot helps (you can paste or drag one into this box).
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How can we see it ourselves?
+      description: The steps you took, or the page where it happens.
+  - type: input
+    id: page
+    attributes:
+      label: Page address
+      description: The address of the page where you saw it (filled in for you if you came from the site).
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      description: For example "iPhone, Safari" or "Windows, Chrome". Also say if you use a Settings option such as Wide or Large text, or a theme.

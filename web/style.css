@@ -312,3 +312,7 @@ a.missing, a.missing:visited { color: var(--nerf); }
 .catlist h3 { margin: 0 0 .2em; font: 700 1.05rem var(--sans); border: 0; }
 .catlist ul { margin: 0; padding-left: 1.3em; list-style: disc; }
 .catlist li { margin: 1px 0; }
+
+/* buttons that are links */
+a.btn, a.btn:visited { display: inline-block; padding: 6px 14px; border: 1px solid var(--accent); border-radius: 3px; background: var(--accent); color: var(--paper); font-weight: 700; text-decoration: none; }
+a.btn:hover { filter: brightness(1.1); text-decoration: none; }
