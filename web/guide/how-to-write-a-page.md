@@ -111,7 +111,6 @@ Raw HTML is not supported. It is shown as plain text, which keeps pages safe and
 - One subject per page. Link to other pages instead of repeating them.
 - The Patch Notes already record *what changed*. A guide page should say *how it works now*, and can link to the topic for the history, for example [[topic:Revenants]].
 - Use your own words. Do not paste the developers' release text or copy other sites.
-- Be respectful to other contributors. Everyone taking part follows the [Code of Conduct](https://github.com/tau-samsara/udfop/blob/main/CODE_OF_CONDUCT.md), and maintainers may edit or remove contributions that break it.
 - Your writing is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) and credited to "UDFOP contributors".
 
 ## Review and credit
