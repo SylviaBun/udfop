@@ -305,3 +305,10 @@ a.missing, a.missing:visited { color: var(--nerf); }
 .gcards li { display: flex; flex-direction: column; gap: 3px; margin: 0; padding: 8px 12px; border: 1px solid var(--line); background: var(--softer); }
 .gcards li > a { font-weight: 700; }
 .gcards .gsum { font-size: .85rem; color: var(--muted); }
+
+/* category page: Wikipedia-style lettered columns */
+.catlist { columns: 3 16em; column-gap: 28px; margin: .6em 0 1.2em; }
+.catlist section { break-inside: avoid; margin: 0 0 .8em; }
+.catlist h3 { margin: 0 0 .2em; font: 700 1.05rem var(--sans); border: 0; }
+.catlist ul { margin: 0; padding-left: 1.3em; list-style: disc; }
+.catlist li { margin: 1px 0; }

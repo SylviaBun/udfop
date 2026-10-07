@@ -345,6 +345,22 @@
     return m;
   }
   function glink(p) { return '<a href="#/guide/' + p.slug.split("/").map(enc).join("/") + '">' + esc(p.title) + "</a>"; }
+  /* a category page: titles only, bulleted in columns, grouped by first letter once there are enough of them */
+  function categoryList(list) {
+    var sorted = list.slice().sort(function (a, b) { return a.title.localeCompare(b.title, undefined, { sensitivity: "base" }); });
+    function li(p) { return "<li>" + glink(p).replace("<a ", p.summary ? '<a title="' + esc(p.summary) + '" ' : "<a ") + "</li>"; }
+    var h = "<p>The following " + plural(sorted.length, "page") + (sorted.length === 1 ? " is" : " are") + " in this category.</p>";
+    if (sorted.length < 8) return h + '<ul class="cols">' + sorted.map(li).join("") + "</ul>";
+    var letters = {}, order = [];
+    sorted.forEach(function (p) {
+      var ch = p.title.charAt(0).toUpperCase(); if (!/[A-Z]/.test(ch)) ch = /[0-9]/.test(ch) ? "0–9" : "#";
+      if (!letters[ch]) { letters[ch] = []; order.push(ch); }
+      letters[ch].push(p);
+    });
+    return h + '<div class="catlist">' + order.map(function (ch) {
+      return "<section><h3>" + esc(ch) + "</h3><ul>" + letters[ch].map(li).join("") + "</ul></section>";
+    }).join("") + "</div>";
+  }
   function guideCards(list) {
     return '<ul class="gcards">' + list.map(function (p) {
       return "<li>" + glink(p) + (p.summary ? '<span class="gsum">' + esc(p.summary) + "</span>" : "") + "</li>";
@@ -520,7 +536,7 @@
   };
   views.guidecat = function (c) {
     var list = (guide || []).filter(function (p) { return p.category === c; });
-    var h = guide === null ? "<p>Loading…</p>" : list.length ? guideCards(list) : "<p>No pages in this category.</p>";
+    var h = guide === null ? "<p>Loading…</p>" : list.length ? categoryList(list) : "<p>No pages in this category.</p>";
     return { title: c, html: page(esc(c), h, { hat: GUIDE_HAT + " › " + esc(c) }), toc: false };
   };
   views.guidepage = function (slug) {
