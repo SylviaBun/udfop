@@ -414,7 +414,7 @@
     s = s.replace(/\[\[([^\]|]+?)(?:\|([^\]]*))?\]\]/g, function (m, t, l) { return keep(wikiLink(t, l)); });
     s = s.replace(/!\[([^\]]*)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g, function (m, alt, src) {
       src = safeUrl(src); if (!src) return "";
-      if (!/^(https?:|\/)/i.test(src)) src = "guide/" + src.replace(/^\.?\//, "");
+      if (!/^(https?:|\/)/i.test(src)) src = "guide/" + mdBase + src.replace(/^\.?\//, "");
       return keep('<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">');
     });
     s = s.replace(/\[([^\]]+)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g, function (m, text, url) {
@@ -441,6 +441,7 @@
     return cells;
   }
 
+  var mdBase = "";   /* folder of the page being rendered, so pictures resolve next to it */
   function markdown(src, title) {
     var lines = src.replace(/\r\n?/g, "\n").split("\n"), out = [], i = 0, first = true;
     function para(buf) { if (buf.length) out.push("<p>" + inline(buf.join(" ")) + "</p>"); }
@@ -551,7 +552,9 @@
         setNav(["page:" + slug.toLowerCase(), "cat:" + cat]);
         document.querySelector("h1.title").textContent = t;
         document.querySelector(".hat").innerHTML = GUIDE_HAT + ' › <a href="#/guide/category/' + enc(cat) + '">' + esc(cat) + "</a>";
-        box.innerHTML = '<div id="toc" class="toc"></div>' + markdown(fm.body, t) +
+        mdBase = (entry ? entry.slug : slug).indexOf("/") >= 0 ? (entry ? entry.slug : slug).replace(/[^/]*$/, "") : "";
+        var rendered = markdown(fm.body, t); mdBase = "";
+        box.innerHTML = '<div id="toc" class="toc"></div>' + rendered +
           '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> · <a href="' + newPageUrl("") + '"' + newAttr("") + ' rel="noopener">Create a page</a></p>';
         buildToc();
       }).catch(function () {

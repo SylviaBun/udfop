@@ -34,6 +34,14 @@ Headings with `##` and `###` become sections. Because this page has three or mor
 - To an outside site: [GitHub](https://github.com)
 - To a page that does not exist yet (it shows in red, and clicking it starts that page): [[Example of a missing page]]
 
+## Pictures
+
+Upload the picture next to your page (in `web/guide/`), then reference it by file name:
+
+![A sample picture: a gold disc beside three bars](demo-image.png)
+
+The text in the brackets is the *alt text*. It is read aloud by screen readers and shown if the picture cannot load, so describe what the picture shows. Pictures shrink to fit narrow screens.
+
 ## A table
 
 | Feature | Where it shows up | Automatic? |
@@ -57,8 +65,9 @@ which is useful for commands or in-game chat lines.
 
 On the site, check that:
 
-1. **Demo** appears as a new group in the sidebar, under Game Guide.
-2. This page is listed on the Game Guide index, under Demo, with the summary beside its name.
-3. Searching for "demo" finds it.
-4. The breadcrumb at the top reads Main page › Game Guide › Demo.
-5. The red link above opens GitHub's editor with a new page ready.
+1. The sample picture appears under **Pictures**.
+2. **Demo** appears as a new group in the sidebar, under Game Guide.
+3. This page is listed on the Game Guide index, under Demo, with the summary beside its name.
+4. Searching for "demo" finds it.
+5. The breadcrumb at the top reads Main page › Game Guide › Demo.
+6. The red link above opens GitHub's editor with a new page ready.
