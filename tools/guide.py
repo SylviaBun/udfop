@@ -9,6 +9,9 @@ so contributors never have to run this."""
 import json, os, re, sys
 
 ROOT = os.path.join('web', 'guide')
+IMG_EXT = ('.png', '.jpg', '.jpeg', '.webp', '.gif')
+MAX_IMG = 500 * 1024
+IMAGE = re.compile(r'!\[[^\]]*\]\(([^)\s]+)\)')
 LINK = re.compile(r'\[\[([^\]\|]+?)(?:\|[^\]]*)?\]\]')
 
 
@@ -85,6 +88,37 @@ def topic_names():
         return set()
 
 
+def check_images(pages, problems):
+    """Pictures live under web/guide/ (the convention is web/guide/images/). Report broken, unused, oversized and odd files."""
+    used = set()
+    for p in pages:
+        body = re.sub(r'```.*?```|`[^`\n]*`', ' ', p['_body'], flags=re.S)
+        folder = os.path.dirname(p['slug'])
+        for ref in IMAGE.findall(body):
+            if re.match(r'^([a-z][a-z0-9+.-]*:|//|/)', ref, flags=re.I):
+                continue
+            rel = os.path.normpath(os.path.join(folder, ref.lstrip('./') if ref.startswith('./') else ref)).replace(os.sep, '/')
+            used.add(rel.lower())
+            if not os.path.isfile(os.path.join(ROOT, rel)):
+                problems.append(('error', p['slug'] + '.md', 'the picture "%s" does not exist (upload it to web/guide/images/ and use that path)' % ref))
+    for base, dirs, files in os.walk(ROOT):
+        dirs[:] = sorted(d for d in dirs if not d.startswith(('_', '.')))
+        for f in sorted(files):
+            if f.startswith(('_', '.')) or f.lower().endswith('.md') or f == 'index.json':
+                continue
+            path = os.path.join(base, f)
+            rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
+            if not f.lower().endswith(IMG_EXT):
+                problems.append(('warn', rel, 'not a page or a picture the site can show (use PNG, JPG, WebP or GIF)'))
+                continue
+            if os.path.getsize(path) > MAX_IMG:
+                problems.append(('warn', rel, 'is %d KB; please shrink it below %d KB so pages load quickly' % (os.path.getsize(path) // 1024, MAX_IMG // 1024)))
+            if rel.lower() not in used:
+                problems.append(('warn', rel, 'is not used by any page'))
+            if os.path.dirname(rel) != 'images':
+                problems.append(('warn', rel, 'pictures are easier to find in web/guide/images/'))
+
+
 def main():
     check = '--check' in sys.argv
     if not os.path.isdir(ROOT):
@@ -97,6 +131,7 @@ def main():
                 problems.append(('error', p['slug'] + '.md', 'the title or name clashes with "%s.md"' % seen[key]))
         seen[p['title'].lower()] = p['slug']
         seen.setdefault(p['slug'].lower(), p['slug'])
+    check_images(pages, problems)
     topics = topic_names()
     for p in pages:
         for target in LINK.findall(re.sub(r'```.*?```|`[^`\n]*`', ' ', p['_body'], flags=re.S)):

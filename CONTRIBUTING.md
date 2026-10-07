@@ -17,7 +17,7 @@ The starter template is [`web/guide/_template.md`](web/guide/_template.md). It i
 
 ## Licence of what you contribute
 
-By submitting a Game Guide page you agree that your writing is released under [CC BY 4.0](LICENSE-CONTENT.md), credited to "UDFOP contributors". Use your own words: do not paste the developers' release text or text from other sites. Code contributions are under the [MIT licence](LICENSE).
+By submitting a Game Guide page you agree that your writing is released under [CC BY 4.0](LICENSE-CONTENT.md), credited to "UDFOP contributors". Use your own words and your own pictures: do not paste the developers' release text, or text or images from other sites. Code contributions are under the [MIT licence](LICENSE).
 
 ## Review
 

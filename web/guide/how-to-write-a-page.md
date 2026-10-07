@@ -74,7 +74,7 @@ In short: **a guide page is found through its category, its title, search and th
 | `[[topic:Revenants]]` | a link to the Patch Notes topic "Revenants" |
 | `[[patch:0.1.6646]]` | a link to that patch's page |
 | `[text](https://example.com)` | an outside link |
-| `![caption](picture.png)` | a picture. Add the image file next to your page. |
+| `![what it shows](images/party-rest-camp.png)` | a picture (see below) |
 
 ## Formatting
 
@@ -88,6 +88,15 @@ In short: **a guide page is found through its category, its title, search and th
 | `\| a \| b \|` rows with a `\|---\|---\|` line under the first | a table (put a backslash before any pipe that belongs inside a cell) |
 
 Raw HTML is not supported. It is shown as plain text, which keeps pages safe and consistent.
+
+## Pictures
+
+- Upload pictures to the **`web/guide/images/`** folder: open it on GitHub, choose **Add file → Upload files**, and do this in the same pull request as your page.
+- Reference a picture by its path, always starting with `images/`.
+- Name it after your page, such as `party-rest-camp.png`, so names do not clash and people can tell what it belongs to.
+- Use PNG, JPG, WebP or GIF, and keep each file under about 500 KB. Crop or shrink large screenshots.
+- Always write alt text (the words in the square brackets) describing what the picture shows. It is read aloud by screen readers and shown if the picture cannot load.
+- Only upload pictures you made yourself, such as your own screenshots or diagrams. Do not upload other people's artwork or images taken from other sites.
 
 ## Good practice
 

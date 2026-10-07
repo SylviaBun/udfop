@@ -36,9 +36,9 @@ Headings with `##` and `###` become sections. Because this page has three or mor
 
 ## Pictures
 
-Upload the picture next to your page (in `web/guide/`), then reference it by file name:
+Upload the picture into the `web/guide/images/` folder, then reference it by its path:
 
-![A sample picture: a gold disc beside three bars](demo-image.png)
+![A sample picture: a gold disc beside three bars](images/demo-image.png)
 
 The text in the brackets is the *alt text*. It is read aloud by screen readers and shown if the picture cannot load, so describe what the picture shows. Pictures shrink to fit narrow screens.
 
