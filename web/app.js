@@ -360,6 +360,7 @@
      All text is escaped first, so a page cannot inject HTML or scripts. */
   function safeUrl(u) {
     u = u.trim();
+    if (/[\u0000-\u001f\u007f-\u009f]/.test(u)) return "";
     if (/^(https?:|mailto:|#)/i.test(u)) return u;
     if (/^[a-z][a-z0-9+.-]*:/i.test(u) || u.indexOf("//") === 0) return "";
     return u;
