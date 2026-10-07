@@ -31,21 +31,25 @@ body { margin: 0; background: var(--page); color: var(--fg); font: .9375rem/1.6 
 a { color: var(--link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 a:visited { color: var(--visited); }
-#page { display: grid; grid-template-columns: 14.5em minmax(0, 70rem); justify-content: center; grid-template-rows: auto 1fr; min-height: 100vh; }
+#page { display: grid; grid-template-columns: 14.5em minmax(0, 70rem); justify-content: center; grid-template-rows: 1fr; min-height: calc(100vh - var(--head-h, 3.6rem)); }
 html[data-width="wide"] #page { grid-template-columns: 14.5em minmax(0, 1fr); }
 
 /* header */
-#head { grid-column: 1 / -1; position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 16px;
-  padding: 8px 16px; background: var(--head); border-bottom: 1px solid var(--line); }
+#head { position: sticky; top: 0; z-index: 20; background: var(--head); border-bottom: 1px solid var(--line); }
+/* the inner bar is exactly as wide as the nav + article block below, so the logo sits over the nav and the search starts at the article text */
+.head-in { display: flex; align-items: center; padding: 8px 16px 8px 12px; max-width: calc(14.5em + 70rem); margin: 0 auto; }
+html[data-width="wide"] .head-in { max-width: none; }
+body.settings-open .head-in { max-width: calc(14.5em + 70rem + 19rem); }
+html[data-width="wide"] body.settings-open .head-in { max-width: none; }
 #menu { display: none; border: 0; background: none; font-size: 1.4rem; color: var(--fg); cursor: pointer; padding: 0 6px; }
-#logo { display: flex; align-items: center; gap: 10px; color: var(--fg); width: 14em; }
+#logo { display: flex; align-items: center; gap: 10px; color: var(--fg); width: calc(14.5em - 12px); flex: none; }
 #logo:hover { text-decoration: none; }
 #logo:visited { color: var(--fg); }
 .mark { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: #fff;
   font: 700 .56rem var(--sans); letter-spacing: 0; flex: none; }
 .name { font: .98rem/1.15 var(--serif); }
 .name small { display: block; font: .7rem var(--sans); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
-#search { position: relative; flex: 1; max-width: 560px; margin-left: auto; }
+#search { position: relative; flex: 1 1 560px; max-width: 560px; margin-left: 29px; }
 #q { width: 100%; padding: 7px 12px; font: inherit; border: 1px solid var(--line); border-radius: 2px; background: var(--softer); color: var(--fg); }
 #q:focus { outline: 2px solid var(--link); background: var(--paper); }
 #suggest { position: absolute; left: 0; right: 0; top: 100%; margin: 0; padding: 0; list-style: none; background: var(--paper);
@@ -150,10 +154,10 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
 }
 
 /* settings panel: a docked column on desktop, a drawer like the nav on phones */
-#gear { flex: none; border: 0; background: none; cursor: pointer; color: var(--fg); font: inherit; font-size: 1.35rem; line-height: 1; padding: 4px 6px; border-radius: 3px; }
+#gear { flex: none; margin-left: auto; border: 0; background: none; cursor: pointer; color: var(--fg); font: inherit; font-size: 1.35rem; line-height: 1; padding: 4px 6px; border-radius: 3px; }
 #gear:hover, body.settings-open #gear { background: var(--soft); }
 #gear:focus-visible { outline: 2px solid var(--link); }
-#settings-panel { display: none; grid-column: 3; grid-row: 2; align-self: start; position: sticky; top: var(--head-h, 3.6rem);
+#settings-panel { display: none; grid-column: 3; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem);
   max-height: calc(100vh - var(--head-h, 3.6rem)); overflow-y: auto; width: 19rem; background: var(--paper);
   border: 1px solid var(--line); border-bottom: 0; padding: 0 18px 24px; }
 body.settings-open #page { grid-template-columns: 14.5em minmax(0, 70rem) 19rem; }
@@ -180,7 +184,7 @@ body.settings-open #settings-panel { display: block; }
 /* phone and tablet: search sits on its own row under the logo */
 @media (max-width: 860px) {
   html { scroll-padding-top: 7.5rem; }
-  #head { flex-wrap: wrap; gap: 8px 10px; padding: 8px 12px 10px; }
+  .head-in { flex-wrap: wrap; gap: 8px 10px; padding: 8px 12px 10px; }
   #logo { width: auto; flex: 1 1 0; min-width: 0; }
   #gear { order: 2; margin-left: auto; }
   #search { order: 3; flex: 1 1 100%; max-width: none; margin-left: 0; }
@@ -189,11 +193,14 @@ body.settings-open #settings-panel { display: block; }
 
 /* below 1100px a docked column would squeeze the page, so the panel becomes a drawer like the nav */
 @media (max-width: 1100px) {
+  body.settings-open .head-in { max-width: calc(14.5em + 70rem); }
+  html[data-width="wide"] body.settings-open .head-in { max-width: none; }
   body.settings-open #page { grid-template-columns: 14.5em minmax(0, 70rem); }
   html[data-width="wide"] body.settings-open #page { grid-template-columns: 14.5em minmax(0, 1fr); }
   #settings-panel { grid-column: auto; grid-row: auto; position: fixed; top: 0; right: 0; bottom: 0; z-index: 15; width: 17rem; max-width: 90vw;
     max-height: none; border: 0; border-left: 1px solid var(--line); padding-top: var(--head-h, 7.5rem); }
 }
 @media (max-width: 860px) {
+  .head-in, html[data-width="wide"] .head-in, body.settings-open .head-in, html[data-width="wide"] body.settings-open .head-in { max-width: none; }
   #page, html[data-width="wide"] #page, body.settings-open #page, html[data-width="wide"] body.settings-open #page { grid-template-columns: 1fr; }
 }
