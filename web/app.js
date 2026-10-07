@@ -27,7 +27,13 @@
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
   }
+  function syncHeadH() {
+    var h = document.getElementById("head");
+    if (h) document.documentElement.style.setProperty("--head-h", h.offsetHeight + "px");
+  }
+  window.addEventListener("resize", syncHeadH);
   applySettings(loadSettings());
+  syncHeadH();
 
   /* ---------- helpers ---------- */
   function vcmp(a, b) {
@@ -352,7 +358,8 @@
     if (document.body.classList.contains("menu-open") && !e.target.closest("#side") && !e.target.closest("#menu")) setMenu(false);
   });
 
-  function setMenu(on) { document.body.classList.toggle("menu-open", on); document.getElementById("menu").setAttribute("aria-expanded", on ? "true" : "false"); }
+  function setMenu(on) {
+    if (on && typeof settingsPanel !== "undefined" && settingsPanel) settingsPanel.close(false); document.body.classList.toggle("menu-open", on); document.getElementById("menu").setAttribute("aria-expanded", on ? "true" : "false"); }
   document.getElementById("menu").addEventListener("click", function () { setMenu(!document.body.classList.contains("menu-open")); });
 
   /* sidebar */
@@ -409,7 +416,7 @@
     var inputs = body.querySelectorAll("input");
     function sync() { Array.prototype.forEach.call(inputs, function (i) { i.checked = st[i.name] === i.value; }); }
     function change(next) {
-      st = next; applySettings(st); sync();
+      st = next; applySettings(st); syncHeadH(); sync();
       if (!saveSettings(st) && !warned) {
         warned = true;
         var note = document.getElementById("settings-note");
@@ -423,6 +430,7 @@
     function isOpen() { return document.body.classList.contains("settings-open"); }
     function open() {
       st = loadSettings(); sync();
+      document.body.classList.remove("menu-open");
       document.body.classList.add("settings-open");
       gear.setAttribute("aria-expanded", "true"); panel.setAttribute("aria-hidden", "false");
       var first = body.querySelector("input:checked"); if (first) first.focus();
@@ -434,7 +442,9 @@
     }
     gear.addEventListener("click", function () { if (isOpen()) close(true); else open(); });
     document.getElementById("settings-close").addEventListener("click", function () { close(true); });
-    document.getElementById("settings-backdrop").addEventListener("click", function () { close(false); });
+    document.addEventListener("click", function (e) {
+      if (isOpen() && window.matchMedia("(max-width: 1100px)").matches && !e.target.closest("#settings-panel") && !e.target.closest("#gear")) close(false);
+    });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && isOpen()) close(true); });
     sync();
     return { open: open, close: close };
