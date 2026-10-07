@@ -45,7 +45,7 @@ html[data-width="wide"] body.settings-open .head-in { max-width: none; }
 #logo { display: flex; align-items: center; gap: 10px; color: var(--fg); width: calc(14.5em - 12px); flex: none; }
 #logo:hover { text-decoration: none; }
 #logo:visited { color: var(--fg); }
-.mark { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: #fff;
+.mark { display: grid; place-items: center; width: 2.875rem; height: 2.875rem; border-radius: 50%; background: var(--accent); color: #fff;
   font: 700 .56rem var(--sans); letter-spacing: 0; flex: none; }
 .name { font: .98rem/1.15 var(--serif); }
 .name small { display: block; font: .7rem var(--sans); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
@@ -158,7 +158,7 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
 #gear:hover, body.settings-open #gear { background: var(--soft); }
 #gear:focus-visible { outline: 2px solid var(--link); }
 #settings-panel { display: none; grid-column: 3; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem);
-  max-height: calc(100vh - var(--head-h, 3.6rem)); overflow-y: auto; width: 19rem; background: var(--paper);
+  height: calc(100vh - var(--head-h, 3.6rem)); overflow-y: auto; width: 19rem; background: var(--paper);
   border: 1px solid var(--line); border-bottom: 0; padding: 0 18px 24px; }
 body.settings-open #page { grid-template-columns: 14.5em minmax(0, 70rem) 19rem; }
 html[data-width="wide"] body.settings-open #page { grid-template-columns: 14.5em minmax(0, 1fr) 19rem; }
@@ -198,7 +198,7 @@ body.settings-open #settings-panel { display: block; }
   body.settings-open #page { grid-template-columns: 14.5em minmax(0, 70rem); }
   html[data-width="wide"] body.settings-open #page { grid-template-columns: 14.5em minmax(0, 1fr); }
   #settings-panel { grid-column: auto; grid-row: auto; position: fixed; top: 0; right: 0; bottom: 0; z-index: 15; width: 17rem; max-width: 90vw;
-    max-height: none; border: 0; border-left: 1px solid var(--line); padding-top: var(--head-h, 7.5rem); }
+    height: auto; border: 0; border-left: 1px solid var(--line); padding-top: var(--head-h, 7.5rem); }
 }
 @media (max-width: 860px) {
   .head-in, html[data-width="wide"] .head-in, body.settings-open .head-in, html[data-width="wide"] body.settings-open .head-in { max-width: none; }

@@ -32,6 +32,7 @@
     if (h) document.documentElement.style.setProperty("--head-h", h.offsetHeight + "px");
   }
   window.addEventListener("resize", syncHeadH);
+  if (window.ResizeObserver) new ResizeObserver(syncHeadH).observe(document.getElementById("head"));
   applySettings(loadSettings());
   syncHeadH();
 
