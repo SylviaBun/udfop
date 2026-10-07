@@ -406,7 +406,7 @@
     var GROUPS = [
       { key: "skin", legend: "Theme", help: "The overall look. Each theme has a light and a dark version.", grid: true,
         labels: ["Default", "Parchment", "Iliac Bay", "Oblivion"], swatches: [["#ffffff", "#8a5a1a"], ["#f8f1de", "#8a2f0c"], ["#fafdfe", "#0f766e"], ["#171213", "#e4583f"]] },
-      { key: "theme", legend: "Colour", help: "Auto follows your device's light or dark setting.", labels: ["Auto", "Light", "Dark"] },
+      { key: "theme", legend: "Color", help: "Auto follows your device's light or dark setting.", labels: ["Auto", "Light", "Dark"] },
       { key: "size", legend: "Text size", help: "Scales all text and spacing.", labels: ["Small", "Medium", "Large"] },
       { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] }
     ];

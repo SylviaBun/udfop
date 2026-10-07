@@ -24,7 +24,7 @@
 }
 :root[data-theme="light"] { color-scheme: light; }
 
-/* themes: each skin defines light and dark; Auto colour follows the device */
+/* themes: each skin defines light and dark; Auto color follows the device */
 /* parchment */
 html[data-skin="parchment"] {
   --page: #e9dfc8; --paper: #f8f1de; --fg: #2a2116; --muted: #65553d; --line: #b9a77c; --soft: #eadfc3; --softer: #f3ead2; --link: #8a2f0c;
@@ -271,7 +271,7 @@ body.settings-open #settings-panel { display: block; }
   #page, html[data-width="wide"] #page, body.settings-open #page, html[data-width="wide"] body.settings-open #page { grid-template-columns: 1fr; }
 }
 
-/* theme picker: a 2 x 2 grid with a small colour dot */
+/* theme picker: a 2 x 2 grid with a small color dot */
 .seg.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
 .seg.grid label + label { border-left: 0; }
 .seg.grid span { display: flex; align-items: center; gap: 8px; padding: 8px 10px; }
