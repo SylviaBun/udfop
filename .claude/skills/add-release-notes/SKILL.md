@@ -5,6 +5,9 @@ description: Add new Daggerfall Online release notes to the wiki. Use when the u
 
 Run everything from the project root. The helper is `python tools/notes.py` (see README.md). Two steps need judgement and are done by you: turning raw notes into rows, and rewriting topic descriptions. The rest is scripted.
 
+## 0. Before you start
+Community contributors edit Game Guide pages (`web/guide/`) on GitHub, so the remote may have commits the local copy lacks. Run `git fetch` and `git status -sb`; if it says "behind", run `git pull --rebase` first, so the later push is not rejected. This workflow never touches `web/guide/`, `tools/guide.py` or the guide's page list: the Game Guide is hand-written and separate from the generated Patch Notes.
+
 ## 1. Fetch and prepare
 1. `python tools/notes.py fetch` (add `--dry-run` first if the user wants to see what is new). This prepends new GitHub releases to `data/release_notes.md`.
 2. `python tools/notes.py prepare`. It writes `data/inbox/pending.md` (raw notes, PR titles, allowed values), `data/inbox/topics.txt` (every existing topic, its hub and systems), `data/inbox/rows.draft.jsonl` (a pre-filled draft) and `data/inbox/skipped.txt` (bullets it left out). If it says nothing is pending, stop.
@@ -35,3 +38,6 @@ Read `data/inbox/describe.md`. For each topic listed, write one line `Topic ||| 
 
 ## 5. Build and check
 `python tools/notes.py build` rebuilds `web/data.js` and reports topics with no description, descriptions for unknown topics and any stale ones. Open `web/index.html` and check the new patch page and one changed topic. Report to the user: which versions were added, how many rows, any new topics and their hubs, and anything uncertain.
+
+## 6. Commit, then hand over the push
+Run `python tools/notes.py selftest`, then commit the new data, descriptions and `web/data.js` (`git add -A` is safe: generated files such as `web/guide/index.json` and the local-only release text are git-ignored). Commit with the project identity (tau / tau-samsara@users.noreply.github.com) and no personal email. Do not push: tell the user to run `git pull --rebase` (only if GitHub has new commits) and `git push`, then hard-refresh the site once the deploy finishes. The deploy workflow rebuilds the Game Guide page list by itself.
