@@ -83,7 +83,7 @@ In short: **a guide page is found through its category, its title, search and th
 | `[text](https://example.com)` | an outside link, marked with a small **↗** |
 | `![what it shows](images/party-rest-camp.png)` | a picture (see below) |
 
-The small raised marker after a link says where it goes. **PN** means a Patch Notes page and **↗** means another website. Links to other guide pages have no marker. The markers are added for you; do not type them. A line starting with *Patch notes:* that lists only Patch Notes links hides the markers, since the label already says so.
+The small raised marker after a link says where it goes. **PN** means a Patch Notes page and **↗** means another website. Links to other guide pages have no marker. The markers are added for you; do not type them. A paragraph made of an italic label followed only by Patch Notes links, such as the lines in a References section, hides the markers, since the label already says so.
 
 ## Formatting
 
@@ -111,6 +111,7 @@ Raw HTML is not supported. It is shown as plain text, which keeps pages safe and
 
 - Write what you know to be true and say where it comes from, such as testing in the game, a patch number or a developer post.
 - One subject per page. Link to other pages instead of repeating them.
+- Collect your reference links in a **References** section at the bottom of the page, grouped under italic labels, rather than at the end of every section. Link to a topic in the text only where the mention is natural.
 - The Patch Notes already record *what changed*. A guide page should say *how it works now*, and can link to the topic for the history, for example [[topic:Revenants]].
 - Use your own words. Do not paste the developers' release text or copy other sites.
 - Your writing is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) and credited to "UDFOP contributors".

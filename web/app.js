@@ -450,7 +450,7 @@
     function para(buf) {
       if (!buf.length) return;
       var text = buf.join(" ");
-      out.push((/^\*Patch notes:\*/.test(text) ? '<p class="related">' : "<p>") + inline(text) + "</p>");
+      out.push((/^\*[^*]+\*\s*(\[\[topic:[^\]]+\]\](,\s*|$))+$/.test(text) ? '<p class="related">' : "<p>") + inline(text) + "</p>");
     }
     while (i < lines.length) {
       var l = lines[i], m;
