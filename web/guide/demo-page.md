@@ -6,6 +6,8 @@ summary: A sample page that shows every feature of the Game Guide. Safe to delet
 
 This is a **demo page**. It contains no game information. It exists so you can see how a guide file turns into a page, and it can be deleted at any time by removing `web/guide/demo-page.md`.
 
+This is a change.
+
 ## Headings and text
 
 Normal paragraphs are written as plain text. You can use **bold**, *italics* and `inline code`. A blank line starts a new paragraph.
