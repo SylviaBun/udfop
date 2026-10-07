@@ -101,6 +101,12 @@ def main():
             t = target.strip().lower()
             if t not in seen and t not in topics and not t.startswith(('patch:', 'topic:')):
                 problems.append(('warn', p['slug'] + '.md', 'link [[%s]] matches no guide page or topic yet' % target.strip()))
+    cats = {}
+    for p in pages:
+        cats.setdefault(re.sub(r'\s+', ' ', p['category']).strip().lower(), set()).add(p['category'])
+    for key, spellings in cats.items():
+        if len(spellings) > 1:
+            problems.append(('warn', 'categories', 'the category is spelled more than one way: %s (use one spelling)' % ', '.join('"%s"' % x for x in sorted(spellings))))
     pages.sort(key=lambda p: (p['category'].lower(), p['title'].lower()))
     out = [{k: v for k, v in p.items() if not k.startswith('_')} for p in pages]
     with open(os.path.join(ROOT, 'index.json'), 'w', encoding='utf-8') as f:

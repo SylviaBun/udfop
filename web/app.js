@@ -398,7 +398,16 @@
       .replace(/(^|[\s(])_([^_\s][^_]*)_(?=[\s).,;:!?]|$)/g, "$1<i>$2</i>");
   }
   function plainText(s) { return s.replace(/\[\[([^\]|]+)(?:\|([^\]]*))?\]\]/g, function (m, t, l) { return l || t; }).replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, ""); }
-  function splitRow(l) { return l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(function (c) { return c.trim(); }); }
+  function splitRow(l) {
+    var cells = [], cur = "", t = l.trim().replace(/^\|/, "").replace(/([^\\])\|$/, "$1");
+    for (var k = 0; k < t.length; k++) {
+      if (t[k] === "\\" && t[k + 1] === "|") { cur += "|"; k++; }
+      else if (t[k] === "|") { cells.push(cur.trim()); cur = ""; }
+      else cur += t[k];
+    }
+    cells.push(cur.trim());
+    return cells;
+  }
 
   function markdown(src, title) {
     var lines = src.replace(/\r\n?/g, "\n").split("\n"), out = [], i = 0, first = true;
