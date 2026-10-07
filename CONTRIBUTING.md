@@ -11,7 +11,9 @@ UDFOP has two parts:
 
 **The full instructions are on the site:** [How to write a guide page](https://tau-samsara.github.io/udfop/#/guide/how-to-write-a-page). They cover the page format, links, how a page connects to the sidebar, search and the patch notes, and a formatting cheat sheet.
 
-The short version: a page is one Markdown file in `web/guide/`. Use **Write a page** on the site (or **Add file → Create new file** in `web/guide/` on GitHub), fill in the template, then **Commit changes → Propose changes**. You need a free GitHub account and nothing installed.
+The short version: a page is one Markdown file in `web/guide/`. Use **Write a page** on the site (or **Add file → Create new file** in `web/guide/` on GitHub), fill in the template, then **Commit changes → Propose changes**. You need a free GitHub account (with a verified email) and nothing installed.
+
+**You will need to fork the repository.** Only maintainers can change it directly, so GitHub creates a copy in your own account (a fork) the first time you propose a change, and asks you to agree. After that you must click **Create pull request**, twice, to send the change to the maintainers. The site's guide spells out each screen.
 
 The starter template is [`web/guide/_template.md`](web/guide/_template.md). It is the only copy: the site's **Write a page** link loads it, so edit that file to change what new pages start with.
 

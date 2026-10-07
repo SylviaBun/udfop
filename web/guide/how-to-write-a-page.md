@@ -4,16 +4,22 @@ category: Contributing
 summary: Add or fix a Game Guide page in a few minutes, and see how it connects to the rest of the site.
 ---
 
-Anyone can add to the Game Guide. A page is one plain text file, and you can write it entirely in your browser. You need a free GitHub account, and nothing else.
+Anyone can add to the Game Guide. A page is one plain text file, and you can write it entirely in your browser. You need a free GitHub account, and nothing installed.
+
+**You will need to fork the project.** Only the maintainers can change the project directly. When anyone else proposes a change, GitHub makes you your own copy of the project (a *fork*) and sends your change from it. GitHub does this for you, and it is free, but you will see it happen, and the steps below say when.
 
 ## The short version
 
-1. Click **Write a page** on the [Game Guide](#/guide) index.
-2. Fill in the three lines at the top (`title`, `category`, `summary (put a backslash before any pipe that belongs inside a cell), then write the page underneath.
-3. Click **Commit changes**, then **Propose changes**.
-4. A maintainer reviews it. Once it is merged, the page appears on the site within a few minutes. You do not need to edit any menu or list: the site builds those from the page files.
+1. **Sign in to GitHub** (a free account is enough, and a new account must have its email address confirmed).
+2. Click **Write a page** on the [Game Guide](#/guide) index. GitHub's editor opens with a template.
+3. Fill in the three lines at the top (`title`, `category` and `summary`), then write the page underneath. Choose a file name ending in `.md`.
+4. Click **Commit changes** (or **Propose changes** or **Propose new file**). GitHub tells you that you need to **fork the repository** to propose changes. Agree to it. A copy called `udfop` appears in your own GitHub account.
+5. GitHub then shows a comparison of your change. Click **Create pull request**, then click **Create pull request** once more on the next screen. This is the step people most often miss: until you do it, nobody has been told about your page.
+6. A maintainer reviews it and may ask for changes, which you make on the same pull request. Once it is merged, the page appears on the site within a few minutes. You do not need to edit any menu or list: the site builds those from the page files.
 
-To fix an existing page, click **Edit this page** at the bottom of it. It opens the same editor.
+To fix an existing page, click **Edit this page** at the bottom of it. It opens the same editor, and the same fork and pull request steps apply.
+
+If GitHub shows an error such as "An unexpected error occurred" when you fork, check that your email address is verified. Very new accounts are sometimes blocked from forking for a while. If you are stuck, report it from [Feedback and bugs](#/feedback).
 
 ## How a file becomes a page
 
@@ -91,7 +97,7 @@ Raw HTML is not supported. It is shown as plain text, which keeps pages safe and
 
 ## Pictures
 
-- Upload pictures to the **`web/guide/images/`** folder: open it on GitHub, choose **Add file → Upload files**, and do this in the same pull request as your page.
+- Upload pictures to the **`web/guide/images/`** folder. Once your fork exists (see above), open your fork on GitHub, switch to the branch GitHub made for your page (the branch menu at the top left of the file list), open `web/guide/images/`, and choose **Add file → Upload files**. The picture joins your open pull request automatically.
 - Reference a picture by its path, always starting with `images/`.
 - Name it after your page, such as `party-rest-camp.png`, so names do not clash and people can tell what it belongs to.
 - Use PNG, JPG, WebP or GIF, and keep each file under about 500 KB. Crop or shrink large screenshots.

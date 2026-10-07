@@ -384,7 +384,7 @@
     .then(function (t) { guideTemplate = t.replace(/^\ufeff/, "").replace(/\r\n/g, "\n"); refreshNewLinks(); })
     .catch(function () {});
   function contribBox() {
-    return '<div class="mbox"><b>Anyone can add or fix a page.</b> Pages are plain text files. ' +
+    return '<div class="mbox"><b>Anyone can add or fix a page.</b> Pages are plain text files. You need a free GitHub account, and GitHub will ask you to <b>fork</b> (copy) the project to propose a change. ' +
       '<a href="' + newPageUrl("") + '"' + newAttr("") + ' rel="noopener">Create a page</a> (it opens GitHub\'s editor with a starter template), or use <b>Edit this page</b> on any page. ' +
       '<a href="#/guide/how-to-write-a-page">How it works</a>.</div>';
   }
