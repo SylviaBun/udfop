@@ -55,23 +55,23 @@ which is useful for commands or in-game chat lines.
 
 ## Script injection attempts
 
-Every line below is a real attack attempt. None of them should do anything: HTML is shown as text, and unsafe links lose their link. If any of them ran, a page-wide counter named `window.hacked` would be set, and it must stay empty.
+Every line below is a real attack attempt. None of them should do anything: HTML is shown as text, and unsafe links lose their link. If any of them ran, a pop-up would appear.
 
-1. Script tag: <script>window.hacked = 1</script>
-2. Image error handler: <img src=x onerror="window.hacked = 2">
-3. Plain `javascript:` link: [click me](javascript:window.hacked=3)
-4. Mixed-case scheme: [click me](JaVaScRiPt:window.hacked=4)
-5. `data:` link: [click me](data:text/html,<script>window.hacked=5</script>)
-6. `javascript:` image: ![image](javascript:window.hacked=6)
-7. Raw anchor tag: <a href="javascript:window.hacked=7">click me</a>
+1. Script tag: <script>alert(1)</script>
+2. Image error handler: <img src=x onerror="alert(1)">
+3. Plain `javascript:` link: [click me](javascript:alert(1))
+4. Mixed-case scheme: [click me](JaVaScRiPt:alert(1))
+5. `data:` link: [click me](data:text/html,<script>alert(1)</script>)
+6. `javascript:` image: ![image](javascript:alert(1))
+7. Raw anchor tag: <a href="javascript:alert(1)">click me</a>
 8. Embedded frame: <iframe src="https://example.com"></iframe>
-9. Hidden control character before the scheme: [click me](javascript:window.hacked=9)
-10. HTML inside a wiki link: [[<img src=x onerror=window.hacked=10>]]
+9. Hidden control character before the scheme: [click me](javascript:alert(1))
+10. HTML inside a wiki link: [[<img src=x onerror=alert(1)>]]
 11. Event handler in a table cell:
 
 | Cell | Attempt |
 |---|---|
-| Handler | <b onmouseover="window.hacked=11">hover me</b> |
+| Handler | <b onmouseover="alert(1)">hover me</b> |
 
 ## What to look for
 

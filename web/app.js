@@ -380,12 +380,12 @@
     function keep(h) { stash.push(h); return "\u0000" + (stash.length - 1) + "\u0000"; }
     s = s.replace(/`([^`]+)`/g, function (m, c) { return keep("<code>" + esc(c) + "</code>"); });
     s = s.replace(/\[\[([^\]|]+?)(?:\|([^\]]*))?\]\]/g, function (m, t, l) { return keep(wikiLink(t, l)); });
-    s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, function (m, alt, src) {
+    s = s.replace(/!\[([^\]]*)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g, function (m, alt, src) {
       src = safeUrl(src); if (!src) return "";
       if (!/^(https?:|\/)/i.test(src)) src = "guide/" + src.replace(/^\.?\//, "");
       return keep('<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">');
     });
-    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (m, text, url) {
+    s = s.replace(/\[([^\]]+)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g, function (m, text, url) {
       url = safeUrl(url); if (!url) return text;
       var ext = /^https?:/i.test(url);
       return keep('<a href="' + esc(url) + '"' + (ext ? ' rel="noopener"' : "") + ">" + inlineBasic(text) + "</a>");
