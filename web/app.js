@@ -384,9 +384,8 @@
     .then(function (t) { guideTemplate = t.replace(/^\ufeff/, "").replace(/\r\n/g, "\n"); refreshNewLinks(); })
     .catch(function () {});
   function contribBox() {
-    return '<div class="mbox"><b>Anyone can add or fix a page.</b> Pages are plain text files. You need a free GitHub account, and GitHub will ask you to <b>fork</b> (copy) the project to propose a change. ' +
-      '<a href="' + newPageUrl("") + '"' + newAttr("") + ' rel="noopener">Create a page</a> (it opens GitHub\'s editor with a starter template), or use <b>Edit this page</b> on any page. ' +
-      '<a href="#/guide/how-to-write-a-page">How it works</a>.</div>';
+    return '<div class="mbox"><b>Anyone can add or fix a page.</b> You need a free GitHub account and your own copy (a <b>fork</b>) of the project, which you make on the project\'s GitHub page first. ' +
+      '<a href="#/guide/how-to-write-a-page">Step-by-step: how to write a guide page</a>.</div>';
   }
 
   /* Markdown: headings, paragraphs, **bold**, *italic*, `code`, links, images, lists, tables, quotes, code blocks, [[wiki links]].
@@ -556,7 +555,7 @@
         mdBase = (entry ? entry.slug : slug).indexOf("/") >= 0 ? (entry ? entry.slug : slug).replace(/[^/]*$/, "") : "";
         var rendered = markdown(fm.body, t); mdBase = "";
         box.innerHTML = '<div id="toc" class="toc"></div>' + rendered +
-          '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> · <a href="' + newPageUrl("") + '"' + newAttr("") + ' rel="noopener">Create a page</a></p>';
+          '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> (fork the project first) · <a href="#/guide/how-to-write-a-page">How to contribute</a></p>';
         buildToc();
       }).catch(function () {
         box.innerHTML = guideFailed ? guideUnavailable() : '<div class="mbox">There is no guide page called “' + esc(title) + '” yet. <a href="' + newPageUrl(title) + '"' + newAttr(title) + ' rel="noopener">Create it</a>, or try the search box.</div>';
@@ -568,7 +567,7 @@
     var n = guide ? guide.length : 0;
     var h = '<p>Welcome to <b>UDFOP</b>, the <b>Unofficial Daggerfall Online Pages</b>: a fan-made, community-edited reference for Daggerfall Online. It has two parts.</p>';
     h += '<div class="portals two">';
-    h += '<div class="portal"><h3>Game Guide</h3><div><p>How things work, written by players. ' + (n ? "<b>" + plural(n, "page") + "</b> so far." : "Be the first to add a page.") + '</p><p><a href="#/guide">Browse the Game Guide →</a><br><a href="' + newPageUrl("") + '"' + newAttr("") + ' rel="noopener">Write a page</a></p></div></div>';
+    h += '<div class="portal"><h3>Game Guide</h3><div><p>How things work, written by players. ' + (n ? "<b>" + plural(n, "page") + "</b> so far." : "Be the first to add a page.") + '</p><p><a href="#/guide">Browse the Game Guide →</a><br><a href="#/guide/how-to-write-a-page">How to write a page</a></p></div></div>';
     h += '<div class="portal"><h3>Patch Notes</h3><div><p>Every recorded change, patch by patch: <b>' + rows.length.toLocaleString() + "</b> changes to <b>" + topics.length + "</b> topics. Latest: <b>" + vlink(versions[0]) + "</b> (" + esc(dateOf(versions[0])) + ').</p><p><a href="#/patchnotes">Browse the Patch Notes →</a><br><a href="#/recent">Recent changes</a></p></div></div>';
     h += "</div>";
     h += "<p>Patch notes are compiled from the developers' public release notes by a script, so they are updated for each release. Guide pages are written and corrected by the community. <a href=\"#/about\">About UDFOP</a></p>";
