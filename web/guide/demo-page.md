@@ -1,6 +1,6 @@
 ---
 title: Demo page
-category: Demo
+category: Contributing
 summary: A sample page that shows every feature of the Game Guide. Safe to delete.
 ---
 
