@@ -323,3 +323,10 @@ sup.lt { font-size: .62em; line-height: 0; margin-left: 1px; font-weight: 700; l
 /* the automatic References section at the bottom of a guide page */
 ol.refs { margin: .3em 0 1em 1.8em; padding: 0; }
 ol.refs li { margin: 2px 0; }
+
+/* link previews */
+#preview { position: fixed; z-index: 30; max-width: 22rem; padding: 8px 12px; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); color: var(--fg); box-shadow: 0 4px 14px rgba(0, 0, 0, .28); font-size: .85rem; line-height: 1.4; pointer-events: none; }
+#preview[hidden] { display: none; }
+#preview .pk { font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+#preview .pt { margin: 1px 0 3px; font-size: .95rem; font-weight: 700; }
+#preview .pm { margin-top: 5px; font-size: .78rem; color: var(--muted); }

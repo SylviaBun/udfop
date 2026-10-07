@@ -9,8 +9,8 @@
 
   /* ---------- display settings (saved in this browser only) ---------- */
   var SETTINGS_KEY = "udfop.settings";
-  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"] };
-  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto" };
+  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"] };
+  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on" };
   function loadSettings() {
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {}; } catch (e) {}
@@ -23,7 +23,7 @@
   }
   function applySettings(st) {
     var d = document.documentElement;
-    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"]].forEach(function (p) {
+    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"]].forEach(function (p) {
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
   }
@@ -720,7 +720,8 @@
         labels: ["Default", "Parchment", "Iliac Bay", "Oblivion"], swatches: [["#ffffff", "#8a5a1a"], ["#f8f1de", "#8a2f0c"], ["#fafdfe", "#0f766e"], ["#171213", "#e4583f"]] },
       { key: "theme", legend: "Color", help: "Auto follows your device's light or dark setting.", labels: ["Auto", "Light", "Dark"] },
       { key: "size", legend: "Text size", help: "Scales all text and spacing.", labels: ["Small", "Medium", "Large"] },
-      { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] }
+      { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] },
+      { key: "previews", legend: "Link previews", help: "A short preview appears when you point at a link to a page or topic. Not shown on touch screens.", labels: ["On", "Off"] }
     ];
     body.innerHTML = GROUPS.map(function (g) {
       return '<fieldset class="setting"><legend>' + g.legend + "</legend><p class='muted'>" + g.help + '</p><div class="seg' + (g.grid ? " grid" : "") + '">' +
@@ -763,6 +764,87 @@
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && isOpen()) close(true); });
     sync();
     return { open: open, close: close };
+  })();
+
+  /* ---------- link previews: point at (or tab to) an internal link in the article for a short summary ---------- */
+  var previews = (function () {
+    var box = document.createElement("div"), timer = null, shownFor = null;
+    box.id = "preview"; box.setAttribute("role", "tooltip"); box.hidden = true;
+    document.body.appendChild(box);
+    var canHover = window.matchMedia ? window.matchMedia("(hover: hover) and (pointer: fine)") : { matches: true };
+    function enabled() { return document.documentElement.getAttribute("data-previews") !== "off" && canHover.matches; }
+    function clip(text, n) {
+      text = String(text || "").replace(/\s+/g, " ").trim();
+      if (text.length <= n) return text;
+      var cut = text.slice(0, n), dot = cut.lastIndexOf(". ");
+      return dot > n * 0.5 ? cut.slice(0, dot + 1) : cut.replace(/\s+\S*$/, "") + "…";
+    }
+    function content(href) {
+      var m = /^#\/(topic|guide|patch|hub|system)\/(.+)$/.exec(href), arg;
+      if (!m) return null;
+      try { arg = decodeURIComponent(m[2]); } catch (e) { arg = m[2]; }
+      if (m[1] === "topic") {
+        var l = byTopic[arg]; if (!l) return null;
+        var vs = vers(l), last = vs[vs.length - 1];
+        return { kind: "Patch Notes topic", title: arg,
+          text: D.desc && D.desc[arg] ? clip(D.desc[arg], 280) : "A topic with " + plural(l.length, "recorded change") + ".",
+          meta: plural(l.length, "change") + " · last patched " + last + " (" + dateOf(last) + ")" };
+      }
+      if (m[1] === "patch") {
+        var pl = byVersion[arg]; if (!pl) return null;
+        var rel = D.releases[arg], tn = uniq(pl.map(function (r) { return r.e; })).length;
+        return { kind: "Patch", title: "Patch " + arg, text: plural(pl.length, "change") + " to " + plural(tn, "topic") + ".",
+          meta: "Released " + dateOf(arg) + (rel && rel.prs.length ? " · " + plural(rel.prs.length, "pull request") : "") };
+      }
+      if (m[1] === "hub") {
+        var ht = hubs[arg]; if (!ht) return null;
+        return { kind: "Patch Notes category", title: arg, text: clip(ht.slice(0, 8).join(", ") + (ht.length > 8 ? ", …" : ""), 200), meta: plural(ht.length, "topic") };
+      }
+      if (m[1] === "system") {
+        var sl = bySystem[arg]; if (!sl) return null;
+        return { kind: "Game system", title: arg, text: "Changes to the " + arg + " system.", meta: plural(sl.length, "change") };
+      }
+      if (arg.indexOf("category/") === 0) {
+        var cat = arg.slice(9), n = (guide || []).filter(function (g) { return g.category === cat; }).length;
+        return n ? { kind: "Game Guide category", title: cat, text: "", meta: plural(n, "page") } : null;
+      }
+      var g = guideBySlug[arg.toLowerCase()] || guideByTitle[arg.toLowerCase()];
+      return g ? { kind: "Game Guide · " + g.category, title: g.title, text: g.summary || clip(g.text, 200), meta: "" } : null;
+    }
+    function hide() {
+      clearTimeout(timer); box.hidden = true;
+      if (shownFor) { shownFor.removeAttribute("aria-describedby"); shownFor = null; }
+    }
+    function show(a, ev) {
+      var c = content(a.getAttribute("href"));
+      if (!c || !enabled()) return;
+      box.innerHTML = '<div class="pk">' + esc(c.kind) + '</div><div class="pt">' + esc(c.title) + "</div>" +
+        (c.text ? "<div>" + esc(c.text) + "</div>" : "") + (c.meta ? '<div class="pm">' + esc(c.meta) + "</div>" : "");
+      box.hidden = false; a.setAttribute("aria-describedby", "preview"); shownFor = a;
+      var rects = a.getClientRects(), r = rects[0];
+      if (ev && ev.clientY != null) Array.prototype.forEach.call(rects, function (x) { if (ev.clientY >= x.top && ev.clientY <= x.bottom) r = x; });
+      var bw = box.offsetWidth, bh = box.offsetHeight, vw = document.documentElement.clientWidth, vh = window.innerHeight;
+      var left = Math.max(8, Math.min(r.left, vw - bw - 8));
+      var top = r.bottom + 6; if (top + bh > vh - 8 && r.top - bh - 6 > 8) top = r.top - bh - 6;
+      box.style.left = left + "px"; box.style.top = Math.max(8, top) + "px";
+    }
+    function target(e) {
+      var a = e.target.closest && e.target.closest("#app a[href^='#/']");
+      if (!a || a.classList.contains("missing") || a.hasAttribute("data-scroll") || a.getAttribute("href") === location.hash) return null;
+      return a;
+    }
+    document.addEventListener("mouseover", function (e) {
+      var a = target(e); if (!a || a === shownFor) return;
+      hide(); timer = setTimeout(function () { show(a, e); }, 350);
+    });
+    document.addEventListener("mouseout", function (e) { if (target(e)) hide(); });
+    document.addEventListener("focusin", function (e) { var a = target(e); if (a) { hide(); show(a); } });
+    document.addEventListener("focusout", function (e) { if (target(e)) hide(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") hide(); });
+    document.addEventListener("click", hide);
+    window.addEventListener("scroll", hide, { passive: true });
+    window.addEventListener("hashchange", hide);
+    return { hide: hide };
   })();
 
   /* highlight the first of these sidebar entries that exists (the exact page, then its breadcrumb parent) */
