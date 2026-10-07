@@ -7,7 +7,7 @@ at `https://tau-samsara.github.io/udfop/`.
 - **Topics:** every change is filed under a topic (Revenants, Market, Climbing and so on) with a short description of how it works now, a full history table and a breakdown by type.
 - **Patches:** one page per release, with links to the pull requests it came from.
 - **Browse and search:** categories, game systems, recent changes and full-text search.
-- **Settings:** text size (small, medium, large), page width (standard, wide) and colour (auto, light, dark) are chosen in a panel on the right, opened with the gear icon in the header (a docked column on desktop, a drawer like the menu on phones), and remembered in the visitor's own browser; nothing is sent anywhere.
+- **Settings:** theme (default, Parchment, Iliac Bay, Oblivion), colour (auto, light, dark), text size (small, medium, large) and page width (standard, wide) are chosen in a panel on the right, opened with the gear icon in the header (a docked column on desktop, a drawer like the menu on phones), and remembered in the visitor's own browser; nothing is sent anywhere.
 
 All changes come from the project's public
 [release notes](https://github.com/Lattymoy/daggerfall-js-source/releases), rewritten in short plain sentences.

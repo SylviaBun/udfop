@@ -9,8 +9,8 @@
 
   /* ---------- display settings (saved in this browser only) ---------- */
   var SETTINGS_KEY = "udfop.settings";
-  var SETTING_OPTIONS = { size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"] };
-  var SETTING_DEFAULTS = { size: "medium", width: "standard", theme: "auto" };
+  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"] };
+  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto" };
   function loadSettings() {
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {}; } catch (e) {}
@@ -23,7 +23,7 @@
   }
   function applySettings(st) {
     var d = document.documentElement;
-    [["size", "medium"], ["width", "standard"], ["theme", "auto"]].forEach(function (p) {
+    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"]].forEach(function (p) {
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
   }
@@ -404,13 +404,15 @@
     var panel = document.getElementById("settings-panel"), body = document.getElementById("settings-body"),
         gear = document.getElementById("gear"), st = loadSettings(), warned = false;
     var GROUPS = [
+      { key: "skin", legend: "Theme", help: "The overall look. Each theme has a light and a dark version.", grid: true,
+        labels: ["Default", "Parchment", "Iliac Bay", "Oblivion"], swatches: [["#ffffff", "#8a5a1a"], ["#f8f1de", "#8a2f0c"], ["#fafdfe", "#0f766e"], ["#171213", "#e4583f"]] },
+      { key: "theme", legend: "Colour", help: "Auto follows your device's light or dark setting.", labels: ["Auto", "Light", "Dark"] },
       { key: "size", legend: "Text size", help: "Scales all text and spacing.", labels: ["Small", "Medium", "Large"] },
-      { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] },
-      { key: "theme", legend: "Colour", help: "Auto follows your device's light or dark setting.", labels: ["Auto", "Light", "Dark"] }
+      { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] }
     ];
     body.innerHTML = GROUPS.map(function (g) {
-      return '<fieldset class="setting"><legend>' + g.legend + "</legend><p class='muted'>" + g.help + '</p><div class="seg">' +
-        SETTING_OPTIONS[g.key].map(function (v, i) { return '<label><input type="radio" name="' + g.key + '" value="' + v + '"><span>' + g.labels[i] + "</span></label>"; }).join("") +
+      return '<fieldset class="setting"><legend>' + g.legend + "</legend><p class='muted'>" + g.help + '</p><div class="seg' + (g.grid ? " grid" : "") + '">' +
+        SETTING_OPTIONS[g.key].map(function (v, i) { return '<label><input type="radio" name="' + g.key + '" value="' + v + '"><span>' + (g.swatches ? '<i class="dot" style="background:linear-gradient(135deg,' + g.swatches[i][0] + " 50%," + g.swatches[i][1] + ' 50%)"></i>' : "") + g.labels[i] + "</span></label>"; }).join("") +
         "</div></fieldset>";
     }).join("") + '<p><button class="more" id="reset-settings" type="button">Reset to defaults</button></p>' +
       '<p class="muted" id="settings-note">Saved in this browser only, so your choices do not follow you to another browser or device, and clearing your browser’s site data resets them. Nothing is sent anywhere.</p>';

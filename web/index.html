@@ -15,6 +15,7 @@
     if (s.size === "small" || s.size === "large") d.setAttribute("data-size", s.size);
     if (s.width === "wide") d.setAttribute("data-width", "wide");
     if (s.theme === "light" || s.theme === "dark") d.setAttribute("data-theme", s.theme);
+    if (["parchment", "iliac", "oblivion"].indexOf(s.skin) >= 0) d.setAttribute("data-skin", s.skin);
   } catch (e) {}
 })();
 </script>
