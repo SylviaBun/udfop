@@ -9,3 +9,5 @@ __pycache__/
 # the developer's verbatim release text stays on your machine (re-download with: python tools/notes.py fetch)
 data/release_notes.md
 data/normalized/sources.jsonl
+
+web/guide/index.json

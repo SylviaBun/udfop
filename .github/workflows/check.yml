@@ -1,0 +1,21 @@
+# Checks Game Guide pages in pull requests (duplicate titles, empty pages, front matter problems).
+name: Check Game Guide
+
+on:
+  pull_request:
+    paths:
+      - 'web/guide/**'
+      - 'tools/guide.py'
+
+permissions:
+  contents: read
+
+jobs:
+  guide:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/guide.py --check

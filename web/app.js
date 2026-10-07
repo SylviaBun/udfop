@@ -141,11 +141,11 @@
   /* ---------- views ---------- */
   var views = {};
 
-  views.home = function () {
+  views.patchnotes = function () {
     var latest = versions[0], lrows = byVersion[latest];
     var recent = uniq(rows.slice().sort(newest).slice(0, 80).map(function (r) { return r.e; })).slice(0, 12);
     var big = topics.slice().sort(function (a, b) { return byTopic[b].length - byTopic[a].length; }).slice(0, 12);
-    var h = '<p>Welcome to <b>UDFOP</b>, the <b>Unofficial Daggerfall Online Pages</b>, a fan-made reference for what has changed in Daggerfall Online. It covers <b>' +
+    var h = '<p>The patch notes record what has changed in Daggerfall Online, patch by patch and topic by topic. They cover <b>' +
       rows.length.toLocaleString() + "</b> recorded changes to <b>" + topics.length + '</b> topics across <b>' + versions.length + "</b> patches, from version " +
       esc(versions[versions.length - 1]) + " (" + esc(dateOf(versions[versions.length - 1])) + ") to " + esc(latest) + " (" + esc(dateOf(latest)) + ").</p>";
     h += '<div class="portals">';
@@ -160,7 +160,7 @@
       return "<li>" + hlink(n) + " <small>(" + hubs[n].length + ")</small></li>"; }).join("") + "</ul>";
     h += sec("Browse by game system", "Browse by game system", 2) + '<ul class="cols">' + systems.map(function (s) {
       return "<li>" + slink(s) + " <small>(" + bySystem[s].length + ")</small></li>"; }).join("") + "</ul>";
-    return { title: "Main Page", html: page("Main Page", h) };
+    return { title: "Patch Notes", html: page("Patch Notes", h, { hat: '<a href="#/">Main page</a> › Patch Notes' }) };
   };
 
   views.recent = function () {
@@ -294,14 +294,19 @@
       var s = (r.e + " " + r.x + " " + (r.n || "") + " " + (r.g || []).join(" ")).toLowerCase();
       return words.every(function (w) { return s.indexOf(w) >= 0; });
     });
+    var gp = (guide || []).filter(function (p) {
+      var s = (p.title + " " + p.summary + " " + p.category + " " + p.text).toLowerCase();
+      return words.every(function (w) { return s.indexOf(w) >= 0; });
+    });
     var h = "";
     if (!words.length) h = "<p>Type something in the search box.</p>";
     else {
-      h = '<p>Results for <b>' + esc(q) + "</b>: " + plural(tm.length, "matching topic") + " and " + plural(hit.length, "matching change") + ".</p>";
+      h = '<p>Results for <b>' + esc(q) + "</b>: " + plural(gp.length, "guide page") + ", " + plural(tm.length, "matching topic") + " and " + plural(hit.length, "matching change") + ".</p>";
+      if (gp.length) h += sec("Game Guide", "Game Guide", 2) + '<ul class="cols">' + gp.slice(0, 40).map(function (p) { return "<li>" + glink(p) + (p.summary ? ' <small class="muted">– ' + esc(p.summary) + "</small>" : "") + "</li>"; }).join("") + "</ul>";
       if (tm.length === 1 && tm[0].toLowerCase() === q.toLowerCase()) h = '<div class="mbox">There is a topic named “' + tlink(tm[0]) + "”.</div>" + h;
       if (tm.length) h += sec("Topics", "Topics", 2) + topicList(tm.slice(0, 80));
       if (hit.length) h += sec("Changes", "Changes", 2) + table(hit, ["Patch", "Topic", "Type", "Change"], 100);
-      if (!tm.length && !hit.length) h += "<p>No results. Try fewer or different words.</p>";
+      if (!tm.length && !hit.length && !gp.length) h += "<p>No results. Try fewer or different words.</p>";
     }
     return { title: "Search: " + q, html: page("Search", h) };
   };
@@ -310,13 +315,217 @@
     var latest = versions[0];
     var h = "<p><b>UDFOP</b>, the <b>Unofficial Daggerfall Online Pages</b>, is a fan-made patch notes wiki that records what has changed in <b>Daggerfall Online</b>, patch by patch and topic by topic. It is not affiliated with or endorsed by the game's developers, by Bethesda Softworks or by ZeniMax. <i>The Elder Scrolls</i>, <i>Daggerfall</i> and related names are trademarks of their respective owners.</p>";
     h += sec("Where the information comes from", "Where the information comes from", 2) +
-      "<p>Every change on this wiki comes from the <a href=\"https://github.com/Lattymoy/daggerfall-js-source/releases\" rel=\"noopener\">public release notes</a> of the project's GitHub repository. Each change has been rewritten in short plain sentences and filed under a topic, a game system and a type. Patch pages link to the pull requests the changes came from, and the release notes themselves remain the authoritative record.</p>";
-    h += sec("How the pages are written", "How the pages are written", 2) +
+      "<p>Every change in the Patch Notes comes from the <a href=\"https://github.com/Lattymoy/daggerfall-js-source/releases\" rel=\"noopener\">public release notes</a> of the project's GitHub repository. Each change has been rewritten in short plain sentences and filed under a topic, a game system and a type. Patch pages link to the pull requests the changes came from, and the release notes themselves remain the authoritative record.</p>";
+    h += sec("The Game Guide", "The Game Guide", 2) +
+      '<p>The <a href="#/guide">Game Guide</a> is written by the community in plain Markdown files, and anyone can add or correct a page through GitHub. See <a href="' + REPO + '/blob/main/CONTRIBUTING.md" rel="noopener">how to contribute</a>. Guide pages are the work of their contributors and have not been checked by the game developers.</p>';
+    h += sec("How the Patch Notes pages are written", "How the Patch Notes pages are written", 2) +
       "<p>The change tables are compiled from the release notes with a small script. The opening paragraph of each topic was written with the help of an AI assistant (Claude) from that topic's change history, and describes how the topic works as of its latest change. These paragraphs can be wrong or out of date, so the <b>History</b> table on each page is the thing to trust. Corrections are welcome.</p>";
     h += sec("Credits and licence", "Credits and licence", 2) +
-      "<p>Compiled and maintained by <b>tau</b>. The site code is released under the MIT licence and the topic descriptions and other original text are licensed CC BY 4.0. The change data is derived from the developer's release notes, and the game and its names belong to their owners.</p>";
+      "<p>Started and maintained by <b>tau</b>, with Game Guide pages written by their contributors. The site code is released under the MIT licence and the topic descriptions and other original text are licensed CC BY 4.0. The change data is derived from the developer's release notes, and the game and its names belong to their owners.</p>";
     h += sec("Coverage", "Coverage", 2) + "<p>" + rows.length.toLocaleString() + " changes in " + topics.length + " topics across " + versions.length + " patches, from " + esc(versions[versions.length - 1]) + " (" + esc(dateOf(versions[versions.length - 1])) + ") to " + esc(latest) + " (" + esc(dateOf(latest)) + ").</p>";
     return { title: "About UDFOP", html: page("About UDFOP", h, { hat: '<a href="#/">Main page</a> › About' }) };
+  };
+
+  /* ---------- Game Guide: Markdown pages in web/guide/, listed by guide/index.json ---------- */
+  var REPO = "https://github.com/tau-samsara/udfop";
+  var guide = null, guideFailed = false, guideBySlug = {}, guideByTitle = {};
+  var topicByLower = {};
+  topics.forEach(function (t) { topicByLower[t.toLowerCase()] = t; });
+
+  function guideLoaded(list) {
+    guide = list || []; guideBySlug = {}; guideByTitle = {};
+    guide.forEach(function (p) { guideBySlug[p.slug.toLowerCase()] = p; guideByTitle[p.title.toLowerCase()] = p; });
+    var cats = guideCategories();
+    document.getElementById("side-guide").innerHTML = Object.keys(cats).map(function (c) {
+      return '<li><a href="#/guide/category/' + enc(c) + '">' + esc(c) + " <small>(" + cats[c].length + ")</small></a></li>"; }).join("");
+  }
+  function guideCategories() {
+    var m = {};
+    (guide || []).forEach(function (p) { (m[p.category] = m[p.category] || []).push(p); });
+    return m;
+  }
+  function glink(p) { return '<a href="#/guide/' + p.slug.split("/").map(enc).join("/") + '">' + esc(p.title) + "</a>"; }
+  function newPageUrl(title) {
+    var name = (title || "new-page").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "new-page";
+    var tpl = "---\ntitle: " + (title || "Page title") + "\ncategory: \nsummary: \n---\n\nWrite your page here. Use ## for section headings.\n";
+    return REPO + "/new/main/web/guide?filename=" + enc(name + ".md") + "&value=" + enc(tpl);
+  }
+  function contribBox() {
+    return '<div class="mbox"><b>Anyone can add or fix a page.</b> Pages are plain text files. ' +
+      '<a href="' + newPageUrl("") + '" rel="noopener">Create a page</a> (it opens GitHub\'s editor with a template), or use <b>Edit this page</b> on any page. ' +
+      '<a href="' + REPO + '/blob/main/CONTRIBUTING.md" rel="noopener">How it works</a>.</div>';
+  }
+
+  /* Markdown: headings, paragraphs, **bold**, *italic*, `code`, links, images, lists, tables, quotes, code blocks, [[wiki links]].
+     All text is escaped first, so a page cannot inject HTML or scripts. */
+  function safeUrl(u) {
+    u = u.trim();
+    if (/^(https?:|mailto:|#)/i.test(u)) return u;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(u) || u.indexOf("//") === 0) return "";
+    return u;
+  }
+  function wikiLink(target, label) {
+    var raw = target.trim(), low = raw.toLowerCase(), t;
+    if (low.indexOf("topic:") === 0) { t = topicByLower[low.slice(6).trim()]; return t ? tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") : esc(label || raw.slice(6)); }
+    if (low.indexOf("patch:") === 0) { var v = raw.slice(6).trim(); return byVersion[v] ? '<a href="#/patch/' + enc(v) + '">' + esc(label || v) + "</a>" : esc(label || v); }
+    var g = guideByTitle[low] || guideBySlug[low];
+    if (g) return '<a href="#/guide/' + g.slug.split("/").map(enc).join("/") + '">' + esc(label || g.title) + "</a>";
+    t = topicByLower[low];
+    if (t) return tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<");
+    return '<a class="missing" href="' + newPageUrl(raw) + '" rel="noopener" title="No page called this yet. Click to create it.">' + esc(label || raw) + "</a>";
+  }
+  function inline(s) {
+    var stash = [];
+    function keep(h) { stash.push(h); return "\u0000" + (stash.length - 1) + "\u0000"; }
+    s = s.replace(/`([^`]+)`/g, function (m, c) { return keep("<code>" + esc(c) + "</code>"); });
+    s = s.replace(/\[\[([^\]|]+?)(?:\|([^\]]*))?\]\]/g, function (m, t, l) { return keep(wikiLink(t, l)); });
+    s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, function (m, alt, src) {
+      src = safeUrl(src); if (!src) return "";
+      if (!/^(https?:|\/)/i.test(src)) src = "guide/" + src.replace(/^\.?\//, "");
+      return keep('<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">');
+    });
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (m, text, url) {
+      url = safeUrl(url); if (!url) return text;
+      var ext = /^https?:/i.test(url);
+      return keep('<a href="' + esc(url) + '"' + (ext ? ' rel="noopener"' : "") + ">" + inlineBasic(text) + "</a>");
+    });
+    s = inlineBasic(s);
+    return s.replace(/\u0000(\d+)\u0000/g, function (m, i) { return stash[+i]; });
+  }
+  function inlineBasic(s) {
+    return esc(s).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/(^|[\s(])\*([^*\s][^*]*)\*/g, "$1<i>$2</i>")
+      .replace(/(^|[\s(])_([^_\s][^_]*)_(?=[\s).,;:!?]|$)/g, "$1<i>$2</i>");
+  }
+  function plainText(s) { return s.replace(/\[\[([^\]|]+)(?:\|([^\]]*))?\]\]/g, function (m, t, l) { return l || t; }).replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, ""); }
+  function splitRow(l) { return l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(function (c) { return c.trim(); }); }
+
+  function markdown(src, title) {
+    var lines = src.replace(/\r\n?/g, "\n").split("\n"), out = [], i = 0, first = true;
+    function para(buf) { if (buf.length) out.push("<p>" + inline(buf.join(" ")) + "</p>"); }
+    while (i < lines.length) {
+      var l = lines[i], m;
+      if (!l.trim()) { i++; continue; }
+      if ((m = /^```/.exec(l))) {
+        var code = []; i++;
+        while (i < lines.length && !/^```/.test(lines[i])) code.push(lines[i++]);
+        i++; out.push("<pre><code>" + esc(code.join("\n")) + "</code></pre>"); continue;
+      }
+      if ((m = /^(#{1,6})\s+(.*?)\s*#*\s*$/.exec(l))) {
+        var text = plainText(m[2]);
+        if (first && m[1].length === 1 && text.toLowerCase() === (title || "").toLowerCase()) { i++; first = false; continue; }
+        var lvl = Math.min(6, Math.max(2, m[1].length + 1));
+        out.push(lvl <= 3 ? sec(text, text, lvl) : "<h" + lvl + ">" + inline(m[2]) + "</h" + lvl + ">"); i++; first = false; continue;
+      }
+      first = false;
+      if (/^\s*([-*_])\s*(\1\s*){2,}$/.test(l)) { out.push("<hr>"); i++; continue; }
+      if (/^>/.test(l)) {
+        var q = [];
+        while (i < lines.length && /^>/.test(lines[i])) q.push(lines[i++].replace(/^>\s?/, ""));
+        out.push("<blockquote>" + markdown(q.join("\n")) + "</blockquote>"); continue;
+      }
+      if (l.indexOf("|") >= 0 && i + 1 < lines.length && /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(lines[i + 1])) {
+        var head = splitRow(l), body = []; i += 2;
+        while (i < lines.length && lines[i].trim() && lines[i].indexOf("|") >= 0) body.push(splitRow(lines[i++]));
+        out.push('<div class="wrap"><table class="wikitable"><thead><tr>' + head.map(function (c) { return "<th>" + inline(c) + "</th>"; }).join("") +
+          "</tr></thead><tbody>" + body.map(function (r) { return "<tr>" + head.map(function (_, k) { return "<td>" + inline(r[k] || "") + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>");
+        continue;
+      }
+      if (/^\s*([-*+]|\d+[.)])\s+/.test(l)) {
+        var items = [];
+        while (i < lines.length && lines[i].trim() && (/^\s*([-*+]|\d+[.)])\s+/.test(lines[i]) || /^\s{2,}\S/.test(lines[i]))) items.push(lines[i++]);
+        out.push(list(items)); continue;
+      }
+      var buf = [];
+      while (i < lines.length && lines[i].trim() && !/^(```|#{1,6}\s|>)/.test(lines[i]) && !/^\s*([-*+]|\d+[.)])\s+/.test(lines[i])) buf.push(lines[i++].trim());
+      para(buf);
+    }
+    return out.join("\n");
+  }
+  function list(items) {
+    function indentOf(l) { return l.match(/^\s*/)[0].replace(/\t/g, "  ").length; }
+    function build(from, to, base) {
+      var m0 = /^\s*(\d+[.)])/.exec(items[from]), tag = m0 ? "ol" : "ul", h = "<" + tag + ">", k = from;
+      while (k < to) {
+        var m = /^\s*(?:[-*+]|\d+[.)])\s+(.*)$/.exec(items[k]), text = m ? m[1] : items[k].trim(), j = k + 1;
+        while (j < to && (indentOf(items[j]) > base || !/^\s*([-*+]|\d+[.)])\s+/.test(items[j]))) j++;
+        var kids = "";
+        if (j > k + 1) {
+          var sub = items.slice(k + 1, j).filter(function (x) { return /^\s*([-*+]|\d+[.)])\s+/.test(x); });
+          if (sub.length) kids = list(sub); else text += " " + items.slice(k + 1, j).map(function (x) { return x.trim(); }).join(" ");
+        }
+        h += "<li>" + inline(text) + kids + "</li>"; k = j;
+      }
+      return h + "</" + tag + ">";
+    }
+    return build(0, items.length, indentOf(items[0]));
+  }
+  function frontMatter(raw) {
+    raw = raw.replace(/^﻿/, "").replace(/\r\n/g, "\n");
+    var meta = {}, body = raw;
+    if (raw.indexOf("---\n") === 0) {
+      var end = raw.indexOf("\n---", 4);
+      if (end > 0) {
+        raw.slice(4, end).split("\n").forEach(function (ln) { var c = ln.indexOf(":"); if (c > 0) meta[ln.slice(0, c).trim().toLowerCase()] = ln.slice(c + 1).trim().replace(/^["']|["']$/g, ""); });
+        body = raw.slice(end + 4).replace(/^\n+/, "");
+      }
+    }
+    return { meta: meta, body: body };
+  }
+
+  var GUIDE_HAT = '<a href="#/">Main page</a> › <a href="#/guide">Game Guide</a>';
+  function guideUnavailable() {
+    return '<div class="mbox">The Game Guide could not be loaded. If you opened <code>index.html</code> straight from a folder, the browser blocks it: serve the <code>web</code> folder instead (for example <code>python -m http.server --directory web</code>) or use the published site. If you just added pages, run <code>python tools/guide.py</code> to refresh the list.</div>';
+  }
+
+  views.guide = function (arg) {
+    if (arg && arg.indexOf("category/") === 0) return views.guidecat(arg.slice(9));
+    if (arg) return views.guidepage(arg);
+    var h = "<p>The Game Guide is the community-written part of UDFOP: how things in Daggerfall Online work, written by players. Unlike the patch notes it is edited by hand, so anyone can improve it.</p>" + contribBox();
+    if (guide === null) h += "<p>Loading…</p>";
+    else if (guideFailed) h += guideUnavailable();
+    else if (!guide.length) h += "<p>There are no guide pages yet. Be the first to write one.</p>";
+    else {
+      var cats = guideCategories();
+      Object.keys(cats).forEach(function (c) {
+        h += sec(c, c, 2) + "<ul class=\"cols\">" + cats[c].map(function (p) { return "<li>" + glink(p) + (p.summary ? " <small class=\"muted\">– " + esc(p.summary) + "</small>" : "") + "</li>"; }).join("") + "</ul>";
+      });
+    }
+    return { title: "Game Guide", html: page("Game Guide", h, { hat: '<a href="#/">Main page</a> › Game Guide' }) };
+  };
+  views.guidecat = function (c) {
+    var list = (guide || []).filter(function (p) { return p.category === c; });
+    var h = guide === null ? "<p>Loading…</p>" : list.length ? '<ul class="cols">' + list.map(function (p) { return "<li>" + glink(p) + (p.summary ? " <small class=\"muted\">– " + esc(p.summary) + "</small>" : "") + "</li>"; }).join("") + "</ul>" : "<p>No pages in this category.</p>";
+    return { title: c, html: page(esc(c), h, { hat: GUIDE_HAT + " › " + esc(c) }), toc: false };
+  };
+  views.guidepage = function (slug) {
+    var entry = guideBySlug[slug.toLowerCase()] || guideByTitle[slug.toLowerCase()];
+    var title = entry ? entry.title : slug.split("/").pop();
+    var slugPath = (entry ? entry.slug : slug).split("/").map(enc).join("/");
+    return { title: title, html: page(esc(title), '<div id="gp"><p>Loading…</p></div>', { hat: GUIDE_HAT }), after: function () {
+      var box = document.getElementById("gp");
+      fetch("guide/" + slugPath + ".md").then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); }).then(function (raw) {
+        var fm = frontMatter(raw), t = fm.meta.title || title, cat = fm.meta.category || (entry && entry.category) || "General";
+        document.title = t + " – " + SHORT;
+        document.querySelector("h1.title").textContent = t;
+        document.querySelector(".hat").innerHTML = GUIDE_HAT + ' › <a href="#/guide/category/' + enc(cat) + '">' + esc(cat) + "</a>";
+        box.innerHTML = '<div id="toc" class="toc"></div>' + markdown(fm.body, t) +
+          '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> · <a href="' + newPageUrl("") + '" rel="noopener">Create a page</a></p>';
+        buildToc();
+      }).catch(function () {
+        box.innerHTML = guideFailed ? guideUnavailable() : '<div class="mbox">There is no guide page called “' + esc(title) + '” yet. <a href="' + newPageUrl(title) + '" rel="noopener">Create it</a>, or try the search box.</div>';
+      });
+    }, toc: false };
+  };
+
+  views.home = function () {
+    var n = guide ? guide.length : 0;
+    var h = '<p>Welcome to <b>UDFOP</b>, the <b>Unofficial Daggerfall Online Pages</b>: a fan-made, community-edited reference for Daggerfall Online. It has two parts.</p>';
+    h += '<div class="portals two">';
+    h += '<div class="portal"><h3>Game Guide</h3><div><p>How things work, written by players. ' + (n ? "<b>" + plural(n, "page") + "</b> so far." : "Be the first to add a page.") + '</p><p><a href="#/guide">Browse the Game Guide →</a><br><a href="' + newPageUrl("") + '" rel="noopener">Write a page</a></p></div></div>';
+    h += '<div class="portal"><h3>Patch Notes</h3><div><p>Every recorded change, patch by patch: <b>' + rows.length.toLocaleString() + "</b> changes to <b>" + topics.length + "</b> topics. Latest: <b>" + vlink(versions[0]) + "</b> (" + esc(dateOf(versions[0])) + ').</p><p><a href="#/patchnotes">Browse the Patch Notes →</a><br><a href="#/recent">Recent changes</a></p></div></div>';
+    h += "</div>";
+    h += "<p>Patch notes are compiled from the developers' public release notes by a script, so they are updated for each release. Guide pages are written and corrected by the community. <a href=\"#/about\">About UDFOP</a></p>";
+    return { title: "Main Page", html: page("Main Page", h), toc: false };
   };
 
   views.random = function () {
@@ -367,6 +576,9 @@
   document.getElementById("side-patches").innerHTML = versions.slice(0, 6).map(function (v) { return "<li>" + vlink(v) + "</li>"; }).join("") +
     '<li><a href="#/patches">More…</a></li>';
   document.getElementById("side-hubs").innerHTML = hubNames.map(function (n) { return "<li>" + hlink(n) + "</li>"; }).join("");
+  fetch("guide/index.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(guideLoaded)
+    .catch(function () { guideFailed = true; guideLoaded([]); })
+    .then(function () { if (/^#\/(guide|search)?(\/|$)/.test(location.hash) || location.hash === "" || location.hash === "#") route(); });
   document.getElementById("foot-stats").textContent = rows.length.toLocaleString() + " changes · " + topics.length + " topics · " + versions.length + " patches · latest " + versions[0] + " (" + dateOf(versions[0]) + ")";
 
   /* search box with suggestions */
@@ -377,7 +589,8 @@
     var pre = [], mid = [];
     topics.forEach(function (t) { var i = t.toLowerCase().indexOf(v); if (i === 0) pre.push(t); else if (i > 0) mid.push(t); });
     var list = pre.concat(mid).slice(0, 8);
-    sug.innerHTML = list.map(function (t) { return '<li><a href="#/topic/' + enc(t) + '">' + esc(t) + "<small>" + plural(byTopic[t].length, "change") + "</small></a></li>"; }).join("") +
+    var gl = (guide || []).filter(function (p) { return p.title.toLowerCase().indexOf(v) >= 0; }).slice(0, 4);
+    sug.innerHTML = gl.map(function (p) { return '<li><a href="#/guide/' + p.slug.split("/").map(enc).join("/") + '">' + esc(p.title) + "<small>guide</small></a></li>"; }).join("") + list.map(function (t) { return '<li><a href="#/topic/' + enc(t) + '">' + esc(t) + "<small>" + plural(byTopic[t].length, "change") + "</small></a></li>"; }).join("") +
       '<li><a href="#/search/' + enc(q.value.trim()) + '">Search for “' + esc(q.value.trim()) + "”<small>full text</small></a></li>";
     sug.hidden = false; cur = -1;
   }
@@ -461,8 +674,8 @@
     var view = views[name], res = view ? view(arg) : notFound(location.hash);
     if (!res) return;
     app.innerHTML = res.html;
-    document.title = (name === "home" ? SITE + " (Patch Notes Wiki)" : res.title + " – " + SHORT);
-    var nav = { home: "home", recent: "recent", topics: "topics", topic: "topics", hubs: "hubs", hub: "hubs", systems: "systems", system: "systems", patches: "patches", patch: "patches", about: "about" }[name];
+    document.title = (name === "home" ? SITE : res.title + " – " + SHORT);
+    var nav = { home: "home", guide: "guide", patchnotes: "patchnotes", recent: "recent", topics: "topics", topic: "topics", hubs: "hubs", hub: "hubs", systems: "systems", system: "systems", patches: "patches", patch: "patches", about: "about" }[name];
     Array.prototype.forEach.call(document.querySelectorAll("[data-nav]"), function (a) { a.classList.toggle("on", a.getAttribute("data-nav") === nav); });
     if (res.toc !== false) buildToc();
     if (res.after) res.after();

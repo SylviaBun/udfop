@@ -8,6 +8,7 @@ You may share and adapt it for any purpose, including commercially, as long as y
 "UDFOP (Unofficial Daggerfall Online Pages), by tau" and link to the licence.
 
 This covers:
+- the Game Guide pages in `web/guide/`, written by the project's contributors (see [CONTRIBUTING.md](CONTRIBUTING.md); credit "UDFOP contributors")
 - the topic descriptions in `data/descriptions/`
 - the site's own text (the About page and the README)
 - the topic groupings and merges in `data/hub_assignment.csv` and `data/merges.csv`
