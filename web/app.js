@@ -337,7 +337,7 @@
     guide.forEach(function (p) { guideBySlug[p.slug.toLowerCase()] = p; guideByTitle[p.title.toLowerCase()] = p; });
     var cats = guideCategories();
     document.getElementById("side-guide").innerHTML = Object.keys(cats).map(function (c) {
-      return '<li><a href="#/guide/category/' + enc(c) + '">' + esc(c) + " <small>(" + cats[c].length + ")</small></a></li>"; }).join("");
+      return '<li><a href="#/guide/category/' + enc(c) + '" data-nav="cat:' + esc(c) + '">' + esc(c) + " <small>(" + cats[c].length + ")</small></a></li>"; }).join("");
   }
   function guideCategories() {
     var m = {};
@@ -527,6 +527,7 @@
       fetch("guide/" + slugPath + ".md").then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); }).then(function (raw) {
         var fm = frontMatter(raw), t = fm.meta.title || title, cat = fm.meta.category || (entry && entry.category) || "General";
         document.title = t + " – " + SHORT;
+        setNav(["page:" + slug.toLowerCase(), "cat:" + cat]);
         document.querySelector("h1.title").textContent = t;
         document.querySelector(".hat").innerHTML = GUIDE_HAT + ' › <a href="#/guide/category/' + enc(cat) + '">' + esc(cat) + "</a>";
         box.innerHTML = '<div id="toc" class="toc"></div>' + markdown(fm.body, t) +
@@ -596,7 +597,7 @@
   /* sidebar */
   document.getElementById("side-patches").innerHTML = versions.slice(0, 6).map(function (v) { return "<li>" + vlink(v) + "</li>"; }).join("") +
     '<li><a href="#/patches">More…</a></li>';
-  document.getElementById("side-hubs").innerHTML = hubNames.map(function (n) { return "<li>" + hlink(n) + "</li>"; }).join("");
+  document.getElementById("side-hubs").innerHTML = hubNames.map(function (n) { return '<li><a href="#/hub/' + enc(n) + '" data-nav="hub:' + esc(n) + '">' + esc(n) + "</a></li>"; }).join("");
   fetch("guide/index.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(guideLoaded)
     .catch(function () { guideFailed = true; guideLoaded([]); })
     .then(function () { if (/^#\/(guide|search)?(\/|$)/.test(location.hash) || location.hash === "" || location.hash === "#") route(); });
@@ -687,6 +688,13 @@
     return { open: open, close: close };
   })();
 
+  /* highlight the first of these sidebar entries that exists (the exact page, then its breadcrumb parent) */
+  function setNav(keys) {
+    var links = document.querySelectorAll("[data-nav]"), pick = null;
+    keys.some(function (k) { return Array.prototype.some.call(links, function (a) { if (a.getAttribute("data-nav") === k) { pick = k; return true; } return false; }); });
+    Array.prototype.forEach.call(links, function (a) { a.classList.toggle("on", a.getAttribute("data-nav") === pick); });
+  }
+
   /* router */
   function route() {
     var parts = location.hash.replace(/^#\/?/, "").split("/"), name = parts[0] || "home", arg = parts.slice(1).join("/");
@@ -697,7 +705,13 @@
     app.innerHTML = res.html;
     document.title = (name === "home" ? SITE : res.title + " – " + SHORT);
     var nav = { home: "home", guide: "guide", patchnotes: "patchnotes", recent: "recent", topics: "topics", topic: "topics", hubs: "hubs", hub: "hubs", systems: "systems", system: "systems", patches: "patches", patch: "patches", about: "about" }[name];
-    Array.prototype.forEach.call(document.querySelectorAll("[data-nav]"), function (a) { a.classList.toggle("on", a.getAttribute("data-nav") === nav); });
+    var keys = [nav];
+    if (name === "guide") {
+      if (arg.indexOf("category/") === 0) keys = ["cat:" + arg.slice(9)];
+      else if (arg) { var ge = guideBySlug[arg.toLowerCase()] || guideByTitle[arg.toLowerCase()]; keys = ge ? ["page:" + ge.slug.toLowerCase(), "cat:" + ge.category] : ["page:" + arg.toLowerCase()]; }
+    } else if (name === "hub") keys = ["hub:" + arg, nav];
+    else if (name === "topic" && D.hubs[arg]) keys = ["hub:" + D.hubs[arg], nav];
+    setNav(keys);
     if (res.toc !== false) buildToc();
     if (res.after) res.after();
     setMenu(false); sug.hidden = true;
