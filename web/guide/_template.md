@@ -1,6 +1,7 @@
 ---
 title: Page title
-category: Combat
+# category: reuse a name from the Game Guide sidebar, or leave empty for "General"
+category:
 summary: One line saying what this page covers.
 ---
 
@@ -8,16 +9,11 @@ Start with one or two sentences saying what this is and why a player would care.
 
 ## Section heading
 
-Write in short paragraphs. Link to other pages with double brackets: [[Another guide page]].
-Link to a patch-notes topic the same way: [[topic:Revenants]].
+Write in short paragraphs. Delete these hints as you go.
 
-- Use bullet lists for options or steps.
-- **Bold** for key terms, *italics* for emphasis.
-
-| Item | What it does |
-|---|---|
-| Example | A table row |
+- Link to another guide page with `[[Page title]]`, and to a patch-notes topic with `[[topic:Name]]`.
+- Use **bold** for key terms and *italics* for emphasis.
 
 ## Sources
 
-Say where the information comes from (in-game testing, a patch number, a developer post) so others can check it.
+Say where the information comes from (testing in the game, a patch number, a developer post) so others can check it.

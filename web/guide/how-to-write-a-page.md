@@ -9,7 +9,7 @@ Anyone can add to the Game Guide. A page is one plain text file, and you can wri
 ## The short version
 
 1. Click **Write a page** on the [Game Guide](#/guide) index.
-2. Fill in the three lines at the top (`title`, `category`, `summary`), then write the page underneath.
+2. Fill in the three lines at the top (`title`, `category`, `summary (put a backslash before any pipe that belongs inside a cell), then write the page underneath.
 3. Click **Commit changes**, then **Propose changes**.
 4. A maintainer reviews it. Once it is merged, the page appears on the site within a few minutes. You do not need to edit any menu or list: the site builds those from the page files.
 
@@ -85,7 +85,7 @@ In short: **a guide page is found through its category, its title, search and th
 | `- item` | a bullet list (indent two spaces to nest) |
 | `1. step` | a numbered list |
 | `> quote` | a quotation |
-| `\| a \| b \|` rows with a `\|---\|---\|` line under the first | a table |
+| `\| a \| b \|` rows with a `\|---\|---\|` line under the first | a table (put a backslash before any pipe that belongs inside a cell) |
 
 Raw HTML is not supported. It is shown as plain text, which keeps pages safe and consistent.
 
@@ -97,4 +97,19 @@ Raw HTML is not supported. It is shown as plain text, which keeps pages safe and
 - Use your own words. Do not paste the developers' release text or copy other sites.
 - Your writing is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) and credited to "UDFOP contributors".
 
-The full contributor guide is in [CONTRIBUTING.md](https://github.com/tau-samsara/udfop/blob/main/CONTRIBUTING.md).
+## Review and credit
+
+- Every new or edited page is reviewed by a maintainer before it goes live. Mistakes are fixed the same way, by another edit.
+- Files and folders whose names start with `_` are ignored by the site (the starter template, `_template.md`, is one).
+- Folders are optional. A page inside `web/guide/combat/` gets the category "Combat" unless it sets its own.
+
+## Previewing on your computer (optional)
+
+You do not need this to contribute. To see a page before proposing it, run these from the project folder, then open <http://localhost:8000>:
+
+```
+python tools/guide.py --check
+python -m http.server 8000 --directory web
+```
+
+`guide.py` rebuilds the page list the site reads and reports problems such as duplicate titles. The deploy runs it for you.

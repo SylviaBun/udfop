@@ -345,15 +345,26 @@
     return m;
   }
   function glink(p) { return '<a href="#/guide/' + p.slug.split("/").map(enc).join("/") + '">' + esc(p.title) + "</a>"; }
+  /* The editor's starter text is web/guide/_template.md (the one template); this is only a fallback if it cannot be fetched. */
+  var FALLBACK_TPL = "---\ntitle: Page title\ncategory: \nsummary: \n---\n\nWrite your page here.\n";
+  var guideTemplate = null;
   function newPageUrl(title) {
-    var name = (title || "new-page").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "new-page";
-    var tpl = "---\ntitle: " + (title || "Page title") + "\ncategory: \nsummary: \n---\n\nWrite your page here. Use ## for section headings.\n";
-    return REPO + "/new/main/web/guide?filename=" + enc(name + ".md") + "&value=" + enc(tpl);
+    var tpl = guideTemplate || FALLBACK_TPL;
+    if (title) tpl = tpl.replace(/^title:.*$/m, function () { return "title: " + title; });
+    var name = title ? title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") : "";
+    return REPO + "/new/main/web/guide?" + (name ? "filename=" + enc(name + ".md") + "&" : "") + "value=" + enc(tpl);
   }
+  function newAttr(title) { return ' data-new="' + esc(title) + '"'; }
+  function refreshNewLinks() {
+    Array.prototype.forEach.call(document.querySelectorAll("a[data-new]"), function (a) { a.href = newPageUrl(a.getAttribute("data-new")); });
+  }
+  fetch("guide/_template.md").then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(function (t) { guideTemplate = t.replace(/^\ufeff/, "").replace(/\r\n/g, "\n"); refreshNewLinks(); })
+    .catch(function () {});
   function contribBox() {
     return '<div class="mbox"><b>Anyone can add or fix a page.</b> Pages are plain text files. ' +
-      '<a href="' + newPageUrl("") + '" rel="noopener">Create a page</a> (it opens GitHub\'s editor with a template), or use <b>Edit this page</b> on any page. ' +
-      '<a href="' + REPO + '/blob/main/CONTRIBUTING.md" rel="noopener">How it works</a>.</div>';
+      '<a href="' + newPageUrl("") + '"' + newAttr("") + ' rel="noopener">Create a page</a> (it opens GitHub\'s editor with a starter template), or use <b>Edit this page</b> on any page. ' +
+      '<a href="#/guide/how-to-write-a-page">How it works</a>.</div>';
   }
 
   /* Markdown: headings, paragraphs, **bold**, *italic*, `code`, links, images, lists, tables, quotes, code blocks, [[wiki links]].
@@ -373,7 +384,7 @@
     if (g) return '<a href="#/guide/' + g.slug.split("/").map(enc).join("/") + '">' + esc(label || g.title) + "</a>";
     t = topicByLower[low];
     if (t) return tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<");
-    return '<a class="missing" href="' + newPageUrl(raw) + '" rel="noopener" title="No page called this yet. Click to create it.">' + esc(label || raw) + "</a>";
+    return '<a class="missing" href="' + newPageUrl(raw) + '"' + newAttr(raw) + ' rel="noopener" title="No page called this yet. Click to create it.">' + esc(label || raw) + "</a>";
   }
   function inline(s) {
     var stash = [];
@@ -519,10 +530,10 @@
         document.querySelector("h1.title").textContent = t;
         document.querySelector(".hat").innerHTML = GUIDE_HAT + ' › <a href="#/guide/category/' + enc(cat) + '">' + esc(cat) + "</a>";
         box.innerHTML = '<div id="toc" class="toc"></div>' + markdown(fm.body, t) +
-          '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> · <a href="' + newPageUrl("") + '" rel="noopener">Create a page</a></p>';
+          '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> · <a href="' + newPageUrl("") + '"' + newAttr("") + ' rel="noopener">Create a page</a></p>';
         buildToc();
       }).catch(function () {
-        box.innerHTML = guideFailed ? guideUnavailable() : '<div class="mbox">There is no guide page called “' + esc(title) + '” yet. <a href="' + newPageUrl(title) + '" rel="noopener">Create it</a>, or try the search box.</div>';
+        box.innerHTML = guideFailed ? guideUnavailable() : '<div class="mbox">There is no guide page called “' + esc(title) + '” yet. <a href="' + newPageUrl(title) + '"' + newAttr(title) + ' rel="noopener">Create it</a>, or try the search box.</div>';
       });
     }, toc: false };
   };
@@ -531,7 +542,7 @@
     var n = guide ? guide.length : 0;
     var h = '<p>Welcome to <b>UDFOP</b>, the <b>Unofficial Daggerfall Online Pages</b>: a fan-made, community-edited reference for Daggerfall Online. It has two parts.</p>';
     h += '<div class="portals two">';
-    h += '<div class="portal"><h3>Game Guide</h3><div><p>How things work, written by players. ' + (n ? "<b>" + plural(n, "page") + "</b> so far." : "Be the first to add a page.") + '</p><p><a href="#/guide">Browse the Game Guide →</a><br><a href="' + newPageUrl("") + '" rel="noopener">Write a page</a></p></div></div>';
+    h += '<div class="portal"><h3>Game Guide</h3><div><p>How things work, written by players. ' + (n ? "<b>" + plural(n, "page") + "</b> so far." : "Be the first to add a page.") + '</p><p><a href="#/guide">Browse the Game Guide →</a><br><a href="' + newPageUrl("") + '"' + newAttr("") + ' rel="noopener">Write a page</a></p></div></div>';
     h += '<div class="portal"><h3>Patch Notes</h3><div><p>Every recorded change, patch by patch: <b>' + rows.length.toLocaleString() + "</b> changes to <b>" + topics.length + "</b> topics. Latest: <b>" + vlink(versions[0]) + "</b> (" + esc(dateOf(versions[0])) + ').</p><p><a href="#/patchnotes">Browse the Patch Notes →</a><br><a href="#/recent">Recent changes</a></p></div></div>';
     h += "</div>";
     h += "<p>Patch notes are compiled from the developers' public release notes by a script, so they are updated for each release. Guide pages are written and corrected by the community. <a href=\"#/about\">About UDFOP</a></p>";
