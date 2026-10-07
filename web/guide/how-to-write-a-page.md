@@ -47,6 +47,7 @@ Here is where each part shows up on the site:
 | `title` | The page heading and the browser tab. It is also the name other pages use to link to this one: `[[Party rest]]`. Titles must be unique. |
 | `category` | Puts the page in a group. The group appears in the **Game Guide** part of the sidebar, as its own page listing, and in the breadcrumb at the top of the page. |
 | `summary` | The one-line description shown next to the page's name in lists and in search results. |
+| `related` | Optional. Pages and topics to list in the References section even though the text does not link them. |
 | `## Heading` lines | Section headings. When a page has three or more, a **Contents** box is added automatically. The page title is added for you, so do not repeat it. |
 | The file name | The page's web address. `party-rest.md` becomes `#/guide/party-rest`. Use lower case and hyphens. |
 | `[[Another page]]` | A link to another guide page, by its title. |
@@ -83,7 +84,27 @@ In short: **a guide page is found through its category, its title, search and th
 | `[text](https://example.com)` | an outside link, marked with a small **↗** |
 | `![what it shows](images/party-rest-camp.png)` | a picture (see below) |
 
-The small raised marker after a link says where it goes. **PN** means a Patch Notes page and **↗** means another website. Links to other guide pages have no marker. The markers are added for you; do not type them. A paragraph made of an italic label followed only by Patch Notes links, such as the lines in a References section, hides the markers, since the label already says so.
+The small raised marker after a link says where it goes. **PN** means a Patch Notes page and **↗** means another website. Links to other guide pages have no marker. The markers are added for you; do not type them.
+
+## The References section is automatic
+
+Every guide page that links anywhere gets a **References** section at the bottom, built for you from the links in the text. Do not write one yourself.
+
+| Part | What it lists |
+|---|---|
+| **Game Guide** | the guide pages you linked, each with its summary |
+| **Patch Notes** | the topics and patches you linked, each with when it was last changed |
+| **External Links** | the outside websites you linked |
+
+Each link appears once, in the order it first appears in the text. Pages you did not link are left out.
+
+To list a related page or topic that does not belong in a sentence, add a `related:` line to the front matter at the top of the page, with names separated by commas:
+
+```
+related: Revenants, Companions, Party rest
+```
+
+A name that matches a guide page's title goes under Game Guide, and one that matches a Patch Notes topic goes under Patch Notes. The check warns about names that match neither.
 
 ## Formatting
 
@@ -111,7 +132,6 @@ Raw HTML is not supported. It is shown as plain text, which keeps pages safe and
 
 - Write what you know to be true and say where it comes from, such as testing in the game, a patch number or a developer post.
 - One subject per page. Link to other pages instead of repeating them.
-- Collect your reference links in a **References** section at the bottom of the page, grouped under italic labels, rather than at the end of every section. Link to a topic in the text only where the mention is natural.
 - The Patch Notes already record *what changed*. A guide page should say *how it works now*, and can link to the topic for the history, for example [[topic:Revenants]].
 - Use your own words. Do not paste the developers' release text or copy other sites.
 - Your writing is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) and credited to "UDFOP contributors".

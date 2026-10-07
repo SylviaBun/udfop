@@ -400,14 +400,25 @@
   /* small superscripts say where a link goes; links to other guide pages are the default and carry none */
   var MARK_PN = '<sup class="lt" title="Patch Notes page" aria-label="(Patch Notes)">PN</sup>';
   var MARK_EXT = '<sup class="lt" title="Opens another website" aria-label="(external site)">\u2197</sup>';
+  /* every link a page makes is noted here, and listed in a References section at the bottom */
+  var refs = null;
+  function newRefs(selfSlug) { return { self: (selfSlug || "").toLowerCase(), seen: {}, guide: [], topic: [], patch: [], ext: [] }; }
+  function noteRef(kind, key, item) {
+    if (!refs) return;
+    var id = kind + "|" + String(key).toLowerCase();
+    if (refs.seen[id]) return; refs.seen[id] = 1;
+    refs[kind].push(item);
+  }
+  function refs_self() { return refs ? refs.self : ""; }
   function wikiLink(target, label) {
     var raw = target.trim(), low = raw.toLowerCase(), t;
-    if (low.indexOf("topic:") === 0) { t = topicByLower[low.slice(6).trim()]; return t ? tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") + MARK_PN : esc(label || raw.slice(6)); }
-    if (low.indexOf("patch:") === 0) { var v = raw.slice(6).trim(); return byVersion[v] ? '<a href="#/patch/' + enc(v) + '">' + esc(label || v) + "</a>" + MARK_PN : esc(label || v); }
+    if (low.indexOf("topic:") === 0) { t = topicByLower[low.slice(6).trim()]; if (t) noteRef("topic", t, t); return t ? tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") + MARK_PN : esc(label || raw.slice(6)); }
+    if (low.indexOf("patch:") === 0) { var v = raw.slice(6).trim(); if (byVersion[v]) noteRef("patch", v, v); return byVersion[v] ? '<a href="#/patch/' + enc(v) + '">' + esc(label || v) + "</a>" + MARK_PN : esc(label || v); }
     var g = guideByTitle[low] || guideBySlug[low];
+    if (g) { if (g.slug.toLowerCase() !== refs_self()) noteRef("guide", g.slug, g); }
     if (g) return '<a href="#/guide/' + g.slug.split("/").map(enc).join("/") + '">' + esc(label || g.title) + "</a>";
     t = topicByLower[low];
-    if (t) return tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") + MARK_PN;
+    if (t) { noteRef("topic", t, t); return tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") + MARK_PN; }
     return '<a class="missing" href="' + newPageUrl(raw) + '"' + newAttr(raw) + ' rel="noopener" title="No page called this yet. Click to create it.">' + esc(label || raw) + "</a>";
   }
   function inline(s) {
@@ -423,6 +434,7 @@
     s = s.replace(/\[([^\]]+)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g, function (m, text, url) {
       url = safeUrl(url); if (!url) return text;
       var ext = /^https?:/i.test(url);
+      if (ext) noteRef("ext", url, { url: url, text: plainText(text) });
       return keep('<a href="' + esc(url) + '"' + (ext ? ' rel="noopener"' : "") + ">" + inlineBasic(text) + "</a>" + (ext ? MARK_EXT : ""));
     });
     s = inlineBasic(s);
@@ -444,14 +456,29 @@
     return cells;
   }
 
+  function buildReferences(r, related) {
+    (related || []).forEach(function (name) {
+      var low = name.toLowerCase().replace(/^topic:\s*/, ""), g = guideByTitle[low] || guideBySlug[low], t = topicByLower[low];
+      if (g && g.slug.toLowerCase() !== r.self) noteRef("guide", g.slug, g); else if (!g && t) noteRef("topic", t, t);
+    });
+    var h = "";
+    if (r.guide.length || r.topic.length || r.patch.length) {
+      h += sec("References", "References", 2);
+      if (r.guide.length) h += sec("Game Guide", "Game Guide", 3) + '<ol class="refs">' + r.guide.map(function (g) {
+        return "<li>" + glink(g) + (g.summary ? " – " + esc(g.summary) : "") + "</li>"; }).join("") + "</ol>";
+      if (r.topic.length || r.patch.length) h += sec("Patch Notes", "Patch Notes", 3) + '<ol class="refs">' +
+        r.topic.map(function (t) { var v = lastVer(byTopic[t]); return "<li>" + tlink(t) + " – last patched " + vlink(v) + " (" + esc(dateOf(v)) + ")</li>"; }).join("") +
+        r.patch.map(function (v) { return "<li>Patch " + vlink(v) + " – released " + esc(dateOf(v)) + "</li>"; }).join("") + "</ol>";
+    }
+    if (r.ext.length) h += sec("External Links", "External Links", 2) + '<ol class="refs">' + r.ext.map(function (e) {
+      var host = e.url.replace(/^https?:\/\//i, "").split("/")[0];
+      return '<li><a href="' + esc(e.url) + '" rel="noopener">' + esc(e.text || host) + "</a>" + MARK_EXT + ' <small class="muted">(' + esc(host) + ")</small></li>"; }).join("") + "</ol>";
+    return h;
+  }
   var mdBase = "";   /* folder of the page being rendered, so pictures resolve next to it */
   function markdown(src, title) {
     var lines = src.replace(/\r\n?/g, "\n").split("\n"), out = [], i = 0, first = true;
-    function para(buf) {
-      if (!buf.length) return;
-      var text = buf.join(" ");
-      out.push((/^\*[^*]+\*\s*(\[\[topic:[^\]]+\]\](,\s*|$))+$/.test(text) ? '<p class="related">' : "<p>") + inline(text) + "</p>");
-    }
+    function para(buf) { if (buf.length) out.push("<p>" + inline(buf.join(" ")) + "</p>"); }
     while (i < lines.length) {
       var l = lines[i], m;
       if (!l.trim()) { i++; continue; }
@@ -560,7 +587,9 @@
         document.querySelector("h1.title").textContent = t;
         document.querySelector(".hat").innerHTML = GUIDE_HAT + ' › <a href="#/guide/category/' + enc(cat) + '">' + esc(cat) + "</a>";
         mdBase = (entry ? entry.slug : slug).indexOf("/") >= 0 ? (entry ? entry.slug : slug).replace(/[^/]*$/, "") : "";
+        refs = newRefs(entry ? entry.slug : slug);
         var rendered = markdown(fm.body, t); mdBase = "";
+        rendered += buildReferences(refs, (fm.meta.related || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean)); refs = null;
         box.innerHTML = '<div id="toc" class="toc"></div>' + rendered +
           '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> (fork the project first) · <a href="#/guide/how-to-write-a-page">How to contribute</a></p>';
         buildToc();

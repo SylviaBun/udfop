@@ -75,7 +75,8 @@ def scan():
             if re.search(r'[^A-Za-z0-9._/ -]', slug):
                 problems.append(('warn', rel, 'file names are easier to link with only letters, numbers, spaces and hyphens'))
             pages.append(dict(slug=slug, title=title, category=category, summary=meta.get('summary', ''),
-                              text=plain(body)[:6000], _body=body))
+                              text=plain(body)[:6000], _body=body,
+                              _related=[x.strip() for x in meta.get('related', '').split(',') if x.strip()]))
     return pages, problems
 
 
@@ -144,6 +145,11 @@ def main():
     for key, spellings in cats.items():
         if len(spellings) > 1:
             problems.append(('warn', 'categories', 'the category is spelled more than one way: %s (use one spelling)' % ', '.join('"%s"' % x for x in sorted(spellings))))
+    for p in pages:
+        for name in p['_related']:
+            key = re.sub(r'^topic:\s*', '', name.lower())
+            if key not in seen and key not in topics:
+                problems.append(('warn', p['slug'] + '.md', 'related: "%s" matches no guide page or topic' % name))
     pages.sort(key=lambda p: (p['category'].lower(), p['title'].lower()))
     out = [{k: v for k, v in p.items() if not k.startswith('_')} for p in pages]
     with open(os.path.join(ROOT, 'index.json'), 'w', encoding='utf-8') as f:
