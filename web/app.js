@@ -302,7 +302,7 @@
     if (!words.length) h = "<p>Type something in the search box.</p>";
     else {
       h = '<p>Results for <b>' + esc(q) + "</b>: " + plural(gp.length, "guide page") + ", " + plural(tm.length, "matching topic") + " and " + plural(hit.length, "matching change") + ".</p>";
-      if (gp.length) h += sec("Game Guide", "Game Guide", 2) + '<ul class="cols">' + gp.slice(0, 40).map(function (p) { return "<li>" + glink(p) + (p.summary ? ' <small class="muted">– ' + esc(p.summary) + "</small>" : "") + "</li>"; }).join("") + "</ul>";
+      if (gp.length) h += sec("Game Guide", "Game Guide", 2) + guideCards(gp.slice(0, 40));
       if (tm.length === 1 && tm[0].toLowerCase() === q.toLowerCase()) h = '<div class="mbox">There is a topic named “' + tlink(tm[0]) + "”.</div>" + h;
       if (tm.length) h += sec("Topics", "Topics", 2) + topicList(tm.slice(0, 80));
       if (hit.length) h += sec("Changes", "Changes", 2) + table(hit, ["Patch", "Topic", "Type", "Change"], 100);
@@ -345,6 +345,11 @@
     return m;
   }
   function glink(p) { return '<a href="#/guide/' + p.slug.split("/").map(enc).join("/") + '">' + esc(p.title) + "</a>"; }
+  function guideCards(list) {
+    return '<ul class="gcards">' + list.map(function (p) {
+      return "<li>" + glink(p) + (p.summary ? '<span class="gsum">' + esc(p.summary) + "</span>" : "") + "</li>";
+    }).join("") + "</ul>";
+  }
   /* The editor's starter text is web/guide/_template.md (the one template); this is only a fallback if it cannot be fetched. */
   var FALLBACK_TPL = "---\ntitle: Page title\ncategory: \nsummary: \n---\n\nWrite your page here.\n";
   var guideTemplate = null;
@@ -508,14 +513,14 @@
     else {
       var cats = guideCategories();
       Object.keys(cats).forEach(function (c) {
-        h += sec(c, c, 2) + "<ul class=\"cols\">" + cats[c].map(function (p) { return "<li>" + glink(p) + (p.summary ? " <small class=\"muted\">– " + esc(p.summary) + "</small>" : "") + "</li>"; }).join("") + "</ul>";
+        h += sec(c, c, 2) + guideCards(cats[c]);
       });
     }
     return { title: "Game Guide", html: page("Game Guide", h, { hat: '<a href="#/">Main page</a> › Game Guide' }) };
   };
   views.guidecat = function (c) {
     var list = (guide || []).filter(function (p) { return p.category === c; });
-    var h = guide === null ? "<p>Loading…</p>" : list.length ? '<ul class="cols">' + list.map(function (p) { return "<li>" + glink(p) + (p.summary ? " <small class=\"muted\">– " + esc(p.summary) + "</small>" : "") + "</li>"; }).join("") + "</ul>" : "<p>No pages in this category.</p>";
+    var h = guide === null ? "<p>Loading…</p>" : list.length ? guideCards(list) : "<p>No pages in this category.</p>";
     return { title: c, html: page(esc(c), h, { hat: GUIDE_HAT + " › " + esc(c) }), toc: false };
   };
   views.guidepage = function (slug) {

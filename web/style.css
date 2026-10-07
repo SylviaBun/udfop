@@ -299,3 +299,9 @@ a.missing, a.missing:visited { color: var(--nerf); }
 #app pre { overflow-x: auto; padding: 8px 12px; border: 1px solid var(--line); background: var(--softer); font-size: .85rem; }
 #app code { font-size: .88em; }
 #app img { max-width: 100%; height: auto; }
+
+/* Game Guide page lists: one card per page, reflowing with the width */
+.gcards { list-style: none; margin: .4em 0 1.2em; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 10px; }
+.gcards li { display: flex; flex-direction: column; gap: 3px; margin: 0; padding: 8px 12px; border: 1px solid var(--line); background: var(--softer); }
+.gcards li > a { font-weight: 700; }
+.gcards .gsum { font-size: .85rem; color: var(--muted); }
