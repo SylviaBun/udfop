@@ -7,6 +7,28 @@
     Performance: "Performance", Economy: "Economy", QoL: "Quality of life", UI: "Interface", Other: "Other changes" };
   var TYPE_COLOR = { Buff: "var(--buff)", Nerf: "var(--nerf)", Removal: "var(--nerf)", New: "var(--new)", Rework: "var(--rework)", Fix: "var(--fix)" };
 
+  /* ---------- display settings (saved in this browser only) ---------- */
+  var SETTINGS_KEY = "udfop.settings";
+  var SETTING_OPTIONS = { size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"] };
+  var SETTING_DEFAULTS = { size: "medium", width: "standard", theme: "auto" };
+  function loadSettings() {
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {}; } catch (e) {}
+    var out = {};
+    Object.keys(SETTING_DEFAULTS).forEach(function (k) { out[k] = SETTING_OPTIONS[k].indexOf(saved[k]) >= 0 ? saved[k] : SETTING_DEFAULTS[k]; });
+    return out;
+  }
+  function saveSettings(st) {
+    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(st)); return true; } catch (e) { return false; }
+  }
+  function applySettings(st) {
+    var d = document.documentElement;
+    [["size", "medium"], ["width", "standard"], ["theme", "auto"]].forEach(function (p) {
+      if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
+    });
+  }
+  applySettings(loadSettings());
+
   /* ---------- helpers ---------- */
   function vcmp(a, b) {
     var x = a.split(".").map(Number), y = b.split(".").map(Number);
@@ -369,10 +391,60 @@
   });
   document.addEventListener("click", function (e) { if (!e.target.closest("#search")) sug.hidden = true; });
 
+  /* ---------- settings panel (slides in from the right) ---------- */
+  var settingsPanel = (function () {
+    var panel = document.getElementById("settings-panel"), body = document.getElementById("settings-body"),
+        gear = document.getElementById("gear"), st = loadSettings(), warned = false;
+    var GROUPS = [
+      { key: "size", legend: "Text size", help: "Scales all text and spacing.", labels: ["Small", "Medium", "Large"] },
+      { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] },
+      { key: "theme", legend: "Colour", help: "Auto follows your device's light or dark setting.", labels: ["Auto", "Light", "Dark"] }
+    ];
+    body.innerHTML = GROUPS.map(function (g) {
+      return '<fieldset class="setting"><legend>' + g.legend + "</legend><p class='muted'>" + g.help + '</p><div class="seg">' +
+        SETTING_OPTIONS[g.key].map(function (v, i) { return '<label><input type="radio" name="' + g.key + '" value="' + v + '"><span>' + g.labels[i] + "</span></label>"; }).join("") +
+        "</div></fieldset>";
+    }).join("") + '<p><button class="more" id="reset-settings" type="button">Reset to defaults</button></p>' +
+      '<p class="muted" id="settings-note">Saved in this browser only, so your choices do not follow you to another browser or device, and clearing your browser’s site data resets them. Nothing is sent anywhere.</p>';
+    var inputs = body.querySelectorAll("input");
+    function sync() { Array.prototype.forEach.call(inputs, function (i) { i.checked = st[i.name] === i.value; }); }
+    function change(next) {
+      st = next; applySettings(st); sync();
+      if (!saveSettings(st) && !warned) {
+        warned = true;
+        var note = document.getElementById("settings-note");
+        note.innerHTML = "<b>Your browser is blocking storage</b>, so these choices will reset when you leave this page. " + note.innerHTML;
+      }
+    }
+    Array.prototype.forEach.call(inputs, function (i) {
+      i.addEventListener("change", function () { var n = {}; Object.keys(st).forEach(function (k) { n[k] = st[k]; }); n[i.name] = i.value; change(n); });
+    });
+    document.getElementById("reset-settings").addEventListener("click", function () { change(JSON.parse(JSON.stringify(SETTING_DEFAULTS))); });
+    function isOpen() { return document.body.classList.contains("settings-open"); }
+    function open() {
+      st = loadSettings(); sync();
+      document.body.classList.add("settings-open");
+      gear.setAttribute("aria-expanded", "true"); panel.setAttribute("aria-hidden", "false");
+      var first = body.querySelector("input:checked"); if (first) first.focus();
+    }
+    function close(returnFocus) {
+      document.body.classList.remove("settings-open");
+      gear.setAttribute("aria-expanded", "false"); panel.setAttribute("aria-hidden", "true");
+      if (returnFocus) gear.focus();
+    }
+    gear.addEventListener("click", function () { if (isOpen()) close(true); else open(); });
+    document.getElementById("settings-close").addEventListener("click", function () { close(true); });
+    document.getElementById("settings-backdrop").addEventListener("click", function () { close(false); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && isOpen()) close(true); });
+    sync();
+    return { open: open, close: close };
+  })();
+
   /* router */
   function route() {
     var parts = location.hash.replace(/^#\/?/, "").split("/"), name = parts[0] || "home", arg = parts.slice(1).join("/");
     if (name !== "search") { try { arg = decodeURIComponent(arg); } catch (e) {} }
+    if (name === "settings") { location.replace("#/"); settingsPanel.open(); return; }
     var view = views[name], res = view ? view(arg) : notFound(location.hash);
     if (!res) return;
     app.innerHTML = res.html;
