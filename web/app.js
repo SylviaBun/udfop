@@ -423,7 +423,7 @@
       if ((m = /^(#{1,6})\s+(.*?)\s*#*\s*$/.exec(l))) {
         var text = plainText(m[2]);
         if (first && m[1].length === 1 && text.toLowerCase() === (title || "").toLowerCase()) { i++; first = false; continue; }
-        var lvl = Math.min(6, Math.max(2, m[1].length + 1));
+        var lvl = Math.min(6, Math.max(2, m[1].length));
         out.push(lvl <= 3 ? sec(text, text, lvl) : "<h" + lvl + ">" + inline(m[2]) + "</h" + lvl + ">"); i++; first = false; continue;
       }
       first = false;

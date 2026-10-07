@@ -65,6 +65,8 @@ def scan():
                 problems.append(('warn', rel, 'no title in the front matter; using "%s"' % title))
             folder = os.path.dirname(slug)
             category = meta.get('category') or (humanize(folder.split('/')[0]) if folder else 'General')
+            if re.search(r'<\s*/?\s*(script|iframe|object|embed|style|img|a)\b|javascript:|\bon[a-z]+\s*=|[\x00-\x08\x0b\x0c\x0e-\x1f]', body, flags=re.I):
+                problems.append(('warn', rel, 'contains HTML tags, script-like text or control characters: the site shows these as plain text, but a reviewer should look'))
             if not body.strip():
                 problems.append(('error', rel, 'the page is empty'))
             if re.search(r'[^A-Za-z0-9._/ -]', slug):
