@@ -47,6 +47,13 @@ downloads it into `data/release_notes.md` (git-ignored), and the verbatim bullet
 
 ## Adding new release notes
 
+**Before every session, bring your local copy up to date, in this order:**
+1. `git pull --rebase` fetches other people's commits (for example data another maintainer ingested, or Game Guide pages).
+2. `python tools/notes.py fetch` then refreshes `data/release_notes.md`.
+
+`data/release_notes.md` is the developers' original text. It is **git-ignored on purpose, so it is never shared through GitHub**: each maintainer's copy only changes when they run `fetch`. After someone else ingests new patches and you pull their data, your copy of the notes is behind the data until you run `fetch`. Symptoms of a stale copy: `status` shows a **WARNING** that the notes end before the rows do, `selftest` stops with a message saying so (older versions crashed with `FileNotFoundError … rows.draft.jsonl`), and `prepare` and `backtest` give wrong results. The fix is always `python tools/notes.py fetch`.
+
+
 Needs Python 3 only. Run from this folder. The quickest route is to ask Claude: **"add the new release notes"**.
 
 | Step | Command | Who |

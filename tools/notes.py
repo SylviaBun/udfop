@@ -420,6 +420,10 @@ def cmd_selftest(a):
     import tempfile
     if not os.path.exists(NOTES):
         sys.exit("selftest needs the raw release notes, which are not stored in the repo. Run `python tools/notes.py fetch` first.")
+    behind = notes_behind()
+    if behind:
+        sys.exit(f"selftest needs release_notes.md to be current: it ends at {behind[0]} but the ingested rows reach {behind[1]} "
+                 "(someone else added newer patches). Run `python tools/notes.py fetch` first.")
     real = [ALL, RELS, HUBS, "web/data.js", NOTES, f"{D}/merges.csv"] + sorted(glob.glob(f"{DESC}/*.txt"))
     before = {p: _hash(p) for p in real}
     results = []
@@ -672,6 +676,16 @@ def cmd_build(a):
         print(f"{len(stale)} stale description(s): run `python tools/notes.py describe`")
 
 
+def notes_behind():
+    """If the local copy of the release notes is older than the data already ingested, return (newest in notes, newest with rows)."""
+    notes = parse_notes()
+    rows = read_jsonl(ALL)
+    if not notes or not rows:
+        return None
+    last = max((r["version"] for r in rows), key=vkey)
+    return (notes[0]["version"], last) if vkey(notes[0]["version"]) < vkey(last) else None
+
+
 def cmd_status(a):
     notes = parse_notes()
     pend = pending_releases()
@@ -683,6 +697,10 @@ def cmd_status(a):
     print(f"inbox rows.jsonl present: {os.path.exists(f'{INBOX}/rows.jsonl')}")
     stale, _, _ = stale_topics()
     print(f"stale descriptions: {len(stale)}")
+    behind = notes_behind()
+    if behind:
+        print(f"WARNING: data/release_notes.md is behind the data (notes end at {behind[0]}, rows reach {behind[1]}). "
+              "Someone else ingested newer patches. Run `python tools/notes.py fetch` to refresh it; selftest, prepare and backtest need it current.")
 
 
 def main():

@@ -8,6 +8,8 @@ Run everything from the project root. The helper is `python tools/notes.py` (see
 ## 0. Before you start
 Community contributors edit Game Guide pages (`web/guide/`) on GitHub, so the remote may have commits the local copy lacks. Run `git fetch` and `git status -sb`; if it says "behind", run `git pull --rebase` first, so the later push is not rejected. This workflow never touches `web/guide/`, `tools/guide.py` or the guide's page list: the Game Guide is hand-written and separate from the generated Patch Notes.
 
+Then refresh the local release notes. `data/release_notes.md` is git-ignored (the developers' text must not be published), so it is **never updated by `git pull`**: another maintainer may have ingested newer patches whose notes your copy does not have. Always run `python tools/notes.py fetch` at the start of every session, even when `git pull` brought in new data. If you skip it, `status` prints a WARNING that the notes are behind the rows, and `selftest`, `prepare` and `backtest` stop or mislead. After pulling, `python tools/notes.py status` should show no WARNING and "pending: none" before you start.
+
 ## 1. Fetch and prepare
 1. `python tools/notes.py fetch` (add `--dry-run` first if the user wants to see what is new). This prepends new GitHub releases to `data/release_notes.md`.
 2. `python tools/notes.py prepare`. It writes `data/inbox/pending.md` (raw notes, PR titles, allowed values), `data/inbox/topics.txt` (every existing topic, its hub and systems), `data/inbox/rows.draft.jsonl` (a pre-filled draft) and `data/inbox/skipped.txt` (bullets it left out). If it says nothing is pending, stop.
