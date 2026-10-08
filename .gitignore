@@ -1,6 +1,7 @@
 # old or temporary material, not part of the site or the workflow
 _archive/
 _backups/
+_sandbox/
 data/inbox/
 __pycache__/
 .claude/launch.json
