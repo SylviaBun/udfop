@@ -376,3 +376,15 @@ html[data-toc="side"] #toc { display: none; }
 #side-toc li a { display: block; padding: 2px 8px; border-left: 3px solid transparent; }
 #side-toc li a.on { border-color: var(--accent); background: var(--soft); color: var(--fg); font-weight: 600; }
 #side-toc p { margin: 4px 0 0; text-align: center; }
+
+/* keys and buttons: {{W}}, {{Shift+Right click}}, {{Mouse 4}}, {{pad:RT}} */
+kbd.k { display: inline-block; min-width: 1.5em; padding: 0 .5em; margin: 0 1px; text-align: center; white-space: nowrap; line-height: 1.5;
+  font: 600 .82em/1.5 ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace; color: var(--fg); background: var(--softer);
+  border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; vertical-align: baseline; }
+kbd.k-mouse { border-radius: 10px; }
+kbd.k-pad { border-radius: 999px; border-color: var(--accent); }
+.kplus { margin: 0 2px; color: var(--muted); }
+.keys { white-space: nowrap; }
+
+/* guide tables size to their content; the 260px last-column minimum is for the patch-notes change text */
+#gp .wikitable td:last-child { min-width: 0; }

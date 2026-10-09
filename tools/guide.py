@@ -38,6 +38,7 @@ def plain(md):
     t = re.sub(r'```.*?```', ' ', md, flags=re.S)
     t = re.sub(r'!\[[^\]]*\]\([^)]*\)(\{[^}]*\})?', ' ', t)
     t = re.sub(r'\[\[([^\]\|]+)(?:\|([^\]]*))?\]\]', lambda m: m.group(2) or m.group(1), t)
+    t = re.sub(r'\{\{(?:pad\s*:\s*)?([^{}]+)\}\}', r'\1', t)
     t = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', t)
     t = re.sub(r'[#>*_`|~-]+', ' ', t)
     return re.sub(r'\s+', ' ', t).strip()

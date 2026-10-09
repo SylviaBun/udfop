@@ -346,6 +346,36 @@ And centered, 300 pixels wide, standing alone on its line:
 
 ![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg "Centered, 300 wide."){center 300}
 
+### Keys and buttons
+
+To show a keyboard key, a mouse button or a gamepad button, put its name between double braces. It is drawn as a small keycap, so readers can see at a glance what to press. Use this for things you **press**. Use bold for buttons and menu labels you **click on screen**, such as **Rest**, so the two are never mixed up.
+
+```
+Press {{W}} to move forward and hold {{Left Shift}} to run.
+{{Shift+Right click}} draws the bow, and {{Mouse 4}} switches the view.
+On a controller, hold {{pad:RT}}.
+```
+
+Rendered:
+
+Press {{W}} to move forward and hold {{Left Shift}} to run. {{Shift+Right click}} draws the bow, and {{Mouse 4}} switches the view. On a controller, hold {{pad:RT}}.
+
+- **Combinations** are joined with `+`, and each key gets its own cap, as in `{{Ctrl+Shift+K}}`. For a plus key itself, write `{{+}}`.
+- **Mouse buttons** are recognised by name (`Left click`, `Right click`, `Middle click`, `Mouse 3`, `Mouse 4`, `Mouse 5` and `Scroll`) and drawn with rounder corners than keyboard keys.
+- **Gamepad buttons** start with `pad:`, as in `{{pad:A}}`, and are drawn round. The prefix is not shown. Use the name printed on the button: A, B, X, Y, LB, RB, LT, RT, D-pad, Start.
+- **Keys with symbols** are written as the character and named in plain words after it, so readers who do not know the symbol can find it: `{{;}} (semicolon)`, `{{,}} (comma)` or `{{[}} (left bracket)`.
+- **Use the same names everywhere** so pages agree. Use these:
+
+| Kind | Names |
+|---|---|
+| Letters and digits | `A` to `Z` and `0` to `9`, as the character |
+| Function and editing | `F1` to `F12`, `Esc`, `Tab`, `Enter`, `Space`, `Backspace`, `Insert`, `Delete`, `Home`, `End`, `PgUp`, `PgDn` |
+| Arrows | `Up`, `Down`, `Left`, `Right` |
+| Modifiers | `Shift`, `Left Shift`, `Right Shift`, `Ctrl`, `Alt`, and `Left` or `Right` in front of each |
+| Number pad | `Numpad 0` to `Numpad 9`, `Numpad +`, `Numpad -`, `Numpad *`, `Numpad /`, `Numpad Enter` |
+
+Keycaps work in tables and in captions, but not inside the text of a link. Put the example in single backticks, as the code boxes on this page do, when you want to show the braces themselves.
+
 ### What the site does for you
 
 You do not write these. They come from what you wrote: a **Contents** box on any page with three or more headings (your first paragraph stays above it, and the paragraphs after it, up to the first heading, flow around it; with more than ten entries it lists the main sections and a "Show subsections" link; readers can move it into the left sidebar, which is the menu on a phone, where it follows the section being read), the page's place in the sidebar and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.

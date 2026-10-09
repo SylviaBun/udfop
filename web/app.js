@@ -449,11 +449,24 @@
       (cap ? "<figcaption>" + inline(cap) + "</figcaption>" : "") + "</figure>";
   }
 
+  /* Keys and buttons: {{W}}, {{Shift+Right click}}, {{Mouse 4}}, {{pad:RT}} become keycaps */
+  var MOUSE_KEY = /^(mouse\s*\d|(left|right|middle)\s*click|click|scroll(\s*(up|down|wheel))?|wheel)$/i;
+  function keycaps(text) {
+    var pad = /^pad\s*:/i.test(text); text = text.replace(/^pad\s*:\s*/i, "").trim();
+    var parts = text === "+" ? ["+"] : text.split("+").map(function (x) { return x.trim(); }).filter(Boolean);
+    if (!parts.length) return esc(text);
+    var caps = parts.map(function (k) {
+      var cls = pad ? "k k-pad" : MOUSE_KEY.test(k) ? "k k-mouse" : "k";
+      return '<kbd class="' + cls + '">' + esc(k) + "</kbd>";
+    });
+    return caps.length === 1 ? caps[0] : '<span class="keys">' + caps.join('<span class="kplus">+</span>') + "</span>";
+  }
   function inline(s) {
     var stash = [];
     function keep(h) { stash.push(h); return "\u0000" + (stash.length - 1) + "\u0000"; }
     s = s.replace(/`([^`]+)`/g, function (m, c) { return keep("<code>" + esc(c) + "</code>"); });
     s = s.replace(/\[\[([^\]|]+?)(?:\|([^\]]*))?\]\]/g, function (m, t, l) { return keep(wikiLink(t, l)); });
+    s = s.replace(/\{\{([^{}]+)\}\}/g, function (m, t) { return keep(keycaps(t)); });
     s = s.replace(IMG_RE, function (m, alt, src) {
       src = imgSrc(src); if (!src) return "";
       return keep('<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">');
