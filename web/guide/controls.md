@@ -20,7 +20,7 @@ The following keybinds are as default in the most recent build of Daggerfall Onl
 
 **Draw and Release Bow**: Defaults to Off, set to On to make it so that you can hold your right click button to draw the bow, and release it to fire. Left clicking with an arrow drawn unknocks it so that you can lower the bow without firing.
 
-**Sneak Stays On**: Defaults to Off. Enables toggling sneak mode instead of holding it. Functional, but might be irrelevant due to crouch and sneak being combined [[topics:Crouch]].
+**Sneak Stays On**: Defaults to Off. Enables toggling sneak mode instead of holding it. Functional, but might be irrelevant due to crouch and sneak being combined [[topic:Crouch]].
 
 **Gradual Start and Stop**: Defaults to Off. Enabling adds acceleration to the start of player movement, and deceleration to the end of player movement. Gives a more weighty feel, but may be disorienting.
 
