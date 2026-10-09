@@ -902,3 +902,15 @@ Waypoints,World and Overworld,,4,Online; UI,
 Blended Climates,World and Overworld,,3,World,
 Word Filter,Social and Chat,,5,Online,
 Privateer's Hold,World and Overworld,,2,World,
+Abyss Dungeons,World and Overworld,,30,Engine; Graphics; Items; Online; UI; World,
+Brass of Numidium,Items and Equipment,,1,Items,yes
+Dungeon Sizes,World and Overworld,,3,World,
+Heat Haze,Rendering,,1,Graphics,yes
+Hourlock,Items and Equipment,,4,Items,
+Iliac Hand,Social and Chat,,2,UI; World,yes
+Land Beyond the Bay,World and Overworld,,3,Engine; World,
+LeFay Monument,World and Overworld,,5,Online; World,
+Mode Wheel,Controls,,4,Controls,
+Snowfall,Rendering,,5,Graphics; World,
+Tavern Cards,Social and Chat,,7,Graphics; Online; World,
+Wrothgarian Zone,World and Overworld,,16,Combat; Items; UI; World,
