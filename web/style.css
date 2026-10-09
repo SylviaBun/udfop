@@ -363,3 +363,16 @@ html[data-skin="oblivion"] { --code: var(--new); }
 #toc .toc-toggle { display: block; margin: 6px auto 0; padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; cursor: pointer; }
 #toc .toc-toggle:hover { text-decoration: underline; }
 @media (max-width: 600px) { #toc.float { float: none; width: auto; max-width: none; margin: .4em 0 1em; } }
+
+/* Contents in the sidebar: the same panel that docks on a desktop and becomes the menu drawer on a phone */
+html:not([data-toc="side"]) #side-toc { display: none; }
+html[data-toc="side"] #toc { display: none; }
+#toc .toc-pin, #side-toc .toc-unpin { display: block; margin: 6px auto 0; padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; cursor: pointer; }
+#toc .toc-pin:hover, #side-toc .toc-unpin:hover { text-decoration: underline; }
+#side-toc { padding-bottom: 6px; border-bottom: 1px solid var(--line); margin-bottom: 6px; }
+#side-toc ol { margin: 0; padding: 0; list-style: none; }
+#side-toc ol ol { display: none; margin-left: 10px; }
+#side-toc li.open > ol { display: block; }
+#side-toc li a { display: block; padding: 2px 8px; border-left: 3px solid transparent; }
+#side-toc li a.on { border-color: var(--accent); background: var(--soft); color: var(--fg); font-weight: 600; }
+#side-toc p { margin: 4px 0 0; text-align: center; }

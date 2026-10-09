@@ -16,6 +16,7 @@
     if (s.width === "wide") d.setAttribute("data-width", "wide");
     if (s.theme === "light" || s.theme === "dark") d.setAttribute("data-theme", s.theme);
     if (["parchment", "iliac", "oblivion"].indexOf(s.skin) >= 0) d.setAttribute("data-skin", s.skin);
+    if (s.toc === "side") d.setAttribute("data-toc", "side");
   } catch (e) {}
 })();
 </script>
@@ -35,6 +36,11 @@
 </header>
 <div id="page">
   <aside id="side">
+    <nav aria-label="Contents of this page" id="side-toc" hidden>
+      <h3>Contents</h3>
+      <div id="side-toc-list"></div>
+      <p><button type="button" class="toc-unpin">Move back to the article</button></p>
+    </nav>
     <nav aria-label="Navigation">
       <h3>Navigation</h3>
       <ul>

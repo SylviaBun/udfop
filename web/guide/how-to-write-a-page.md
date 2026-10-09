@@ -348,7 +348,7 @@ And centered, 300 pixels wide, standing alone on its line:
 
 ### What the site does for you
 
-You do not write these. They come from what you wrote: a **Contents** box on any page with three or more headings (your first paragraph stays above it, and the paragraphs after it, up to the first heading, flow around it; with more than ten entries it lists the main sections and a "Show subsections" link), the page's place in the sidebar and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
+You do not write these. They come from what you wrote: a **Contents** box on any page with three or more headings (your first paragraph stays above it, and the paragraphs after it, up to the first heading, flow around it; with more than ten entries it lists the main sections and a "Show subsections" link; readers can move it into the left sidebar, which is the menu on a phone, where it follows the section being read), the page's place in the sidebar and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
 
 ## Not supported
 

@@ -6,7 +6,7 @@ at `https://tau-samsara.github.io/udfop/`.
 
 - **Game Guide:** how things in the game work, written by the community as plain Markdown pages in `web/guide/`. Anyone can add or fix a page from the GitHub website, with no tools installed: see [CONTRIBUTING.md](CONTRIBUTING.md).
 - **Patch Notes:** every change is filed under a topic (Revenants, Market, Climbing and so on) with a short description of how it works now, a full history table and a breakdown by type, plus one page per release. Browse by category or game system, see recent changes, or search. These are compiled by script from the developers' release notes.
-- **Settings:** theme (default, Parchment, Iliac Bay, Oblivion), color (auto, light, dark), text size (small, medium, large), page width (standard, wide) and link previews (on, off) are chosen in a panel on the right, opened with the gear icon in the header (a docked column on desktop, a drawer like the menu on phones), and remembered in the visitor's own browser; nothing is sent anywhere.
+- **Settings:** theme (default, Parchment, Iliac Bay, Oblivion), color (auto, light, dark), text size (small, medium, large), page width (standard, wide), where the Contents list sits (in the article, in the sidebar) and link previews (on, off) are chosen in a panel on the right, opened with the gear icon in the header (a docked column on desktop, a drawer like the menu on phones), and remembered in the visitor's own browser; nothing is sent anywhere.
 
 All Patch Notes changes come from the project's public
 [release notes](https://github.com/Lattymoy/daggerfall-js-source/releases), rewritten in short plain sentences.

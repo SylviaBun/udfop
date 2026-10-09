@@ -9,8 +9,8 @@
 
   /* ---------- display settings (saved in this browser only) ---------- */
   var SETTINGS_KEY = "udfop.settings";
-  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"] };
-  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on" };
+  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"], toc: ["article", "side"] };
+  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on", toc: "article" };
   function loadSettings() {
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {}; } catch (e) {}
@@ -23,7 +23,7 @@
   }
   function applySettings(st) {
     var d = document.documentElement;
-    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"]].forEach(function (p) {
+    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"], ["toc", "article"]].forEach(function (p) {
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
   }
@@ -684,23 +684,49 @@
     });
   }
 
+  function updateSetting(key, value) {
+    var st = loadSettings(); st[key] = value; saveSettings(st); applySettings(st);
+  }
+  var tocSpy = [];   /* [{el: heading, a: link in the side list, li: its item, top: true for a main section}] */
   function buildToc() {
-    var box = document.getElementById("toc"); if (!box) return;
+    var box = document.getElementById("toc"), side = document.getElementById("side-toc"), sideList = document.getElementById("side-toc-list");
+    tocSpy = []; side.hidden = true; sideList.innerHTML = "";
+    if (!box) return;
     var hs = app.querySelectorAll("h2.sec[data-toc], h3.sec[data-toc]");
     if (hs.length < 3) { box.remove(); return; }
-    var h = "<b>Contents</b><ol>", n2 = 0, n3 = 0, open = false;
+    var h = "<ol>", n2 = 0, n3 = 0, open = false;
     Array.prototype.forEach.call(hs, function (el) {
       var link = '<a href="' + location.hash + '" data-scroll="' + el.id + '">' + esc(el.getAttribute("data-toc")) + "</a>";
       if (el.tagName === "H2") { if (open) { h += "</ol></li>"; open = false; } n2++; n3 = 0; h += "<li>" + link; h += "</li>"; }
       else { if (!open) { h = h.replace(/<\/li>$/, "") + "<ol>"; open = true; } n3++; h += "<li>" + link + "</li>"; }
     });
     if (open) h += "</ol></li>";
-    box.innerHTML = h + "</ol>";
+    h += "</ol>";
+    var compact = window.matchMedia && window.matchMedia("(max-width: 860px), (max-height: 500px) and (max-width: 1100px)").matches;
+    box.innerHTML = "<b>Contents</b>" + h + '<button type="button" class="toc-pin">Move to ' + (compact ? "the menu" : "the sidebar") + "</button>";
     if (hs.length > 10 && n2 > 1 && box.classList.contains("float")) {
       box.classList.add("toc-long");
-      box.insertAdjacentHTML("beforeend", '<button type="button" class="toc-toggle" aria-expanded="false">Show subsections</button>');
+      box.querySelector(".toc-pin").insertAdjacentHTML("beforebegin", '<button type="button" class="toc-toggle" aria-expanded="false">Show subsections</button>');
     }
+    sideList.innerHTML = h; side.hidden = false;
+    var links = sideList.querySelectorAll("a");
+    Array.prototype.forEach.call(hs, function (el, k) { tocSpy.push({ el: el, a: links[k], li: links[k].parentNode, top: el.tagName === "H2" }); });
+    spyToc();
   }
+  /* highlight the section being read, and open its sub-list in the side Contents */
+  function spyToc() {
+    if (!tocSpy.length || document.getElementById("side-toc").hidden) return;
+    var line = (document.getElementById("head").offsetHeight || 60) + 24, cur = -1;
+    tocSpy.forEach(function (t, k) { if (t.el.getBoundingClientRect().top <= line) cur = k; });
+    var parent = cur >= 0 ? (tocSpy[cur].top ? tocSpy[cur].li : (function () { for (var k = cur; k >= 0; k--) if (tocSpy[k].top) return tocSpy[k].li; })()) : null;
+    tocSpy.forEach(function (t, k) { t.a.classList.toggle("on", k === cur); if (t.top) t.li.classList.toggle("open", t.li === parent); });
+  }
+  var spyBusy = false;
+  window.addEventListener("scroll", function () { if (!spyBusy) { spyBusy = true; requestAnimationFrame(function () { spyBusy = false; spyToc(); }); } }, { passive: true });
+  document.addEventListener("click", function (e) {
+    if (e.target.closest && e.target.closest(".toc-pin")) updateSetting("toc", "side");
+    if (e.target.closest && e.target.closest(".toc-unpin")) updateSetting("toc", "article");
+  });
   document.addEventListener("click", function (e) {
     var b = e.target.closest && e.target.closest(".toc-toggle"); if (!b) return;
     var box = b.parentNode, on = box.classList.toggle("toc-open");
@@ -710,7 +736,7 @@
   function scrollTo(id) { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }
   document.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest("[data-scroll]");
-    if (a) { e.preventDefault(); scrollTo(a.getAttribute("data-scroll")); }
+    if (a) { e.preventDefault(); scrollTo(a.getAttribute("data-scroll")); if (a.closest("#side")) setMenu(false); }
     if (document.body.classList.contains("menu-open") && !e.target.closest("#side") && !e.target.closest("#menu")) setMenu(false);
   });
 
@@ -768,6 +794,7 @@
       { key: "theme", legend: "Color", help: "Auto follows your device's light or dark setting.", labels: ["Auto", "Light", "Dark"] },
       { key: "size", legend: "Text size", help: "Scales all text and spacing.", labels: ["Small", "Medium", "Large"] },
       { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] },
+      { key: "toc", legend: "Contents", help: "Where the list of sections sits. In the sidebar it stays beside the article and highlights where you are; on a phone it is in the menu.", labels: ["In the article", "In the sidebar"] },
       { key: "previews", legend: "Link previews", help: "A short preview appears when you point at a link to a page or topic. Not shown on touch screens.", labels: ["On", "Off"] }
     ];
     body.innerHTML = GROUPS.map(function (g) {
@@ -925,6 +952,7 @@
     else if (name === "topic" && D.hubs[arg]) keys = ["hub:" + D.hubs[arg], nav];
     setNav(keys);
     Array.prototype.forEach.call(app.querySelectorAll("a[data-issue]"), function (a) { a.href = issueUrl(a.getAttribute("data-issue"), a.getAttribute("data-prefix")); });
+    document.getElementById("side-toc").hidden = true; tocSpy = [];
     if (res.toc !== false) buildToc();
     if (res.after) res.after();
     setMenu(false); sug.hidden = true;
