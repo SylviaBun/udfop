@@ -345,6 +345,75 @@ def draft_for(rel, g):
     return rows, skipped
 
 
+# ------------------------------------------------------------------ topic-name check
+GENERIC_TOPICS = {"unchanged", "balance", "online", "offline", "changes", "fixes", "fix", "other", "misc", "general", "various",
+                  "update", "updates", "improvements", "everything", "new", "notes", "stuff", "bugs"}
+SMALL_WORDS = {"of", "the", "and", "in", "to", "for", "on", "with", "a", "an", "at", "by", "from", "as", "or", "is", "it", "its",
+               "your", "you", "yours", "their", "instead", "what", "where", "when", "now", "no", "not", "more"}
+
+
+def _plain(name):
+    return re.sub(r"[^a-z0-9]+", " ", name.lower()).strip()
+
+
+def topic_name_warnings(rows, known):
+    """New topic names that look like a headline fragment or a near-duplicate of an existing topic.
+    Topics are short noun phrases ("Magic Repair", "Gathering Nodes"); a drafted entity is often the start of the bullet instead.
+    Only names not already in the data are checked, so an established topic is never flagged.
+    Strong signals say "looks wrong"; weak ones only say "worth a look"."""
+    import difflib
+    by_plain = {}
+    for k in known:
+        by_plain.setdefault(_plain(k), k)
+    strong, weak = [], []
+    for name in sorted({r.get("entity", "") for r in rows}):
+        if not name or name == "TODO" or name in known:
+            continue
+        words = name.split()
+        n = sum(1 for r in rows if r.get("entity") == name)
+        rowtxt = f"({n} row{'s' if n != 1 else ''})"
+        why, soft = [], []
+        if len(words) >= 6:
+            why.append(f"{len(words)} words long")
+        elif len(words) >= 4:
+            soft.append(f"{len(words)} words long")
+        if "," in name:
+            why.append("contains a comma")
+        if re.search(r"'S", name):
+            why.append("has a capital S after an apostrophe")
+        mid = [w for w in words[1:] if w.lower() in SMALL_WORDS and w[:1].isupper()]
+        if mid and len(words) >= 3:
+            why.append("is in headline Title Case (" + ", ".join(sorted(set(mid))) + " capitalised mid-name)")
+        if _plain(name) in GENERIC_TOPICS:
+            why.append("is a generic word, not a topic")
+        sim = []
+        if _plain(name) in by_plain and by_plain[_plain(name)] != name:
+            sim.append(by_plain[_plain(name)])
+            why.append("differs from an existing topic only in capitals or punctuation")
+        sim += [by_plain[m] for m in difflib.get_close_matches(_plain(name), list(by_plain), n=3, cutoff=0.78) if by_plain[m] not in sim]
+        if sim and not why:
+            soft.append("is very like an existing topic")
+        if not why and len(words) >= 2 and len(words[0]) >= 5:
+            kin = sorted(k for k in known if k.split()[:1] == words[:1] and k != name)
+            if kin:
+                soft.append("shares its first word with existing topics " + ", ".join(repr(k) for k in kin[:3]) + "; is it part of one of them?")
+        if why:
+            msg = f"new topic {name!r} {rowtxt} looks wrong: " + "; ".join(why + soft) + "."
+            if sim:
+                msg += " Existing topics it resembles: " + ", ".join(repr(x) for x in sim[:3]) + "."
+            strong.append(msg)
+        elif soft:
+            msg = f"new topic {name!r} {rowtxt}: worth a look: " + "; ".join(soft) + "."
+            if sim:
+                msg += " Resembles: " + ", ".join(repr(x) for x in sim[:3]) + "."
+            weak.append(msg)
+    out = strong + weak
+    if strong:
+        out.append("A topic should be a short noun phrase for the thing that changed. Rename the ones marked 'looks wrong' in the rows file "
+                   "(or reuse an existing topic) before continuing; if a name really is right, ignore the warning.")
+    return out
+
+
 def cmd_approve(a):
     p = f"{INBOX}/rows.draft.jsonl"
     if not os.path.exists(p):
@@ -353,6 +422,8 @@ def cmd_approve(a):
     bad = [r["id"] for r in rows if r["entity"] == "TODO"]
     if bad:
         sys.exit(f"entity is still TODO in: {', '.join(bad)}. Set it (or delete the row), then approve.")
+    for w in topic_name_warnings(rows, {r["entity"] for r in read_jsonl(ALL)}):
+        print("warn:", w)
     n = Counter(f for r in rows for f in r.get("_review", []))
     for r in rows:
         r.pop("_review", None)
@@ -420,6 +491,10 @@ def cmd_selftest(a):
     import tempfile
     if not os.path.exists(NOTES):
         sys.exit("selftest needs the raw release notes, which are not stored in the repo. Run `python tools/notes.py fetch` first.")
+    behind = notes_behind()
+    if behind:
+        sys.exit(f"selftest needs release_notes.md to be current: it ends at {behind[0]} but the ingested rows reach {behind[1]} "
+                 "(someone else added newer patches). Run `python tools/notes.py fetch` first.")
     real = [ALL, RELS, HUBS, "web/data.js", NOTES, f"{D}/merges.csv"] + sorted(glob.glob(f"{DESC}/*.txt"))
     before = {p: _hash(p) for p in real}
     results = []
@@ -567,6 +642,8 @@ def cmd_ingest(a):
     errs, warns = validate(rows, pend, tax, known)
     for w in warns:
         print("warn:", w)
+    for w in topic_name_warnings(rows, known):
+        print("warn:", w)
     if errs:
         print(f"\n{len(errs)} error(s), nothing written:")
         for e in errs:
@@ -672,6 +749,16 @@ def cmd_build(a):
         print(f"{len(stale)} stale description(s): run `python tools/notes.py describe`")
 
 
+def notes_behind():
+    """If the local copy of the release notes is older than the data already ingested, return (newest in notes, newest with rows)."""
+    notes = parse_notes()
+    rows = read_jsonl(ALL)
+    if not notes or not rows:
+        return None
+    last = max((r["version"] for r in rows), key=vkey)
+    return (notes[0]["version"], last) if vkey(notes[0]["version"]) < vkey(last) else None
+
+
 def cmd_status(a):
     notes = parse_notes()
     pend = pending_releases()
@@ -683,6 +770,10 @@ def cmd_status(a):
     print(f"inbox rows.jsonl present: {os.path.exists(f'{INBOX}/rows.jsonl')}")
     stale, _, _ = stale_topics()
     print(f"stale descriptions: {len(stale)}")
+    behind = notes_behind()
+    if behind:
+        print(f"WARNING: data/release_notes.md is behind the data (notes end at {behind[0]}, rows reach {behind[1]}). "
+              "Someone else ingested newer patches. Run `python tools/notes.py fetch` to refresh it; selftest, prepare and backtest need it current.")
 
 
 def main():
