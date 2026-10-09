@@ -135,8 +135,8 @@ Raw HTML is not supported. It is shown as plain text, which keeps pages safe and
 ## Pictures
 
 - Upload pictures to the **`web/guide/images/`** folder. In your fork, switch to the branch GitHub made for your page (the branch menu at the top left of the file list), open `web/guide/images/`, and choose **Add file → Upload files**. The picture joins your open pull request automatically.
-- Reference a picture by its path, always starting with `images/`.
-- Write it as `![alt text](images/how-to-sample-picture.png)`. This is what that sample looks like on the page:
+- Reference a picture by its path, always starting with `images/`. If your page is inside a folder such as `web/guide/combat/`, start with `../images/` instead, because paths are read from the page's own folder.
+- Write it as `![alt text](images/how-to-sample-picture.png)`. That picture belongs to this page, so yours will have its own name. This is what the sample looks like on the page:
 
 ![A sample picture: a gold disc beside three bars](images/how-to-sample-picture.png)
 - Name it after your page, such as `party-rest-camp.png`, so names do not clash and people can tell what it belongs to.
@@ -166,7 +166,7 @@ Once your page is live, look for these:
 
 - Every new or edited page is reviewed by a maintainer before it goes live. Mistakes are fixed the same way, by another edit.
 - Files and folders whose names start with `_` are ignored by the site (the starter template, `_template.md`, is one).
-- Folders are optional. A page inside `web/guide/combat/` gets the category "Combat" unless it sets its own.
+- Folders are optional. A page inside `web/guide/combat/` gets the category "Combat" unless it sets its own. Its pictures are still kept in `web/guide/images/`, so link them as `../images/name.png`.
 
 ## Previewing on your computer (optional)
 
