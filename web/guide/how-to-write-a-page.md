@@ -75,14 +75,15 @@ In short: **a guide page is found through its category, its title, search and th
 
 ## Linking examples
 
-| You type | You get |
-|---|---|
-| `[[Party rest]]` | a link to the guide page titled "Party rest" |
-| `[[Party rest\|resting]]` | the same page, shown as "resting" |
-| `[[topic:Revenants]]` | a link to the Patch Notes topic "Revenants", marked with a small **PN** |
-| `[[patch:0.1.6646]]` | a link to that patch's page, also marked **PN** |
-| `[text](https://example.com)` | an outside link, marked with a small **↗** |
-| `![what it shows](images/party-rest-camp.png)` | a picture (see below) |
+| You type | What it does | Result |
+|---|---|---|
+| `[[How to write a guide page]]` | links to a guide page by its title | [[How to write a guide page]] |
+| `[[How to write a guide page\|this page]]` | the same page, with your own words | [[How to write a guide page\|this page]] |
+| `[[topic:Revenants]]` | links to a Patch Notes topic, marked **PN** | [[topic:Revenants]] |
+| `[[patch:0.1.6656]]` | links to a patch's page, marked **PN** | [[patch:0.1.6656]] |
+| `[text](https://example.com)` | links to another website, marked **↗** | [an outside link](https://example.com) |
+| `[[Example of a missing page]]` | links to a page that does not exist yet: the link is **red**, and clicking it starts that page | [[Example of a missing page]] |
+| `![what it shows](images/x.png)` | a picture | see Pictures below |
 
 The small raised marker after a link says where it goes. **PN** means a Patch Notes page and **↗** means another website. Links to other guide pages have no marker. The markers are added for you; do not type them.
 

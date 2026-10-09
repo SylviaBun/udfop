@@ -148,7 +148,7 @@ def main():
     topics = topic_names()
     for p in pages:
         for target in LINK.findall(re.sub(r'```.*?```|`[^`\n]*`', ' ', p['_body'], flags=re.S)):
-            t = target.strip().lower()
+            t = target.strip().rstrip('\\').strip().lower()   # a table cell writes the alias bar as \|
             if t not in seen and t not in topics and not t.startswith(('patch:', 'topic:')):
                 problems.append(('warn', p['slug'] + '.md', 'link [[%s]] matches no guide page or topic yet' % target.strip()))
     cats = {}
