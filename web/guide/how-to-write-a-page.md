@@ -73,7 +73,181 @@ The site has two parts that are built differently. Knowing which is which explai
 
 In short: **a guide page is found through its category, its title, search and the links other pages make to it.** The patch notes are connected only by links you choose to add.
 
-## Linking examples
+## Basic formatting
+
+These are plain Markdown, the same on any site that uses it. Each one has the rule, then the plain syntax as you type it, then how it looks to readers.
+
+### Paragraphs
+
+A blank line starts a new paragraph. A single line break inside a paragraph is only a space.
+
+```
+First line
+second line, same paragraph
+
+A new paragraph
+```
+
+Rendered:
+
+First line
+second line, same paragraph
+
+A new paragraph
+
+If you want something on its own line, make it its own paragraph, or use a list.
+
+### Headings
+
+Start a line with `##` and a space for a section heading, `###` for a sub-section, and `####` to `######` for deeper levels. The page title is added for you, so start at `##`.
+
+```
+## A section
+### A smaller section
+```
+
+Rendered: the headings you are reading on this page are made this way, such as "Headings" just above.
+
+### Bold and italic
+
+Put `**` around text for bold, and `*` or `_` around it for italic.
+
+```
+This is **bold**, this is *italic*, and this is _also italic_.
+```
+
+Rendered:
+
+This is **bold**, this is *italic*, and this is _also italic_.
+
+### Lists
+
+Start lines with `- ` or `* ` for bullets and `1. ` for numbers. Indent a line two spaces to nest it one level in.
+
+```
+- A bullet
+- Another bullet
+  - A nested bullet
+
+1. First step
+2. Second step
+   - A bullet inside a step
+```
+
+Rendered:
+
+- A bullet
+- Another bullet
+  - A nested bullet
+
+1. First step
+2. Second step
+   - A bullet inside a step
+
+### Quotations
+
+Start a line with `>` for a quotation, which suits in-game text or developer statements. Say where it came from.
+
+```
+> Quotations are set off from the text.
+```
+
+Rendered:
+
+> Quotations are set off from the text.
+
+### Horizontal divider
+
+Three dashes on a line of their own draw a divider.
+
+```
+---
+```
+
+Rendered:
+
+---
+
+### Inline code
+
+Put a short stretch between single backticks to show it exactly as typed. This is also how to show markup literally, so it is not turned into a link or bold.
+
+```
+Press `Jump` to climb, and write `[[a page]]` to link.
+```
+
+Rendered:
+
+Press `Jump` to climb, and write `[[a page]]` to link.
+
+### Code blocks
+
+For several lines shown exactly as typed, put a line of three backticks above them and another below. That suits commands or in-game chat lines, and it is how the grey boxes in this page are written. They cannot be nested, so the plain syntax is described here and not shown in a box. Rendered:
+
+```
+Spacing and    line breaks
+are kept exactly as typed.
+```
+
+### Links to other websites
+
+Write the words in square brackets and the address in round brackets.
+
+```
+[a link to GitHub](https://github.com)
+```
+
+Rendered:
+
+[a link to GitHub](https://github.com)
+
+### Tables
+
+A header row, a line of three dashes per column under it, then one row per line, with `|` between the cells. Put a backslash before any `|` that belongs inside a cell. Cells can hold bold text, links and code. Column alignment is not supported.
+
+```
+| Item | Where it goes |
+|---|---|
+| Rows | one per line |
+| Cells | separated by pipes |
+```
+
+Rendered:
+
+| Item | Where it goes |
+|---|---|
+| Rows | one per line |
+| Cells | separated by pipes |
+
+### Pictures
+
+An exclamation mark, the description in square brackets, and the picture's path in round brackets. How to add the picture file itself is in the next section.
+
+```
+![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg)
+```
+
+Rendered:
+
+![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg)
+
+## Adding pictures
+
+- Upload pictures to the **`web/guide/images/`** folder. In your fork, switch to the branch GitHub made for your page (the branch menu at the top left of the file list), open `web/guide/images/`, and choose **Add file → Upload files**. The picture joins your open pull request automatically.
+- Reference a picture by its path, always starting with `images/`. If your page is inside a folder such as `web/guide/combat/`, start with `../images/` instead, because paths are referenced from the page's own folder.
+- Write the picture into your page as shown above. The sample picture belongs to this page, so yours will have its own name.
+- Name it after your page, such as `party-rest-camp.png`, so names do not clash and people can tell what it belongs to.
+- Use PNG, JPG, WebP or GIF, and keep each file under about 500 KB. Crop or shrink large screenshots.
+- Always write alt text (the words in the square brackets) describing what the picture shows. It is read aloud by screen readers and shown if the picture cannot load.
+- Only upload pictures you made yourself, such as your own screenshots or diagrams. Do not upload other people's artwork or images taken from other sites.
+
+## Extended features
+
+These go beyond plain Markdown. They are what lets Game Guide pages connect to each other and to the Patch Notes, and each one is explained here with an example.
+
+### Links to other pages
+
+Double square brackets link to another page on this site. They are the way to link a guide page, a Patch Notes topic or a patch, because the site then knows what you linked and can show it in the References section. A link to a guide page uses the page's title, and capital letters do not matter. Put `topic:` before the name of a Patch Notes topic and `patch:` before a version number. A bar followed by your own words changes the text that is shown.
 
 | You type | What it does | Result |
 |---|---|---|
@@ -83,11 +257,31 @@ In short: **a guide page is found through its category, its title, search and th
 | `[[patch:0.1.6656]]` | links to a patch's page, marked **PN** | [[patch:0.1.6656]] |
 | `[text](https://example.com)` | links to another website, marked **↗** | [an outside link](https://example.com) |
 | `[[Example of a missing page]]` | links to a page that does not exist yet: the link is **red**, and clicking it starts that page | [[Example of a missing page]] |
-| `![what it shows](images/x.png)` | a picture | see Pictures below |
 
-The small raised marker after a link says where it goes. **PN** means a Patch Notes page and **↗** means another website. Links to other guide pages have no marker. The markers are added for you; do not type them.
+**Link markers.** The small raised marker after a link says where it goes. **PN** means a Patch Notes page and **↗** means another website. Links to other guide pages have no marker. The markers are added for you; do not type them.
 
-## The References section is automatic
+If the page you name does not exist yet, the link shows in red, and clicking it starts that page. That lets you plan a set of pages by linking first.
+
+### Other links on this site
+
+A normal Markdown link can point at any page of the site, so you can send readers to a category, to a Patch Notes list or to the feedback page. Write the address starting with `#/`:
+
+| You type | Result |
+|---|---|
+| `[Contributing](#/guide/category/Contributing)` | [Contributing](#/guide/category/Contributing) (a Game Guide category) |
+| `[Audio](#/hub/Audio)` | [Audio](#/hub/Audio) (a Patch Notes category) |
+| `[all patches](#/patches)` | [all patches](#/patches) |
+| `[recent changes](#/recent)` | [recent changes](#/recent) |
+| `[all topics](#/topics)` | [all topics](#/topics) |
+| `[Feedback and bugs](#/feedback)` | [Feedback and bugs](#/feedback) |
+
+These are plain links: they have no PN or arrow marker and they do not appear in the References section, so use the double-bracket forms from the linking examples above when you want a topic, patch or guide page listed there.
+
+### Link previews
+
+On a computer, pointing at a link to a guide page, a topic, a patch, a category or a system shows a short preview of what is there. You do not write anything for this. Point at any link in the Result columns on this page to see it. Readers can turn previews off in the settings panel.
+
+### The References section
 
 Every guide page that links anywhere gets a **References** section at the bottom, built for you from the links in the text. Do not write one yourself.
 
@@ -107,121 +301,9 @@ related: Revenants, Companions, Party rest
 
 A name that matches a guide page's title goes under Game Guide, and one that matches a Patch Notes topic goes under Patch Notes. The check warns about names that match neither.
 
-## Formatting
+### Picture captions and placement
 
-This is everything the Game Guide can show. Anything not listed here is not supported (see the end of this section), so you can combine these freely: a table inside a section, a quotation after a list, a picture beside a paragraph, links anywhere.
-
-### Text
-
-| You type | What it does | Result |
-|---|---|---|
-| `**bold**` | bold text | **bold** |
-| `*italic*` or `_italic_` | italic text | *italic* and _italic_ |
-| a word between single backticks | a short stretch shown exactly as typed | `code` |
-| any markup between single backticks | shows markup literally, so it is not turned into a link or bold | `[[not a link]]` and `**not bold**` |
-
-**Paragraphs.** A blank line starts a new paragraph. A single line break inside a paragraph is just a space, so these two lines are one paragraph:
-
-```
-First line
-second line, same paragraph
-
-A new paragraph
-```
-
-which gives:
-
-First line
-second line, same paragraph
-
-A new paragraph
-
-If you want something on its own line, make it its own paragraph, or use a list.
-
-### Structure
-
-| You type | What it does |
-|---|---|
-| `## Heading` | a section heading. The page title is added for you, so start at `##` |
-| `### Smaller heading` | a sub-section. `####` to `######` also work, for deeper levels |
-| `- item` or `* item` | a bullet list, with each item on its own line |
-| `1. step` | a numbered list |
-| two spaces then `- item` | a nested item, one level in |
-| `> quote` | a quotation, for in-game text or developer statements (say where it came from) |
-| `---` on its own line | a horizontal divider |
-
-A numbered list with a nested bullet list inside it:
-
-1. A numbered list
-2. Second step
-   - A bullet inside the step
-   - Another one
-3. Third step
-
-A quotation:
-
-> Quotations are set off from the text. Say who said it and where.
-
-A horizontal divider, which is the `---` line:
-
----
-
-Preformatted text goes between two lines of three backticks. It is shown exactly as typed, which suits commands or in-game chat lines, and the code samples in this page are written that way.
-
-A table is a header row, a line of `---` under it, then one row per line, with `|` between the cells. Put a backslash before any `|` that belongs inside a cell.
-
-```
-| Item | Where it goes |
-|---|---|
-| Rows | one per line |
-| Cells | separated by pipes |
-```
-
-which gives:
-
-| Item | Where it goes |
-|---|---|
-| Rows | one per line |
-| Cells | separated by pipes |
-
-Cells can hold bold text, links and code. Column alignment is not supported.
-
-### Other links on this site
-
-A normal Markdown link can point at any page of the site, so you can send readers to a category, to a Patch Notes list or to the feedback page. Write the address starting with `#/`:
-
-| You type | Result |
-|---|---|
-| `[Contributing](#/guide/category/Contributing)` | [Contributing](#/guide/category/Contributing) (a Game Guide category) |
-| `[Audio](#/hub/Audio)` | [Audio](#/hub/Audio) (a Patch Notes category) |
-| `[all patches](#/patches)` | [all patches](#/patches) |
-| `[recent changes](#/recent)` | [recent changes](#/recent) |
-| `[all topics](#/topics)` | [all topics](#/topics) |
-| `[Feedback and bugs](#/feedback)` | [Feedback and bugs](#/feedback) |
-
-These are plain links: they have no PN or arrow marker and they do not appear in the References section, so use the double-bracket forms from the linking examples above when you want a topic, patch or guide page listed there.
-
-**Link previews.** On a computer, pointing at a link to a guide page, a topic, a patch, a category or a system shows a short preview of what is there. You do not write anything for this. Point at any link in the Result columns on this page to see it. Readers can turn previews off in the settings panel.
-
-### Not supported
-
-Raw HTML (it is shown as plain text, which keeps pages safe and consistent), strikethrough, underline, coloured text, footnotes, task-list checkboxes, merged table cells, column alignment, embedded video or other media, forced line breaks inside a paragraph, and links to a section inside a page. Leave these out and the page will look right everywhere.
-
-## Pictures
-
-- Upload pictures to the **`web/guide/images/`** folder. In your fork, switch to the branch GitHub made for your page (the branch menu at the top left of the file list), open `web/guide/images/`, and choose **Add file → Upload files**. The picture joins your open pull request automatically.
-- Reference a picture by its path, always starting with `images/`. If your page is inside a folder such as `web/guide/combat/`, start with `../images/` instead, because paths are referenced from the page's own folder.
-- Write it as `![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg)`. That picture belongs to this page, so yours will have its own name. This is what the sample looks like on the page:
-
-![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg)
-- Name it after your page, such as `party-rest-camp.png`, so names do not clash and people can tell what it belongs to.
-- Use PNG, JPG, WebP or GIF, and keep each file under about 500 KB. Crop or shrink large screenshots.
-- Always write alt text (the words in the square brackets) describing what the picture shows. It is read aloud by screen readers and shown if the picture cannot load.
-- Only upload pictures you made yourself, such as your own screenshots or diagrams. Do not upload other people's artwork or images taken from other sites.
-
-### Captions and placement
-
-To caption a picture or move it to the side, put the caption in quotes after the path, and a side and width in braces after the picture. Both parts are optional, and the picture must be **alone on its line** for them to work.
+To caption a picture or move it to the side, put the caption in quotes after the path, and a side and width in braces after the picture. Both parts are optional, and the picture must be **alone on its line** for them to work. A captioned picture with no side given floats to the right as a framed thumbnail.
 
 | You type | You get |
 |---|---|
@@ -229,7 +311,7 @@ To caption a picture or move it to the side, put the caption in quotes after the
 | `![alt](images/x.png "Caption"){left 180}` | the same, floated to the left and 180 pixels wide |
 | `![alt](images/x.png "Caption"){center 400}` | centered on its own line, 400 pixels wide |
 | `![alt](images/x.png){right 200}` | a floated picture with no caption (the braces alone are enough) |
-| `![alt](images/x.png)` | the plain picture, as before |
+| `![alt](images/x.png)` | the plain picture, as in the basic formatting above |
 
 The side is `left`, `right` or `center`, and the width is a number of pixels from 40 to 1200. The picture never grows past its own size or past the page. The check warns about any other word in the braces.
 
@@ -248,6 +330,14 @@ Here the text carries on beside the left-hand picture for a few more lines, so y
 And centered, 300 pixels wide, standing alone on its line:
 
 ![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg "Centered, 300 wide."){center 300}
+
+### What the site does for you
+
+You do not write these. They come from what you wrote: a **Contents** box at the top of any page with three or more headings, the page's place in the sidebar and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
+
+## Not supported
+
+Raw HTML (it is shown as plain text, which keeps pages safe and consistent), strikethrough, underline, coloured text, footnotes, task-list checkboxes, merged table cells, column alignment, embedded video or other media, forced line breaks inside a paragraph, and links to a section inside a page. Leave these out and the page will look right everywhere.
 
 ## Good practice
 
