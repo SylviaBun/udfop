@@ -24,13 +24,14 @@ The **Edit this page** link and the red links to missing pages open the same edi
 
 ## How a file becomes a page
 
-This is a whole page file. The top block between the `---` lines is the page's *front matter*: a few labelled settings. Everything below it is the page text.
+This is a whole page file. It is named `party-rest.md`. The top block between the `---` lines is the page's *front matter*: a few labelled settings. Everything below it is the page text.
 
 ```
 ---
 title: Party rest
 category: Survival
 summary: How resting works for a party.
+related: topic:Resting, guide:Camping
 ---
 
 Resting restores health while the party camps.
@@ -44,16 +45,16 @@ Here is where each part shows up on the site:
 
 | In the file | What it does on the site |
 |---|---|
-| `title` | The page heading and the browser tab. It is also the name other pages use to link to this one: `[[Party rest]]`. Titles must be unique, and links ignore capital letters: `[[how to write a guide page]]` works too. |
-| `category` | Puts the page in a group. The group appears in the **Game Guide** part of the sidebar, as its own page listing, and in the breadcrumb at the top of the page. |
-| `summary` | The one-line description shown next to the page's name in lists and in search results. |
-| `related` | Optional. Pages and topics to list in the References section even though the text does not link them. See the live References section at the bottom of this page. |
-| `## Heading` lines | Section headings. When a page has three or more, a **Contents** box is added automatically, like the one at the top of this page. The page title is added for you, so do not repeat it. |
-| The file name | The page's web address. `party-rest.md` becomes `#/guide/party-rest`. Use lower case and hyphens. |
+| `title` | The page heading and the browser tab. It is also the name other pages use to link to this one: `[[Party rest]]`. Titles must be unique, and link matching is case-insensitive, so `[[how to write a guide page]]` works too. |
+| `category` (Optional) | Puts the page in a group. The group appears in the **Game Guide** part of the sidebar, as its own page listing, and in the breadcrumb at the top of the page. |
+| `summary` (Optional) | The one-line description shown next to the page's name in lists and in search results. |
+| `related` (Optional) | Pages and topics to list in the References section even though the text does not link them. In the example it adds the Patch Notes topic Resting and the guide page Camping. See "The References section" below. |
+| `## Heading` lines (Optional) | Section headings. When a page has three or more, a **Contents** box is added automatically, like the one at the top of this page. The page title is added for you, so do not repeat it. |
+| The file name | The page's web address. The example file `party-rest.md` becomes `#/guide/party-rest`. Use lower case and hyphens. |
 | `[[Another page]]` | A link to another guide page, by its title. |
 | `[[topic:Name]]` | A link to a Patch Notes topic page (see below). |
 
-Only `title` is required. A page with no `category` goes under **General**.
+Only `title` is required. Everything else is optional. A page with no `category` goes under **General**.
 
 ## How the parts connect
 
@@ -106,7 +107,7 @@ Start a line with `##` and a space for a section heading, `###` for a sub-sectio
 ### A smaller section
 ```
 
-Rendered: the headings you are reading on this page are made this way, such as "Headings" just above.
+Rendered: the headings you are reading on this page are made this way, such as "Headings" just above. There is no separate rendered sample because headings are also what the **Contents** box at the top of the page is built from, and a sample here would add a false entry to it.
 
 ### Bold and italic
 
@@ -122,12 +123,13 @@ This is **bold**, this is *italic*, and this is _also italic_.
 
 ### Lists
 
-Start lines with `- ` or `* ` for bullets and `1. ` for numbers. Indent a line two spaces to nest it one level in.
+Start lines with `- ` or `* ` for bullets and `1. ` for numbers. Indent a line two spaces more than the item above it to nest it one level deeper. There is no limit on the number of levels, but a list reads best with no more than three.
 
 ```
 - A bullet
 - Another bullet
   - A nested bullet
+    - A third level
 
 1. First step
 2. Second step
@@ -139,6 +141,7 @@ Rendered:
 - A bullet
 - Another bullet
   - A nested bullet
+    - A third level
 
 1. First step
 2. Second step
@@ -170,7 +173,7 @@ Rendered:
 
 ### Inline code
 
-Put a short stretch between single backticks to show it exactly as typed. This is also how to show markup literally, so it is not turned into a link or bold.
+Put a short stretch between single backticks to show it exactly as typed. This is also how to show markup literally, so it is not turned into a link or bold. Inline code is shown in an accent colour on a faint background, so it stands out from plain text and is never mistaken for a link: amber on the default and Iliac Bay themes, green on Parchment and blue on Oblivion.
 
 ```
 Press `Jump` to climb, and write `[[a page]]` to link.
@@ -182,11 +185,14 @@ Press `Jump` to climb, and write `[[a page]]` to link.
 
 ### Code blocks
 
-For several lines shown exactly as typed, put a line of three backticks above them and another below. That suits commands or in-game chat lines, and it is how the grey boxes in this page are written. They cannot be nested, so the plain syntax is described here and not shown in a box. Rendered:
+For several lines shown exactly as typed, put a line of three backticks above them and another below. That suits commands, in-game chat lines and data, and it is how the grey boxes in this page are written. Spacing and line breaks are kept, and long lines scroll sideways.
 
-```
-Spacing and    line breaks
-are kept exactly as typed.
+You can name the kind of text straight after the opening backticks, for example `json`, `lua` or `text`. The name is shown as a small label in the corner of the box. It is only a label: colour highlighting of the code is not supported. A box with no name works exactly the same.
+
+A code box cannot be placed inside another, so the plain syntax is described here and not shown in a box. Rendered, with the name `json`:
+
+```json
+{"label": "the name shows in the corner"}
 ```
 
 ### Links to other websites
@@ -203,21 +209,21 @@ Rendered:
 
 ### Tables
 
-A header row, a line of three dashes per column under it, then one row per line, with `|` between the cells. Put a backslash before any `|` that belongs inside a cell. Cells can hold bold text, links and code. Column alignment is not supported.
+A header row, a line of three dashes per column under it, then one row per line, with `|` between the cells. Put a backslash before any `|` that belongs inside a cell. Cells can hold bold text, links and code. Colons in the line of dashes set each column's alignment: a colon on the left (`:---`) aligns left, which is the default, a colon on both sides (`:---:`) centers, and a colon on the right (`---:`) aligns right. Right alignment suits numbers.
 
 ```
-| Item | Where it goes |
-|---|---|
-| Rows | one per line |
-| Cells | separated by pipes |
+| Item | Where it goes | Count |
+|:---|:---:|---:|
+| Rows | one per line | 12 |
+| Cells | separated by pipes | 1,234 |
 ```
 
 Rendered:
 
-| Item | Where it goes |
-|---|---|
-| Rows | one per line |
-| Cells | separated by pipes |
+| Item | Where it goes | Count |
+|:---|:---:|---:|
+| Rows | one per line | 12 |
+| Cells | separated by pipes | 1,234 |
 
 ### Pictures
 
@@ -247,20 +253,29 @@ These go beyond plain Markdown. They are what lets Game Guide pages connect to e
 
 ### Links to other pages
 
-Double square brackets link to another page on this site. They are the way to link a guide page, a Patch Notes topic or a patch, because the site then knows what you linked and can show it in the References section. A link to a guide page uses the page's title, and capital letters do not matter. Put `topic:` before the name of a Patch Notes topic and `patch:` before a version number. A bar followed by your own words changes the text that is shown.
+Double square brackets link to another page on this site. They are the way to link a guide page, a Patch Notes topic or a patch, because the site then knows what you linked and can show it in the References section. A link to a guide page uses the page's title, and matching is case-insensitive. Put `topic:` before the name of a Patch Notes topic and `patch:` before a version number. A bar followed by your own words changes the text that is shown.
 
 | You type | What it does | Result |
 |---|---|---|
-| `[[How to write a guide page]]` | links to a guide page by its title | [[How to write a guide page]] |
-| `[[How to write a guide page\|this page]]` | the same page, with your own words | [[How to write a guide page\|this page]] |
+| `[[How to write a guide page]]` | links to a guide page by its title, marked **GP** | [[How to write a guide page]] |
+| `[[How to write a guide page\|this page]]` | the same page, with your own words, still marked **GP** | [[How to write a guide page\|this page]] |
 | `[[topic:Revenants]]` | links to a Patch Notes topic, marked **PN** | [[topic:Revenants]] |
 | `[[patch:0.1.6656]]` | links to a patch's page, marked **PN** | [[patch:0.1.6656]] |
 | `[text](https://example.com)` | links to another website, marked **↗** | [an outside link](https://example.com) |
 | `[[Example of a missing page]]` | links to a page that does not exist yet: the link is **red**, and clicking it starts that page | [[Example of a missing page]] |
 
-**Link markers.** The small raised marker after a link says where it goes. **PN** means a Patch Notes page and **↗** means another website. Links to other guide pages have no marker. The markers are added for you; do not type them.
-
 If the page you name does not exist yet, the link shows in red, and clicking it starts that page. That lets you plan a set of pages by linking first.
+
+### Link markers
+
+A small raised marker after a link says where it goes, so readers know before they click. The markers are added for you; do not type them.
+
+| Marker | Where the link goes |
+|---|---|
+| **GP** | a page in the Game Guide |
+| **PN** | a Patch Notes topic or patch |
+| **↗** | another website |
+| none | a plain link to a page of this site, such as a category, and a red link to a page that does not exist yet |
 
 ### Other links on this site
 
@@ -291,15 +306,15 @@ Every guide page that links anywhere gets a **References** section at the bottom
 | **Patch Notes** | the topics and patches you linked, each with when it was last changed |
 | **External Links** | the outside websites you linked |
 
-Each link appears once, in the order it first appears in the text. Pages you did not link are left out.
+Each link appears once, in the order it first appears in the text. A page is "not linked" when your text has no `[[...]]` link to it and you did not name it in `related:`. The section lists only what you linked or named, so a guide page that exists but that your text never mentions does not appear.
 
-To list a related page or topic that does not belong in a sentence, add a `related:` line to the front matter at the top of the page, with names separated by commas:
+**`related:` (Optional).** To list a page, topic or patch that does not belong in a sentence, add a `related:` line to the front matter at the top of the page, with names separated by commas. Start each name with `guide:`, `topic:` or `patch:` to say which kind it is:
 
 ```
-related: Revenants, Companions, Party rest
+related: guide:Party rest, topic:Resting, patch:0.1.6656
 ```
 
-A name that matches a guide page's title goes under Game Guide, and one that matches a Patch Notes topic goes under Patch Notes. The check warns about names that match neither.
+`guide:` names a Game Guide page by its title, `topic:` a Patch Notes topic and `patch:` a patch version, matching the double-bracket links in the text. If you leave the prefix off, the name is matched to a guide page first and to a topic second, so use the prefix whenever a guide page and a topic share a name. Guide pages go under Game Guide in the References section and topics and patches under Patch Notes. The check warns about names that match nothing.
 
 ### Picture captions and placement
 
@@ -337,7 +352,7 @@ You do not write these. They come from what you wrote: a **Contents** box at the
 
 ## Not supported
 
-Raw HTML (it is shown as plain text, which keeps pages safe and consistent), strikethrough, underline, coloured text, footnotes, task-list checkboxes, merged table cells, column alignment, embedded video or other media, forced line breaks inside a paragraph, and links to a section inside a page. Leave these out and the page will look right everywhere.
+Raw HTML (it is shown as plain text, which keeps pages safe and consistent), strikethrough, underline, coloured text, footnotes, task-list checkboxes, merged table cells, embedded video or other media, forced line breaks inside a paragraph, and links to a section inside a page. Leave these out and the page will look right everywhere.
 
 ## Good practice
 

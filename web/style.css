@@ -2,7 +2,7 @@
   --page: #f6f6f6; --paper: #fff; --fg: #202122; --muted: #54595d; --line: #a2a9b1; --soft: #eaecf0; --softer: #f8f9fa;
   --link: #0645ad; --visited: #5a3696; --red: #ba0000; --head: #fff; --accent: #8a5a1a;
   --buff: #14866d; --nerf: #d33; --new: #36c; --rework: #7b3fa0; --fix: #ac6600; --other: #72777d;
-  --infobox: #f8f9fa; --notice: #fef6e7; --notice-line: #fc3;
+  --infobox: #f8f9fa; --notice: #fef6e7; --notice-line: #fc3; --code: var(--fix);
   --serif: "Linux Libertine", Georgia, Times, serif; --sans: system-ui, "Segoe UI", Roboto, sans-serif;
   color-scheme: light dark;
 }
@@ -297,7 +297,10 @@ a.missing, a.missing:visited { color: var(--nerf); }
 .editline { margin-top: 2em; padding-top: .6em; border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); }
 #app blockquote { margin: 0 0 1em; padding: .1em 1em; border-left: 3px solid var(--line); background: var(--softer); }
 #app pre { overflow-x: auto; padding: 8px 12px; border: 1px solid var(--line); background: var(--softer); font-size: .85rem; }
-#app code { font-size: .88em; }
+#app code { font-size: .88em; color: var(--code); background: color-mix(in srgb, var(--code) 12%, transparent); padding: 1px 5px; border-radius: 3px; }
+#app pre code { color: inherit; background: none; padding: 0; }
+#app pre[data-lang] { position: relative; }
+#app pre[data-lang]::before { content: attr(data-lang); position: absolute; top: 2px; right: 8px; font: 700 .65rem var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
 #app img { max-width: 100%; height: auto; }
 
 /* Game Guide page lists: one card per page, reflowing with the width */
@@ -347,3 +350,7 @@ figure.fig-center figcaption { text-align: center; }
 @media (max-width: 600px) {
   figure.fig-left, figure.fig-right { float: none; width: auto !important; margin-left: 0; margin-right: 0; }
 }
+
+/* inline code takes an accent that no theme uses for links: amber on the blue and teal themes, green on Parchment, blue on Oblivion */
+html[data-skin="parchment"] { --code: var(--buff); }
+html[data-skin="oblivion"] { --code: var(--new); }

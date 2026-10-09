@@ -132,6 +132,14 @@ def check_images(pages, problems):
                 problems.append(('warn', rel, 'pictures are easier to find in web/guide/images/'))
 
 
+def patch_versions():
+    try:
+        raw = open(os.path.join('web', 'data.js'), encoding='utf-8').read()
+        return {r['v'] for r in json.loads(raw[raw.index('{'):raw.rindex('}') + 1])['rows']}
+    except Exception:
+        return set()
+
+
 def main():
     check = '--check' in sys.argv
     if not os.path.isdir(ROOT):
@@ -157,11 +165,15 @@ def main():
     for key, spellings in cats.items():
         if len(spellings) > 1:
             problems.append(('warn', 'categories', 'the category is spelled more than one way: %s (use one spelling)' % ', '.join('"%s"' % x for x in sorted(spellings))))
+    versions = patch_versions()
     for p in pages:
         for name in p['_related']:
-            key = re.sub(r'^topic:\s*', '', name.lower())
-            if key not in seen and key not in topics:
-                problems.append(('warn', p['slug'] + '.md', 'related: "%s" matches no guide page or topic' % name))
+            m = re.match(r'^(guide|topic|patch)\s*:\s*(.*)$', name, flags=re.I)
+            kind, rest = (m.group(1).lower(), m.group(2).strip()) if m else ('', name.strip())
+            key = rest.lower()
+            ok = (rest in versions) if kind == 'patch' else (key in seen) if kind == 'guide' else (key in topics) if kind == 'topic' else (key in seen or key in topics)
+            if not ok:
+                problems.append(('warn', p['slug'] + '.md', 'related: "%s" matches no %s' % (name, {'patch': 'patch', 'guide': 'guide page', 'topic': 'topic'}.get(kind, 'guide page or topic'))))
     pages.sort(key=lambda p: (p['category'].lower(), p['title'].lower()))
     out = [{k: v for k, v in p.items() if not k.startswith('_')} for p in pages]
     with open(os.path.join(ROOT, 'index.json'), 'w', encoding='utf-8') as f:

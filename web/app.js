@@ -398,6 +398,7 @@
     return u;
   }
   /* small superscripts say where a link goes; links to other guide pages are the default and carry none */
+  var MARK_GP = '<sup class="lt" title="Game Guide page" aria-label="(Game Guide)">GP</sup>';
   var MARK_PN = '<sup class="lt" title="Patch Notes page" aria-label="(Patch Notes)">PN</sup>';
   var MARK_EXT = '<sup class="lt" title="Opens another website" aria-label="(external site)">\u2197</sup>';
   /* every link a page makes is noted here, and listed in a References section at the bottom */
@@ -416,7 +417,7 @@
     if (low.indexOf("patch:") === 0) { var v = raw.slice(6).trim(); if (byVersion[v]) noteRef("patch", v, v); return byVersion[v] ? '<a href="#/patch/' + enc(v) + '">' + esc(label || v) + "</a>" + MARK_PN : esc(label || v); }
     var g = guideByTitle[low] || guideBySlug[low];
     if (g) { if (g.slug.toLowerCase() !== refs_self()) noteRef("guide", g.slug, g); }
-    if (g) return '<a href="#/guide/' + g.slug.split("/").map(enc).join("/") + '">' + esc(label || g.title) + "</a>";
+    if (g) return '<a href="#/guide/' + g.slug.split("/").map(enc).join("/") + '">' + esc(label || g.title) + "</a>" + MARK_GP;
     t = topicByLower[low];
     if (t) { noteRef("topic", t, t); return tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") + MARK_PN; }
     return '<a class="missing" href="' + newPageUrl(raw) + '"' + newAttr(raw) + ' rel="noopener" title="No page called this yet. Click to create it.">' + esc(label || raw) + "</a>";
@@ -484,7 +485,10 @@
 
   function buildReferences(r, related) {
     (related || []).forEach(function (name) {
-      var low = name.toLowerCase().replace(/^topic:\s*/, ""), g = guideByTitle[low] || guideBySlug[low], t = topicByLower[low];
+      /* "guide:Name", "topic:Name" and "patch:0.1.2" say which kind; with no prefix a guide page wins over a topic of the same name */
+      var pm = /^(guide|topic|patch)\s*:\s*(.*)$/i.exec(name), mode = pm ? pm[1].toLowerCase() : "", rest = (pm ? pm[2] : name).trim();
+      if (mode === "patch") { if (byVersion[rest]) noteRef("patch", rest, rest); return; }
+      var low = rest.toLowerCase(), g = mode === "topic" ? null : (guideByTitle[low] || guideBySlug[low]), t = mode === "guide" ? null : topicByLower[low];
       if (g && g.slug.toLowerCase() !== r.self) noteRef("guide", g.slug, g); else if (!g && t) noteRef("topic", t, t);
     });
     var h = "";
@@ -508,10 +512,10 @@
     while (i < lines.length) {
       var l = lines[i], m;
       if (!l.trim()) { i++; continue; }
-      if ((m = /^```/.exec(l))) {
-        var code = []; i++;
+      if ((m = /^```\s*([A-Za-z0-9+#.-]{1,20})?\s*$/.exec(l))) {
+        var code = [], lang = (m[1] || "").toLowerCase(); i++;
         while (i < lines.length && !/^```/.test(lines[i])) code.push(lines[i++]);
-        i++; out.push("<pre><code>" + esc(code.join("\n")) + "</code></pre>"); continue;
+        i++; out.push("<pre" + (lang ? ' data-lang="' + esc(lang) + '"' : "") + "><code" + (lang ? ' class="lang-' + esc(lang) + '"' : "") + ">" + esc(code.join("\n")) + "</code></pre>"); continue;
       }
       if ((m = /^(#{1,6})\s+(.*?)\s*#*\s*$/.exec(l))) {
         var text = plainText(m[2]);
@@ -527,10 +531,12 @@
         out.push("<blockquote>" + markdown(q.join("\n")) + "</blockquote>"); continue;
       }
       if (l.indexOf("|") >= 0 && i + 1 < lines.length && /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(lines[i + 1])) {
-        var head = splitRow(l), body = []; i += 2;
+        var head = splitRow(l), body = [], aligns = splitRow(lines[i + 1]).map(function (c) { return /^:-+:$/.test(c) ? "center" : /^-+:$/.test(c) ? "right" : /^:-+$/.test(c) ? "left" : ""; });
+        function al(k) { return aligns[k] ? ' style="text-align:' + aligns[k] + '"' : ""; }
+        i += 2;
         while (i < lines.length && lines[i].trim() && lines[i].indexOf("|") >= 0) body.push(splitRow(lines[i++]));
-        out.push('<div class="wrap"><table class="wikitable"><thead><tr>' + head.map(function (c) { return "<th>" + inline(c) + "</th>"; }).join("") +
-          "</tr></thead><tbody>" + body.map(function (r) { return "<tr>" + head.map(function (_, k) { return "<td>" + inline(r[k] || "") + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>");
+        out.push('<div class="wrap"><table class="wikitable"><thead><tr>' + head.map(function (c, k) { return "<th" + al(k) + ">" + inline(c) + "</th>"; }).join("") +
+          "</tr></thead><tbody>" + body.map(function (r) { return "<tr>" + head.map(function (_, k) { return "<td" + al(k) + ">" + inline(r[k] || "") + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>");
         continue;
       }
       if (/^\s*([-*+]|\d+[.)])\s+/.test(l)) {
