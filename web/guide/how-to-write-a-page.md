@@ -117,12 +117,28 @@ A name that matches a guide page's title goes under Game Guide, and one that mat
 | `> quote` | a quotation |
 | `\| a \| b \|` rows with a `\|---\|---\|` line under the first | a table (put a backslash before any pipe that belongs inside a cell) |
 
+Preformatted text goes between two lines of three backticks. It is shown exactly as typed, which suits commands or in-game chat lines, and the two examples in this page are written that way. To mark a short stretch inline, put it in single backticks, as in `inline code`.
+
+Here is how a few of these look once rendered. A nested list, indented two spaces:
+
+- A bullet list
+- Another item
+  - A nested item
+- A third item
+
+A quotation, for in-game text or developer statements (say where they came from):
+
+> Quotations are set off from the text.
+
 Raw HTML is not supported. It is shown as plain text, which keeps pages safe and consistent.
 
 ## Pictures
 
 - Upload pictures to the **`web/guide/images/`** folder. In your fork, switch to the branch GitHub made for your page (the branch menu at the top left of the file list), open `web/guide/images/`, and choose **Add file → Upload files**. The picture joins your open pull request automatically.
 - Reference a picture by its path, always starting with `images/`.
+- Write it as `![alt text](images/how-to-sample-picture.png)`. This is what that sample looks like on the page:
+
+![A sample picture: a gold disc beside three bars](images/how-to-sample-picture.png)
 - Name it after your page, such as `party-rest-camp.png`, so names do not clash and people can tell what it belongs to.
 - Use PNG, JPG, WebP or GIF, and keep each file under about 500 KB. Crop or shrink large screenshots.
 - Always write alt text (the words in the square brackets) describing what the picture shows. It is read aloud by screen readers and shown if the picture cannot load.
@@ -135,6 +151,16 @@ Raw HTML is not supported. It is shown as plain text, which keeps pages safe and
 - The Patch Notes already record *what changed*. A guide page should say *how it works now*, and can link to the topic for the history, for example [[topic:Revenants]].
 - Use your own words. Do not paste the developers' release text or copy other sites.
 - Your writing is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) and credited to "UDFOP contributors".
+
+## Checking your page
+
+Once your page is live, look for these:
+
+1. It is listed on the Game Guide index, under its category, with its summary beside the name.
+2. If you used a new category, it appears as a group in the sidebar under Game Guide.
+3. The breadcrumb at the top reads Main page › Game Guide › your category.
+4. Searching for a word from its title finds it.
+5. Pictures appear, and any red link opens GitHub's editor with a new page ready.
 
 ## Review and credit
 
