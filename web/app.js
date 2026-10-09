@@ -421,14 +421,40 @@
     if (t) { noteRef("topic", t, t); return tlink(t).replace(">" + esc(t) + "<", ">" + esc(label || t) + "<") + MARK_PN; }
     return '<a class="missing" href="' + newPageUrl(raw) + '"' + newAttr(raw) + ' rel="noopener" title="No page called this yet. Click to create it.">' + esc(label || raw) + "</a>";
   }
+  /* Pictures: ![alt](path "Caption"){right 240}. A picture alone on its line with a caption or braces becomes a figure that
+     floats (default: a right-hand thumbnail); inline pictures and bare ones behave as before. */
+  var IMG_URL = "([^()\\s]*(?:\\([^()\\s]*\\)[^()\\s]*)*)";
+  var IMG_RE = new RegExp('!\\[([^\\]]*)\\]\\(' + IMG_URL + '(?:\\s+"([^"]*)")?\\)(?:\\{([^}]*)\\})?', "g");
+  var FIG_LINE = new RegExp('^!\\[([^\\]]*)\\]\\(' + IMG_URL + '(?:\\s+"([^"]*)")?\\)(?:\\{([^}]*)\\})?$');
+  function imgSrc(src) {
+    src = safeUrl(src); if (!src) return "";
+    if (!/^(https?:|\/)/i.test(src)) src = "guide/" + mdBase + src.replace(/^\.?\//, "");
+    return src;
+  }
+  function figureOpts(braces) {
+    var o = { side: null, width: null };
+    String(braces || "").split(/[\s,]+/).forEach(function (t) {
+      t = t.toLowerCase();
+      if (t === "left" || t === "right" || t === "center") o.side = t;
+      else if (/^\d+(px)?$/.test(t)) o.width = Math.max(40, Math.min(1200, parseInt(t, 10)));
+    });
+    return o;
+  }
+  function figure(m) {
+    var src = imgSrc(m[2]); if (!src) return "";
+    var o = figureOpts(m[4]), side = o.side || "right", cap = m[3] || "";
+    var width = o.width || (side === "center" ? 420 : 240);
+    return '<figure class="fig fig-' + side + '" style="width:' + width + 'px"><img src="' + esc(src) + '" alt="' + esc(m[1]) + '" loading="lazy">' +
+      (cap ? "<figcaption>" + inline(cap) + "</figcaption>" : "") + "</figure>";
+  }
+
   function inline(s) {
     var stash = [];
     function keep(h) { stash.push(h); return "\u0000" + (stash.length - 1) + "\u0000"; }
     s = s.replace(/`([^`]+)`/g, function (m, c) { return keep("<code>" + esc(c) + "</code>"); });
     s = s.replace(/\[\[([^\]|]+?)(?:\|([^\]]*))?\]\]/g, function (m, t, l) { return keep(wikiLink(t, l)); });
-    s = s.replace(/!\[([^\]]*)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g, function (m, alt, src) {
-      src = safeUrl(src); if (!src) return "";
-      if (!/^(https?:|\/)/i.test(src)) src = "guide/" + mdBase + src.replace(/^\.?\//, "");
+    s = s.replace(IMG_RE, function (m, alt, src) {
+      src = imgSrc(src); if (!src) return "";
       return keep('<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">');
     });
     s = s.replace(/\[([^\]]+)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g, function (m, text, url) {
@@ -512,8 +538,10 @@
         while (i < lines.length && lines[i].trim() && (/^\s*([-*+]|\d+[.)])\s+/.test(lines[i]) || /^\s{2,}\S/.test(lines[i]))) items.push(lines[i++]);
         out.push(list(items)); continue;
       }
+      if ((m = FIG_LINE.exec(l.trim())) && (m[3] || m[4] !== undefined)) { out.push(figure(m)); i++; continue; }
       var buf = [];
-      while (i < lines.length && lines[i].trim() && !/^(```|#{1,6}\s|>)/.test(lines[i]) && !/^\s*([-*+]|\d+[.)])\s+/.test(lines[i])) buf.push(lines[i++].trim());
+      while (i < lines.length && lines[i].trim() && !/^(```|#{1,6}\s|>)/.test(lines[i]) && !/^\s*([-*+]|\d+[.)])\s+/.test(lines[i]) &&
+             !((m = FIG_LINE.exec(lines[i].trim())) && (m[3] || m[4] !== undefined))) buf.push(lines[i++].trim());
       para(buf);
     }
     return out.join("\n");

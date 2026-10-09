@@ -144,6 +144,26 @@ Raw HTML is not supported. It is shown as plain text, which keeps pages safe and
 - Always write alt text (the words in the square brackets) describing what the picture shows. It is read aloud by screen readers and shown if the picture cannot load.
 - Only upload pictures you made yourself, such as your own screenshots or diagrams. Do not upload other people's artwork or images taken from other sites.
 
+### Captions and placement
+
+To caption a picture or move it to the side, put the caption in quotes after the path, and a side and width in braces after the picture. Both parts are optional, and the picture must be **alone on its line** for them to work.
+
+| You type | You get |
+|---|---|
+| `![alt](images/x.png "Caption")` | a framed picture on the **right**, 240 pixels wide, with the caption under it (the default for a captioned picture) |
+| `![alt](images/x.png "Caption"){left 180}` | the same, floated to the left and 180 pixels wide |
+| `![alt](images/x.png "Caption"){center 400}` | centered on its own line, 400 pixels wide |
+| `![alt](images/x.png){right 200}` | a floated picture with no caption (the braces alone are enough) |
+| `![alt](images/x.png)` | the plain picture, as before |
+
+The side is `left`, `right` or `center`, and the width is a number of pixels from 40 to 1200. The picture never grows past its own size or past the page. The check warns about any other word in the braces.
+
+Here is the sample picture from above with a caption, floated to the right:
+
+![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg "Sarsaparilla, looking majestic."){right 220}
+
+Text next to a floated picture wraps around it, as on Wikipedia, and a heading starts below it. Several pictures floated the same way stack down the side. On a phone the picture moves above the text and takes the full width, because narrow columns of wrapped text are hard to read. Write the caption as a short sentence naming what is shown, and keep the alt text for describing what the picture looks like.
+
 ## Good practice
 
 - Write what you know to be true and say where it comes from, such as testing in the game, a patch number or a developer post.

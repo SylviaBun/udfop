@@ -11,7 +11,8 @@ import json, os, re, sys
 ROOT = os.path.join('web', 'guide')
 IMG_EXT = ('.png', '.jpg', '.jpeg', '.webp', '.gif')
 MAX_IMG = 500 * 1024
-IMAGE = re.compile(r'!\[[^\]]*\]\(([^)\s]+)\)')
+IMAGE = re.compile(r'!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)(?:\{[^}]*\})?')
+FIGURE = re.compile(r'^!\[[^\]]*\]\([^)\s]+(?:\s+"([^"]*)")?\)\{([^}]*)\}\s*$', re.M)
 LINK = re.compile(r'\[\[([^\]\|]+?)(?:\|[^\]]*)?\]\]')
 
 
@@ -35,7 +36,7 @@ def split_front(raw):
 def plain(md):
     """Rough plain text of a Markdown body, for the site search."""
     t = re.sub(r'```.*?```', ' ', md, flags=re.S)
-    t = re.sub(r'!\[[^\]]*\]\([^)]*\)', ' ', t)
+    t = re.sub(r'!\[[^\]]*\]\([^)]*\)(\{[^}]*\})?', ' ', t)
     t = re.sub(r'\[\[([^\]\|]+)(?:\|([^\]]*))?\]\]', lambda m: m.group(2) or m.group(1), t)
     t = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', t)
     t = re.sub(r'[#>*_`|~-]+', ' ', t)
@@ -102,6 +103,17 @@ def check_images(pages, problems):
             used.add(rel.lower())
             if not os.path.isfile(os.path.join(ROOT, rel)):
                 problems.append(('error', p['slug'] + '.md', 'the picture "%s" does not exist (upload it to web/guide/images/ and use that path)' % ref))
+    for p in pages:
+        body = re.sub(r'```.*?```', ' ', p['_body'], flags=re.S)
+        for m in FIGURE.finditer(body):
+            for tok in [x for x in re.split(r'[\s,]+', m.group(2).strip().lower()) if x]:
+                if tok in ('left', 'right', 'center'):
+                    continue
+                if re.fullmatch(r'\d+(px)?', tok):
+                    if not 40 <= int(tok.rstrip('px')) <= 1200:
+                        problems.append(('warn', p['slug'] + '.md', 'picture width %s is outside 40 to 1200 pixels' % tok))
+                    continue
+                problems.append(('warn', p['slug'] + '.md', 'unknown picture option "%s" in braces (use left, right, center and a width in pixels)' % tok))
     for base, dirs, files in os.walk(ROOT):
         dirs[:] = sorted(d for d in dirs if not d.startswith(('_', '.')))
         for f in sorted(files):
