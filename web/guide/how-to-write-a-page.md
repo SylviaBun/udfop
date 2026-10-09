@@ -136,9 +136,9 @@ Raw HTML is not supported. It is shown as plain text, which keeps pages safe and
 
 - Upload pictures to the **`web/guide/images/`** folder. In your fork, switch to the branch GitHub made for your page (the branch menu at the top left of the file list), open `web/guide/images/`, and choose **Add file → Upload files**. The picture joins your open pull request automatically.
 - Reference a picture by its path, always starting with `images/`. If your page is inside a folder such as `web/guide/combat/`, start with `../images/` instead, because paths are referenced from the page's own folder.
-- Write it as `![Sarsaparilla looking majestic](images/sarsaparilla01.png)`. That picture belongs to this page, so yours will have its own name. This is what the sample looks like on the page:
+- Write it as `![Sarsaparilla looking majestic](images/sarsaparilla01.jpg)`. That picture belongs to this page, so yours will have its own name. This is what the sample looks like on the page:
 
-![Sarsaparilla looking majestic](sarsaparilla-01s.png)
+![Sarsaparilla looking majestic](sarsaparilla-01s.jpg)
 - Name it after your page, such as `party-rest-camp.png`, so names do not clash and people can tell what it belongs to.
 - Use PNG, JPG, WebP or GIF, and keep each file under about 500 KB. Crop or shrink large screenshots.
 - Always write alt text (the words in the square brackets) describing what the picture shows. It is read aloud by screen readers and shown if the picture cannot load.
