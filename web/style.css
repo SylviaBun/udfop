@@ -346,7 +346,9 @@ figure.fig-right { float: right; clear: right; margin-left: 1.1em; }
 figure.fig-left { float: left; clear: left; margin-right: 1.1em; }
 figure.fig-center { margin-left: auto; margin-right: auto; clear: both; }
 figure.fig-center figcaption { text-align: center; }
-#gp h2, #gp h3 { clear: both; }
+#gp h2.sec, #gp h3.sec { display: flow-root; }
+#gp h2.cl, #gp h3.cl { clear: both; }
+#gp .wrap, #gp pre { clear: right; }
 @media (max-width: 600px) {
   figure.fig-left, figure.fig-right { float: none; width: auto !important; margin-left: 0; margin-right: 0; }
 }
@@ -354,3 +356,10 @@ figure.fig-center figcaption { text-align: center; }
 /* inline code takes an accent that no theme uses for links: amber on the blue and teal themes, green on Parchment, blue on Oblivion */
 html[data-skin="parchment"] { --code: var(--buff); }
 html[data-skin="oblivion"] { --code: var(--new); }
+
+/* the Contents box on a guide page floats beside the opening paragraphs */
+#toc.float { float: right; clear: right; display: block; width: 15.5em; max-width: 42%; min-width: 0; margin: .2em 0 1em 1.3em; }
+#toc.toc-long:not(.toc-open) ol ol { display: none; }
+#toc .toc-toggle { display: block; margin: 6px auto 0; padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; cursor: pointer; }
+#toc .toc-toggle:hover { text-decoration: underline; }
+@media (max-width: 600px) { #toc.float { float: none; width: auto; max-width: none; margin: .4em 0 1em; } }

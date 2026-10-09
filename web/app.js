@@ -507,7 +507,7 @@
   }
   var mdBase = "";   /* folder of the page being rendered, so pictures resolve next to it */
   function markdown(src, title) {
-    var lines = src.replace(/\r\n?/g, "\n").split("\n"), out = [], i = 0, first = true;
+    var lines = src.replace(/\r\n?/g, "\n").split("\n"), out = [], i = 0, first = true, figSince = false;
     function para(buf) { if (buf.length) out.push("<p>" + inline(buf.join(" ")) + "</p>"); }
     while (i < lines.length) {
       var l = lines[i], m;
@@ -521,7 +521,9 @@
         var text = plainText(m[2]);
         if (first && m[1].length === 1 && text.toLowerCase() === (title || "").toLowerCase()) { i++; first = false; continue; }
         var lvl = Math.min(6, Math.max(2, m[1].length));
-        out.push(lvl <= 3 ? sec(text, text, lvl) : "<h" + lvl + ">" + inline(m[2]) + "</h" + lvl + ">"); i++; first = false; continue;
+        var hd = lvl <= 3 ? sec(text, text, lvl) : "<h" + lvl + ">" + inline(m[2]) + "</h" + lvl + ">";
+        if (figSince && lvl <= 3) hd = hd.replace('class="sec"', 'class="sec cl"');
+        figSince = false; out.push(hd); i++; first = false; continue;
       }
       first = false;
       if (/^\s*([-*_])\s*(\1\s*){2,}$/.test(l)) { out.push("<hr>"); i++; continue; }
@@ -544,7 +546,7 @@
         while (i < lines.length && lines[i].trim() && (/^\s*([-*+]|\d+[.)])\s+/.test(lines[i]) || /^\s{2,}\S/.test(lines[i]))) items.push(lines[i++]);
         out.push(list(items)); continue;
       }
-      if ((m = FIG_LINE.exec(l.trim())) && (m[3] || m[4] !== undefined)) { out.push(figure(m)); i++; continue; }
+      if ((m = FIG_LINE.exec(l.trim())) && (m[3] || m[4] !== undefined)) { out.push(figure(m)); figSince = true; i++; continue; }
       var buf = [];
       while (i < lines.length && lines[i].trim() && !/^(```|#{1,6}\s|>)/.test(lines[i]) && !/^\s*([-*+]|\d+[.)])\s+/.test(lines[i]) &&
              !((m = FIG_LINE.exec(lines[i].trim())) && (m[3] || m[4] !== undefined))) buf.push(lines[i++].trim());
@@ -624,7 +626,9 @@
         refs = newRefs(entry ? entry.slug : slug);
         var rendered = markdown(fm.body, t); mdBase = "";
         rendered += buildReferences(refs, (fm.meta.related || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean)); refs = null;
-        box.innerHTML = '<div id="toc" class="toc"></div>' + rendered +
+        var lead = /^<p>[\s\S]*?<\/p>/.exec(rendered), toc = '<div id="toc" class="toc float"></div>';
+        if (lead) rendered = lead[0] + toc + rendered.slice(lead[0].length); else rendered = toc + rendered;
+        box.innerHTML = rendered +
           '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> (fork the project first) · <a href="#/guide/how-to-write-a-page">How to contribute</a></p>';
         buildToc();
       }).catch(function () {
@@ -692,7 +696,16 @@
     });
     if (open) h += "</ol></li>";
     box.innerHTML = h + "</ol>";
+    if (hs.length > 10 && n2 > 1 && box.classList.contains("float")) {
+      box.classList.add("toc-long");
+      box.insertAdjacentHTML("beforeend", '<button type="button" class="toc-toggle" aria-expanded="false">Show subsections</button>');
+    }
   }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".toc-toggle"); if (!b) return;
+    var box = b.parentNode, on = box.classList.toggle("toc-open");
+    b.textContent = on ? "Hide subsections" : "Show subsections"; b.setAttribute("aria-expanded", on ? "true" : "false");
+  });
 
   function scrollTo(id) { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }
   document.addEventListener("click", function (e) {
