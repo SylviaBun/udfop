@@ -44,11 +44,11 @@ Here is where each part shows up on the site:
 
 | In the file | What it does on the site |
 |---|---|
-| `title` | The page heading and the browser tab. It is also the name other pages use to link to this one: `[[Party rest]]`. Titles must be unique. |
+| `title` | The page heading and the browser tab. It is also the name other pages use to link to this one: `[[Party rest]]`. Titles must be unique, and links ignore capital letters: `[[how to write a guide page]]` works too. |
 | `category` | Puts the page in a group. The group appears in the **Game Guide** part of the sidebar, as its own page listing, and in the breadcrumb at the top of the page. |
 | `summary` | The one-line description shown next to the page's name in lists and in search results. |
-| `related` | Optional. Pages and topics to list in the References section even though the text does not link them. |
-| `## Heading` lines | Section headings. When a page has three or more, a **Contents** box is added automatically. The page title is added for you, so do not repeat it. |
+| `related` | Optional. Pages and topics to list in the References section even though the text does not link them. See the live References section at the bottom of this page. |
+| `## Heading` lines | Section headings. When a page has three or more, a **Contents** box is added automatically, like the one at the top of this page. The page title is added for you, so do not repeat it. |
 | The file name | The page's web address. `party-rest.md` becomes `#/guide/party-rest`. Use lower case and hyphens. |
 | `[[Another page]]` | A link to another guide page, by its title. |
 | `[[topic:Name]]` | A link to a Patch Notes topic page (see below). |
@@ -109,29 +109,103 @@ A name that matches a guide page's title goes under Game Guide, and one that mat
 
 ## Formatting
 
-| You type | You get |
+This is everything the Game Guide can show. Anything not listed here is not supported (see the end of this section), so you can combine these freely: a table inside a section, a quotation after a list, a picture beside a paragraph, links anywhere.
+
+### Text
+
+| You type | What it does | Result |
+|---|---|---|
+| `**bold**` | bold text | **bold** |
+| `*italic*` or `_italic_` | italic text | *italic* and _italic_ |
+| a word between single backticks | a short stretch shown exactly as typed | `code` |
+| any markup between single backticks | shows markup literally, so it is not turned into a link or bold | `[[not a link]]` and `**not bold**` |
+
+**Paragraphs.** A blank line starts a new paragraph. A single line break inside a paragraph is just a space, so these two lines are one paragraph:
+
+```
+First line
+second line, same paragraph
+
+A new paragraph
+```
+
+which gives:
+
+First line
+second line, same paragraph
+
+A new paragraph
+
+If you want something on its own line, make it its own paragraph, or use a list.
+
+### Structure
+
+| You type | What it does |
 |---|---|
-| `## Heading` and `### Smaller heading` | section headings |
-| `**bold**` and `*italic*` | **bold** and *italic* |
-| `- item` | a bullet list (indent two spaces to nest) |
+| `## Heading` | a section heading. The page title is added for you, so start at `##` |
+| `### Smaller heading` | a sub-section. `####` to `######` also work, for deeper levels |
+| `- item` or `* item` | a bullet list, with each item on its own line |
 | `1. step` | a numbered list |
-| `> quote` | a quotation |
-| `\| a \| b \|` rows with a `\|---\|---\|` line under the first | a table (put a backslash before any pipe that belongs inside a cell) |
+| two spaces then `- item` | a nested item, one level in |
+| `> quote` | a quotation, for in-game text or developer statements (say where it came from) |
+| `---` on its own line | a horizontal divider |
 
-Preformatted text goes between two lines of three backticks. It is shown exactly as typed, which suits commands or in-game chat lines, and the two examples in this page are written that way. To mark a short stretch inline, put it in single backticks, as in `inline code`.
+A numbered list with a nested bullet list inside it:
 
-Here is how a few of these look once rendered. A nested list, indented two spaces:
+1. A numbered list
+2. Second step
+   - A bullet inside the step
+   - Another one
+3. Third step
 
-- A bullet list
-- Another item
-  - A nested item
-- A third item
+A quotation:
 
-A quotation, for in-game text or developer statements (say where they came from):
+> Quotations are set off from the text. Say who said it and where.
 
-> Quotations are set off from the text.
+A horizontal divider, which is the `---` line:
 
-Raw HTML is not supported. It is shown as plain text, which keeps pages safe and consistent.
+---
+
+Preformatted text goes between two lines of three backticks. It is shown exactly as typed, which suits commands or in-game chat lines, and the code samples in this page are written that way.
+
+A table is a header row, a line of `---` under it, then one row per line, with `|` between the cells. Put a backslash before any `|` that belongs inside a cell.
+
+```
+| Item | Where it goes |
+|---|---|
+| Rows | one per line |
+| Cells | separated by pipes |
+```
+
+which gives:
+
+| Item | Where it goes |
+|---|---|
+| Rows | one per line |
+| Cells | separated by pipes |
+
+Cells can hold bold text, links and code. Column alignment is not supported.
+
+### Other links on this site
+
+A normal Markdown link can point at any page of the site, so you can send readers to a category, to a Patch Notes list or to the feedback page. Write the address starting with `#/`:
+
+| You type | Result |
+|---|---|
+| `[Contributing](#/guide/category/Contributing)` | [Contributing](#/guide/category/Contributing) (a Game Guide category) |
+| `[Audio](#/hub/Audio)` | [Audio](#/hub/Audio) (a Patch Notes category) |
+| `[all patches](#/patches)` | [all patches](#/patches) |
+| `[recent changes](#/recent)` | [recent changes](#/recent) |
+| `[all topics](#/topics)` | [all topics](#/topics) |
+| `[Feedback and bugs](#/feedback)` | [Feedback and bugs](#/feedback) |
+
+These are plain links: they have no PN or arrow marker and they do not appear in the References section, so use the double-bracket forms from the linking examples above when you want a topic, patch or guide page listed there.
+
+**Link previews.** On a computer, pointing at a link to a guide page, a topic, a patch, a category or a system shows a short preview of what is there. You do not write anything for this. Point at any link in the Result columns on this page to see it. Readers can turn previews off in the settings panel.
+
+### Not supported
+
+Raw HTML (it is shown as plain text, which keeps pages safe and consistent), strikethrough, underline, coloured text, footnotes, task-list checkboxes, merged table cells, column alignment, embedded video or other media, forced line breaks inside a paragraph, and links to a section inside a page. Leave these out and the page will look right everywhere.
 
 ## Pictures
 
@@ -164,6 +238,16 @@ Here is the sample picture from above with a caption, floated to the right:
 ![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg "Sarsaparilla, looking majestic."){right 220}
 
 Text next to a floated picture wraps around it, as on Wikipedia, and a heading starts below it. Several pictures floated the same way stack down the side. On a phone the picture moves above the text and takes the full width, because narrow columns of wrapped text are hard to read. Write the caption as a short sentence naming what is shown, and keep the alt text for describing what the picture looks like.
+
+The same picture floated to the left, 150 pixels wide. The text now runs down its right-hand side, which suits a small picture that illustrates the paragraph it sits beside.
+
+![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg "Floated left, 150 wide."){left 150}
+
+Here the text carries on beside the left-hand picture for a few more lines, so you can see how a left float and the paragraph work together. A heading, a table or a centered picture starts below the float, never beside it, so the page stays tidy.
+
+And centered, 300 pixels wide, standing alone on its line:
+
+![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg "Centered, 300 wide."){center 300}
 
 ## Good practice
 
