@@ -185,14 +185,99 @@ Press `Jump` to climb, and write `[[a page]]` to link.
 
 ### Code blocks
 
-For several lines shown exactly as typed, put a line of three backticks above them and another below. That suits commands, in-game chat lines and data, and it is how the grey boxes in this page are written. Spacing and line breaks are kept, and long lines scroll sideways.
+For several lines shown exactly as typed, put a line of three backticks above them and another below. That suits commands, in-game chat lines, settings and data, and it is how the grey boxes in this page are written. Spacing and line breaks are kept, and long lines scroll sideways. Every box has a **Copy** button in its top bar, which copies the text exactly as typed, without the colours.
 
-You can name the kind of text straight after the opening backticks, for example `json`, `lua` or `text`. The name is shown as a small label in the corner of the box. It is only a label: colour highlighting of the code is not supported. A box with no name works exactly the same.
+(Optional) Put a language name straight after the opening backticks, for example `json`. The name then appears in the box's top bar and the code is coloured. A box with no name, or with a name the site does not know, is shown plain with no colours, and a name you gave still appears in the bar. Names are not case sensitive.
 
-A code box cannot be placed inside another, so the plain syntax is described here and not shown in a box. Rendered, with the name `json`:
+| You write | The code is coloured as |
+|:---|:---|
+| `json` | JSON |
+| `js`, `javascript`, `ts`, `typescript` | JavaScript and TypeScript |
+| `bash`, `sh`, `zsh`, `shell`, `console` | Shell commands (a leading `$` or `>` prompt is picked out) |
+| `powershell`, `ps1`, `pwsh` | PowerShell |
+| `bat`, `batch`, `cmd` | Windows batch files |
+| `ini`, `conf`, `cfg`, `config`, `toml`, `properties` | Settings files |
+| `yaml`, `yml` | YAML |
+| `lua` | Lua |
+| `cs`, `csharp`, `c#` | C# |
+| `xml`, `html`, `xaml`, `svg` | XML and HTML |
+| `python`, `py` | Python |
+| `markdown`, `md` | Markdown, including `[[links]]` and `{{keys}}` |
+| `text`, `txt`, or no name | no colours |
+
+The colouring is a guide for the eye, not a full reader of the language, so unusual code may be coloured imperfectly. That does no harm, and the text itself is never changed. Very long boxes (over about 20,000 characters) are shown without colours.
+
+A code box cannot be placed inside another, so the plain syntax is described here and not shown in a box. Each box below was written with the name shown in its top bar:
 
 ```json
-{"label": "the name shows in the corner"}
+{"name": "my-mod", "version": 2, "enabled": true, "tags": ["audio", null]}
+```
+
+```bash
+# list the save files
+$ ls -la "$HOME/saves" --color=never
+export GAME_DIR="$HOME/daggerfall"
+```
+
+```powershell
+# list the save files
+Get-ChildItem -Path "C:\Games\Saves" -Recurse | Where-Object { $_.Length -gt 1MB }
+```
+
+```bat
+@echo off
+REM start the game
+set GAME=daggerfall.exe
+if exist "%GAME%" start "" "%GAME%"
+```
+
+```ini
+; display settings
+[Graphics]
+resolution = 1920
+fullscreen = true
+```
+
+```yaml
+# a mod list
+name: my-mod
+mods:
+  - audio-pack
+  - map-fix
+enabled: true
+```
+
+```js
+// log a message
+function greet(name) { return console.log("Hello, " + name); }
+```
+
+```lua
+-- print a message
+local greeting = "Hello"
+function greet(name) print(greeting, name) end
+```
+
+```cs
+// a message
+public class Greeter { public void Greet(string name) { Console.WriteLine($"Hello {name}"); } }
+```
+
+```xml
+<!-- a config file -->
+<settings enabled="true"><volume>80</volume></settings>
+```
+
+```python
+# print a message
+def greet(name):
+    return f"Hello {name}"
+```
+
+```markdown
+## A heading
+Some **bold** words, a `code` word, a [[Guide page]] link and a {{W}} key.
+- a list item
 ```
 
 ### Links to other websites
@@ -382,7 +467,7 @@ Keycaps work in tables and in captions, but not inside the text of a link. Put t
 
 ### What the site does for you
 
-You do not write these. They come from what you wrote: a **Contents** list built from the page's headings (docked in the left sidebar by default, where it follows the section being read; subsections are listed under their section behind a small arrow that the reader opens; readers can hide it behind a ☰ button beside the page title that floats at the top left of the window once they scroll past the title, and the site remembers their choice; on a narrow screen such as a phone there is no Contents list: each section and subsection folds instead, closed to begin with, and a reader taps a heading to open it), the page's place in the Game Guide index and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
+You do not write these. They come from what you wrote: a **Contents** list built from the page's headings (docked in the left sidebar by default, where it follows the section being read; subsections are listed under their section behind a small arrow that the reader opens; readers can hide it behind a ☰ button beside the page title that floats at the top left of the window once they scroll past the title, and the site remembers their choice; on a narrow screen such as a phone there is no Contents list: each section and subsection folds instead, closed to begin with, and a reader taps a heading to open it), the page's place in the Game Guide index and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, the **PN** and **↗** markers on links, and the colours and **Copy** button on code boxes.
 
 ## Not supported
 

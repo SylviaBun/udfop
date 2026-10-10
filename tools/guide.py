@@ -133,6 +133,28 @@ def check_images(pages, problems):
                 problems.append(('warn', rel, 'pictures are easier to find in web/guide/images/'))
 
 
+def code_languages():
+    """The language names the site colours: the keys of ALIASES in web/highlight.js, plus the plain ones."""
+    try:
+        src = open(os.path.join('web', 'highlight.js'), encoding='utf-8').read()
+        block = src[src.index('var ALIASES = {'):src.index('};', src.index('var ALIASES = {'))]
+        names = set(re.findall(r'(?:^|[\s,{])"?([A-Za-z0-9#]+)"?\s*:\s*\[', block))
+    except Exception:
+        return None
+    return names | {'text', 'txt', 'plain', 'none', 'log'}
+
+
+def check_code_languages(pages, problems):
+    """A fenced block can name a language after the backticks. An unknown name is shown plain, so say so."""
+    names = code_languages()
+    if not names:
+        return
+    for p in pages:
+        for lang in re.findall(r'^```[ 	]*([A-Za-z0-9+#.-]{1,20})[ 	]*$', p['_body'], flags=re.M):
+            if lang.lower() not in names:
+                problems.append(('warn', p['slug'] + '.md', 'the code box language "%s" is not one the site colours, so it will be shown plain (see "Code blocks" in the how-to page for the names)' % lang))
+
+
 def patch_versions():
     try:
         raw = open(os.path.join('web', 'data.js'), encoding='utf-8').read()
@@ -154,6 +176,7 @@ def main():
         seen[p['title'].lower()] = p['slug']
         seen.setdefault(p['slug'].lower(), p['slug'])
     check_images(pages, problems)
+    check_code_languages(pages, problems)
     topics = topic_names()
     for p in pages:
         for target in LINK.findall(re.sub(r'```.*?```|`[^`\n]*`', ' ', p['_body'], flags=re.S)):

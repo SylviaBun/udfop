@@ -303,8 +303,22 @@ a.missing, a.missing:visited { color: var(--nerf); }
 #app pre { overflow-x: auto; padding: 8px 12px; border: 1px solid var(--line); background: var(--softer); font-size: .85rem; }
 #app code { font-size: .88em; color: var(--code); background: color-mix(in srgb, var(--code) 12%, transparent); padding: 1px 5px; border-radius: 3px; }
 #app pre code { color: inherit; background: none; padding: 0; }
-#app pre[data-lang] { position: relative; }
-#app pre[data-lang]::before { content: attr(data-lang); position: absolute; top: 2px; right: 8px; font: 700 .65rem var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+/* code blocks: a bar with the language name and a Copy button, over code coloured by highlight.js */
+.codebox { margin: 0 0 1em; border: 1px solid var(--line); background: var(--softer); }
+.codebar { display: flex; align-items: center; justify-content: space-between; min-height: 1.9em; padding: 0 6px 0 12px; border-bottom: 1px solid var(--line); background: var(--soft); }
+.codelang { font: 700 .68rem var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.codecopy { margin: 2px 0; padding: 1px 9px; border: 1px solid var(--line); border-radius: 3px; background: var(--softer); color: var(--fg); font: inherit; font-size: .75rem; cursor: pointer; }
+.codecopy:hover { background: color-mix(in srgb, var(--accent) 22%, var(--soft)); border-color: var(--accent); }
+.codecopy:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
+#app .codebox pre { margin: 0; border: 0; background: none; }
+/* token colours: one set for light and one for dark, checked against every theme's code background */
+:root { --tk-k: #b81f29; --tk-s: #0a3069; --tk-n: #0550ae; --tk-c: #59626d; --tk-f: #6f3fc9; --tk-a: #116329; --tk-t: #953800; --tk-v: #a3330f; --tk-m: #6639ba; --tk-h: #0550ae; }
+:root[data-theme="dark"] { --tk-k: #ff7b72; --tk-s: #a5d6ff; --tk-n: #79c0ff; --tk-c: #9aa4b0; --tk-f: #d2a8ff; --tk-a: #7ee787; --tk-t: #ffa657; --tk-v: #ffb38a; --tk-m: #c2a8ff; --tk-h: #79c0ff; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --tk-k: #ff7b72; --tk-s: #a5d6ff; --tk-n: #79c0ff; --tk-c: #9aa4b0; --tk-f: #d2a8ff; --tk-a: #7ee787; --tk-t: #ffa657; --tk-v: #ffb38a; --tk-m: #c2a8ff; --tk-h: #79c0ff; }
+}
+.tk-k { color: var(--tk-k); } .tk-s { color: var(--tk-s); } .tk-n { color: var(--tk-n); } .tk-c { color: var(--tk-c); font-style: italic; }
+.tk-f { color: var(--tk-f); } .tk-a { color: var(--tk-a); } .tk-t { color: var(--tk-t); } .tk-v { color: var(--tk-v); } .tk-m { color: var(--tk-m); } .tk-h { color: var(--tk-h); font-weight: 700; }
 #app img { max-width: 100%; height: auto; }
 
 /* Game Guide page lists: one card per page, reflowing with the width */
@@ -355,7 +369,7 @@ figure.fig-center figcaption { text-align: center; }
 h2.sec, h3.sec { display: flow-root; }
 #gp h2.cl, #gp h3.cl { clear: both; }
 /* tables and code boxes sit beside the Contents box, and only step below a right-hand picture */
-#gp figure.fig-right ~ .wrap, #gp figure.fig-right ~ pre { clear: right; }
+#gp figure.fig-right ~ .wrap, #gp figure.fig-right ~ .codebox { clear: right; }
 @media (max-width: 600px) {
   figure.fig-left, figure.fig-right { float: none; width: auto !important; margin-left: 0; margin-right: 0; }
 }

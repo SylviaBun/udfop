@@ -547,6 +547,12 @@
       return '<li><a href="' + esc(e.url) + '" rel="noopener">' + esc(e.text || host) + "</a>" + MARK_EXT + ' <small class="muted">(' + esc(host) + ")</small></li>"; }).join("") + "</ol>";
     return h;
   }
+  /* a fenced code block: a bar with the language name and a Copy button over the coloured code (colours come from highlight.js, which escapes everything) */
+  function codeBox(lang, raw) {
+    var hl = window.udfopHighlight ? window.udfopHighlight.run(raw, lang) : { html: esc(raw), label: lang };
+    return '<div class="codebox"><div class="codebar"><span class="codelang">' + esc(hl.label || "") + '</span><button type="button" class="codecopy" aria-label="Copy this code">Copy</button></div><pre><code' +
+      (lang ? ' class="lang-' + esc(lang) + '"' : "") + ">" + hl.html + "</code></pre></div>";
+  }
   var mdBase = "";   /* folder of the page being rendered, so pictures resolve next to it */
   function markdown(src, title) {
     var lines = src.replace(/\r\n?/g, "\n").split("\n"), out = [], i = 0, first = true, figSince = false;
@@ -557,9 +563,9 @@
       if ((m = /^```\s*([A-Za-z0-9+#.-]{1,20})?\s*$/.exec(l))) {
         var code = [], lang = (m[1] || "").toLowerCase(); i++;
         while (i < lines.length && !/^```/.test(lines[i])) code.push(lines[i++]);
-        i++; out.push("<pre" + (lang ? ' data-lang="' + esc(lang) + '"' : "") + "><code" + (lang ? ' class="lang-' + esc(lang) + '"' : "") + ">" + esc(code.join("\n")) + "</code></pre>"); continue;
+        i++; out.push(codeBox(lang, code.join("\n"))); continue;
       }
-      if ((m = /^(#{1,6})\s+(.*?)\s*#*\s*$/.exec(l))) {
+      if ((m = /^(#{1,6})\s+(.*?)(?:\s+#+)?\s*$/.exec(l))) {
         var text = plainText(m[2]);
         if (first && m[1].length === 1 && text.toLowerCase() === (title || "").toLowerCase()) { i++; first = false; continue; }
         var lvl = Math.min(6, Math.max(2, m[1].length));
@@ -861,6 +867,19 @@
     if (d) {
       var k = d.getAttribute("data-dock");
       updateSetting(k, loadSettings()[k] === "sidebar" ? "popover" : "sidebar"); setMenu(false); setToc(false); settingsPanel.close(false);
+    }
+  });
+
+  /* the Copy button on code blocks */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".codecopy");
+    if (!b) return;
+    var text = b.closest(".codebox").querySelector("pre").textContent;
+    function done(ok) { b.textContent = ok ? "Copied" : "Copy failed"; clearTimeout(b.__t); b.__t = setTimeout(function () { b.textContent = "Copy"; }, 1600); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+    else {
+      var ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;left:-9999px;top:0";
+      document.body.appendChild(ta); ta.select(); var ok = false; try { ok = document.execCommand("copy"); } catch (err) {} ta.remove(); done(ok);
     }
   });
 
