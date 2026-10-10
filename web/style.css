@@ -229,28 +229,30 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
 #gear:hover, body.settings-open #gear { background: var(--soft); }
 #gear:focus-visible { outline: 2px solid var(--link); }
 #settings-panel { display: none; position: fixed; top: var(--head-h, 3.6rem); right: 8px; z-index: 15; max-height: calc(100vh - var(--head-h, 3.6rem) - 12px);
-  overflow-y: auto; width: 19rem; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); padding: 0 18px 24px; }
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; width: 19rem; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25);
+  padding: 16px 8px 24px 12px; font-size: .85rem; }
 body.settings-open #settings-panel { display: block; }
 .sp-actions { display: flex; align-items: center; gap: 8px; }
 .panel-dock { margin: 0; padding: 0 2px; border: 0; background: none; color: var(--link); font: inherit; font-size: .85rem; cursor: pointer; }
 .panel-dock:hover { text-decoration: underline; }
 .panel-dock .pd-hide, html[data-panel="sidebar"] .panel-dock .pd-dock { display: none; }
 html[data-panel="sidebar"] .panel-dock .pd-hide { display: inline; }
-.sp-head { display: flex; align-items: center; justify-content: space-between; margin: 0 -18px; padding: 10px 18px; background: var(--soft); border-bottom: 1px solid var(--line); }
-.sp-head h2 { margin: 0; font: 700 1.05rem var(--sans); border: 0; }
-#settings-close { border: 0; background: none; color: var(--fg); font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 6px; border-radius: 3px; }
+.sp-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 4px 8px; padding: 0 0 4px; border-bottom: 1px solid var(--line); }
+.sp-head h2 { margin: 0; font: 700 1em var(--sans); border: 0; padding: 0; }
+#settings-close { border: 0; background: none; color: var(--fg); font-size: 1.3rem; line-height: 1; cursor: pointer; padding: 0 4px; border-radius: 3px; }
 #settings-close:hover { background: var(--line); }
 #settings-close:focus-visible { outline: 2px solid var(--link); }
-#settings-note { font-size: .82rem; }
-.setting { margin: 1.2em 0; padding: 0; border: 0; }
-.setting legend { padding: 0; font-weight: 700; margin-bottom: .3em; }
-.setting p { margin: .2em 0 .5em; }
+#settings-note { font-size: .8rem; margin-left: 8px; }
+.setting { margin: 0 0 8px 8px; padding: 0; border: 0; min-width: 0; }
+.setting legend { padding: 0; margin: 14px 0 4px; font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.setting p { margin: 0 0 6px; font-size: .8rem; line-height: 1.4; }
+#settings-body > p { margin-left: 8px; }
 .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
 .seg label { position: relative; display: block; }
 .seg label + label { border-left: 1px solid var(--line); }
 .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-.seg span { display: block; padding: 6px 14px; background: var(--softer); }
-.seg input:checked + span { background: var(--accent); color: var(--paper); font-weight: 700; }
+.seg span { display: block; padding: 3px 11px; background: var(--softer); }
+.seg input:checked + span { background: var(--soft); color: var(--fg); font-weight: 700; box-shadow: inset 0 -3px 0 var(--accent); }
 .seg input:focus-visible + span { outline: 2px solid var(--link); outline-offset: -2px; }
 
 
@@ -278,7 +280,7 @@ html[data-panel="sidebar"] .panel-dock .pd-hide { display: inline; }
 /* theme picker: a 2 x 2 grid with a small color dot */
 .seg.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); }
 .seg.grid label + label { border-left: 0; }
-.seg.grid span { display: flex; align-items: center; gap: 6px; padding: 8px 8px; white-space: nowrap; font-size: .92em; }
+.seg.grid span { display: flex; align-items: center; gap: 6px; padding: 5px 8px; white-space: nowrap; }
 .dot { flex: none; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--line); }
 
 /* narrow phones: the infobox takes the full width above the text */
@@ -427,7 +429,7 @@ html[data-menu="popover"] .menu-dock .md-dock { display: inline; }
   html[data-panel="sidebar"] .head-in { max-width: calc(14.5em + 70rem + 19rem); }
   html[data-panel="sidebar"][data-width="wide"] .head-in, html[data-panel="sidebar"][data-menu="popover"] .head-in { max-width: none; }
   html[data-panel="sidebar"] #settings-panel { display: block; grid-column: -2 / -1; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem); right: auto; z-index: auto;
-    height: calc(100vh - var(--head-h, 3.6rem)); max-height: none; box-shadow: none; border-bottom: 0; }
+    height: calc(100vh - var(--head-h, 3.6rem)); max-height: none; box-shadow: none; background: none; border: 0; }
   html[data-panel="sidebar"] #gear, html[data-panel="sidebar"] #settings-close { display: none; }
 }
 @media (max-width: 860px), (max-height: 500px) and (max-width: 1100px) { .side-head { display: none; } }
