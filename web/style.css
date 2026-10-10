@@ -388,3 +388,11 @@ kbd.k-pad { border-radius: 999px; border-color: var(--accent); }
 
 /* guide tables size to their content; the 260px last-column minimum is for the patch-notes change text */
 #gp .wikitable td:last-child { min-width: 0; }
+
+/* keycaps on the dark themes: a raised grey cap with a bright edge (keys and mouse buttons) and an accent-tinted cap (gamepad). Border contrast is 5:1 or better. */
+:root[data-theme="dark"] kbd.k { background: #3d4550; color: #f4f6f8; border-color: #8b95a3; border-bottom-color: #b4bdc8; }
+:root[data-theme="dark"] kbd.k-pad { background: color-mix(in srgb, var(--paper) 72%, var(--accent)); color: #fff; border-color: var(--accent); border-bottom-color: var(--accent); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) kbd.k { background: #3d4550; color: #f4f6f8; border-color: #8b95a3; border-bottom-color: #b4bdc8; }
+  :root:not([data-theme="light"]) kbd.k-pad { background: color-mix(in srgb, var(--paper) 72%, var(--accent)); color: #fff; border-color: var(--accent); border-bottom-color: var(--accent); }
+}
