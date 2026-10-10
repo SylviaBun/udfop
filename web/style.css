@@ -312,6 +312,7 @@ a.missing, a.missing:visited { color: var(--nerf); }
 .gcards li { display: flex; flex-direction: column; gap: 3px; margin: 0; padding: 8px 12px; border: 1px solid var(--line); background: var(--softer); }
 .gcards li > a { font-weight: 700; }
 .gcards .gsum { font-size: .85rem; color: var(--muted); }
+.allpages { margin: -.4em 0 1.2em; font-size: .9rem; }
 
 /* category page: Wikipedia-style lettered columns */
 .catlist { columns: 3 16em; column-gap: 28px; margin: .6em 0 1.2em; }

@@ -303,21 +303,30 @@
       var s = (r.e + " " + r.x + " " + (r.n || "") + " " + (r.g || []).join(" ")).toLowerCase();
       return words.every(function (w) { return s.indexOf(w) >= 0; });
     });
-    var gp = (guide || []).filter(function (p) {
-      var s = (p.title + " " + p.summary + " " + p.category + " " + p.text).toLowerCase();
-      return words.every(function (w) { return s.indexOf(w) >= 0; });
-    });
+    var gp = (guide || []).map(function (p) {
+      var all = (p.title + " " + p.summary + " " + p.category + " " + p.text).toLowerCase();
+      if (!words.every(function (w) { return all.indexOf(w) >= 0; })) return null;
+      var ti = p.title.toLowerCase(), head = (p.title + " " + p.summary + " " + p.category).toLowerCase();
+      /* 0: every word is in the title; 1: in the title, summary or category; 2: only in the page text */
+      return { p: p, rank: words.every(function (w) { return ti.indexOf(w) >= 0; }) ? 0 : words.every(function (w) { return head.indexOf(w) >= 0; }) ? 1 : 2 };
+    }).filter(Boolean).sort(function (a, b) { return a.rank - b.rank || a.p.title.localeCompare(b.p.title); }).map(function (x) { return x.p; });
     var h = "";
     if (!words.length) h = "<p>Type something in the search box.</p>";
     else {
       h = '<p>Results for <b>' + esc(q) + "</b>: " + plural(gp.length, "guide page") + ", " + plural(tm.length, "matching topic") + " and " + plural(hit.length, "matching change") + ".</p>";
-      if (gp.length) h += sec("Game Guide", "Game Guide", 2) + guideCards(gp.slice(0, 40));
+      if (gp.length) {
+        h += sec("Game Guide", "Game Guide", 2) + guideCards(gp.slice(0, SEARCH_SHOWN));
+        if (gp.length > SEARCH_SHOWN) h += '<div id="gp-rest" hidden>' + guideCards(gp.slice(SEARCH_SHOWN)) + '</div><p><button type="button" class="more" id="gp-more">Show the other ' + (gp.length - SEARCH_SHOWN) + " guide pages</button></p>";
+      }
       if (tm.length === 1 && tm[0].toLowerCase() === q.toLowerCase()) h = '<div class="mbox">There is a topic named “' + tlink(tm[0]) + "”.</div>" + h;
       if (tm.length) h += sec("Topics", "Topics", 2) + topicList(tm.slice(0, 80));
       if (hit.length) h += sec("Changes", "Changes", 2) + table(hit, ["Patch", "Topic", "Type", "Change"], 100);
       if (!tm.length && !hit.length && !gp.length) h += "<p>No results. Try fewer or different words.</p>";
     }
-    return { title: "Search: " + q, html: page("Search", h) };
+    return { title: "Search: " + q, html: page("Search", h), after: function () {
+      var b = document.getElementById("gp-more");
+      if (b) b.addEventListener("click", function () { document.getElementById("gp-rest").hidden = false; b.parentNode.remove(); });
+    } };
   };
 
   views.about = function () {
@@ -368,6 +377,7 @@
       return "<section><h3>" + esc(ch) + "</h3><ul>" + letters[ch].map(li).join("") + "</ul></section>";
     }).join("") + "</div>";
   }
+  var INDEX_SHOWN = 6, SEARCH_SHOWN = 20;   /* guide pages listed per category on the index, and per first screen of search results */
   function guideCards(list) {
     return '<ul class="gcards">' + list.map(function (p) {
       return "<li>" + glink(p) + (p.summary ? '<span class="gsum">' + esc(p.summary) + "</span>" : "") + "</li>";
@@ -624,7 +634,9 @@
     else {
       var cats = guideCategories();
       Object.keys(cats).forEach(function (c) {
-        h += sec(c, c, 2).replace(">" + esc(c) + "</h2>", '><a href="#/guide/category/' + enc(c) + '">' + esc(c) + "</a></h2>") + guideCards(cats[c]);   /* the section name opens that category's page */
+        var all = cats[c];
+        h += sec(c, c, 2).replace(">" + esc(c) + "</h2>", '><a href="#/guide/category/' + enc(c) + '">' + esc(c) + "</a></h2>") + guideCards(all.slice(0, INDEX_SHOWN));   /* the section name opens that category's page */
+        if (all.length > INDEX_SHOWN) h += '<p class="allpages"><a href="#/guide/category/' + enc(c) + '">All ' + all.length + " pages in " + esc(c) + " →</a></p>";
       });
     }
     return { title: "Game Guide", html: page("Game Guide", h) };
