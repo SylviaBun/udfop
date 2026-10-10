@@ -452,11 +452,12 @@
   /* Keys and buttons: {{W}}, {{Shift+Right click}}, {{Mouse 4}}, {{pad:RT}} become keycaps */
   var MOUSE_KEY = /^(mouse\s*\d|(left|right|middle)\s*click|click|scroll(\s*(up|down|wheel))?|wheel)$/i;
   function keycaps(text) {
-    var pad = /^pad\s*:/i.test(text); text = text.replace(/^pad\s*:\s*/i, "").trim();
-    var parts = text === "+" ? ["+"] : text.split("+").map(function (x) { return x.trim(); }).filter(Boolean);
+    /* a "+" joins keys only when a key follows it directly, so "Shift+F10" is two caps while "Numpad +" and "{{+}}" are one */
+    var all = /^pad\s*:/i.test(text), parts = text.trim().split(/\+(?=\S)/).map(function (x) { return x.trim(); }).filter(Boolean);
     if (!parts.length) return esc(text);
     var caps = parts.map(function (k) {
-      var cls = pad ? "k k-pad" : MOUSE_KEY.test(k) ? "k k-mouse" : "k";
+      var own = /^pad\s*:/i.test(k); k = k.replace(/^pad\s*:\s*/i, "");
+      var cls = all || own ? "k k-pad" : MOUSE_KEY.test(k) ? "k k-mouse" : "k";
       return '<kbd class="' + cls + '">' + esc(k) + "</kbd>";
     });
     return caps.length === 1 ? caps[0] : '<span class="keys">' + caps.join('<span class="kplus">+</span>') + "</span>";
