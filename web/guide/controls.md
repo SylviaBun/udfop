@@ -177,7 +177,7 @@ The following keybinds are as default in the most recent build of Daggerfall Onl
 | **More Sail** | {{Up}} | None |
 | **Less Sail** | {{Down}} | None |
 | **Leave the Helm** | {{'}} (apostrophe) | None |
-| **Light or Douse the Boat's Lanterns** | {{;}} (semi-collon) | None |
+| **Light or Douse the Boat's Lanterns** | {{;}} (semicolon) | None |
 | **Raise or Stow the Sails** | {{End}} | None |
 | **Trim the Sails Right** | {{]}} (right bracket) | None |
 | **Trim the Sails Left** | {{[}} (left bracket) | None |
