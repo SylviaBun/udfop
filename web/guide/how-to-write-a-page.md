@@ -402,7 +402,7 @@ Once your page is live, look for these:
 
 1. It is listed on the Game Guide index, under its category, with its summary beside the name.
 2. If you used a new category, it appears as a group on the **Game Guide** page.
-3. The breadcrumb at the top reads Main Page › Game Guide › your category.
+3. The breadcrumb at the top reads Game Guide › your category.
 4. Searching for a word from its title finds it.
 5. Pictures appear, and any red link opens GitHub's editor with a new page ready.
 
