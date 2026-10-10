@@ -9,8 +9,8 @@
 
   /* ---------- display settings (saved in this browser only) ---------- */
   var SETTINGS_KEY = "udfop.settings";
-  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"], toc: ["article", "side"], tocbox: ["open", "closed"] };
-  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on", toc: "article", tocbox: "open" };
+  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"], toc: ["article", "side"], tocbox: ["open", "closed"], menu: ["sidebar", "popover"] };
+  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on", toc: "article", tocbox: "open", menu: "sidebar" };
   function loadSettings() {
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {}; } catch (e) {}
@@ -23,7 +23,7 @@
   }
   function applySettings(st) {
     var d = document.documentElement;
-    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"], ["toc", "article"], ["tocbox", "open"]].forEach(function (p) {
+    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"], ["toc", "article"], ["tocbox", "open"], ["menu", "sidebar"]].forEach(function (p) {
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
     if (typeof syncFold === "function") syncFold();
@@ -753,6 +753,9 @@
     if (e.target.closest && e.target.closest(".toc-fold")) {
       updateSetting("tocbox", document.documentElement.getAttribute("data-tocbox") === "closed" ? "open" : "closed"); syncFold();
     }
+    if (e.target.closest && e.target.closest(".menu-dock")) {
+      updateSetting("menu", document.documentElement.getAttribute("data-menu") === "popover" ? "sidebar" : "popover"); setMenu(false);
+    }
     if (e.target.closest && e.target.closest(".toc-pin")) updateSetting("toc", "side");
     if (e.target.closest && e.target.closest(".toc-unpin")) updateSetting("toc", "article");
   });
@@ -767,6 +770,9 @@
   function setMenu(on) {
     if (on && typeof settingsPanel !== "undefined" && settingsPanel) settingsPanel.close(false); document.body.classList.toggle("menu-open", on); document.getElementById("menu").setAttribute("aria-expanded", on ? "true" : "false"); }
   document.getElementById("menu").addEventListener("click", function () { setMenu(!document.body.classList.contains("menu-open")); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && document.body.classList.contains("menu-open")) { setMenu(false); document.getElementById("menu").focus(); }
+  });
 
   /* sidebar */
   document.getElementById("side-patches").innerHTML = versions.slice(0, 6).map(function (v) { return "<li>" + vlink(v) + "</li>"; }).join("") +
@@ -818,6 +824,7 @@
       { key: "theme", legend: "Color", help: "Auto follows your device's light or dark setting.", labels: ["Auto", "Light", "Dark"] },
       { key: "size", legend: "Text size", help: "Scales all text and spacing.", labels: ["Small", "Medium", "Large"] },
       { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] },
+      { key: "menu", legend: "Main menu", help: "Docked in a sidebar beside the page, or tucked behind the ☰ button as a pop-up. On a phone it is always the pop-up.", labels: ["In the sidebar", "As a pop-up"] },
       { key: "toc", legend: "Contents", help: "Where the list of sections sits. In the sidebar it stays beside the article and highlights where you are; on a phone it is in the menu.", labels: ["In the article", "In the sidebar"] },
       { key: "previews", legend: "Link previews", help: "A short preview appears when you point at a link to a page or topic. Not shown on touch screens.", labels: ["On", "Off"] }
     ];

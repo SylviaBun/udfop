@@ -17,6 +17,7 @@
     if (s.theme === "light" || s.theme === "dark") d.setAttribute("data-theme", s.theme);
     if (["parchment", "iliac", "oblivion"].indexOf(s.skin) >= 0) d.setAttribute("data-skin", s.skin);
     if (s.toc === "side") d.setAttribute("data-toc", "side");
+    if (s.menu === "popover") d.setAttribute("data-menu", "popover");
     if (s.tocbox === "closed") d.setAttribute("data-tocbox", "closed");
   } catch (e) {}
 })();
@@ -26,7 +27,7 @@
 <body>
 <header id="head">
   <div class="head-in">
-    <button id="menu" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+    <button id="menu" aria-label="Main menu" title="Main menu" aria-expanded="false">&#9776;</button>
     <a id="logo" href="#/"><span class="mark">UDFOP</span><span class="name">Unofficial Daggerfall Online Pages<small>Game Guide &amp; Patch Notes</small></span></a>
     <form id="search" role="search" autocomplete="off">
       <input type="search" id="q" placeholder="Search the wiki" aria-label="Search the wiki">
@@ -37,6 +38,7 @@
 </header>
 <div id="page">
   <aside id="side">
+    <div class="side-head"><span>Main menu</span><button type="button" class="menu-dock"><span class="md-hide">hide</span><span class="md-dock">move to sidebar</span></button></div>
     <nav aria-label="Contents of this page" id="side-toc" hidden>
       <h3>Contents</h3>
       <div id="side-toc-list"></div>

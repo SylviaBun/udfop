@@ -402,3 +402,32 @@ kbd.k-pad { border-radius: 999px; border-color: var(--accent); }
   :root:not([data-theme="light"]) kbd.k { background: #3d4550; color: #f4f6f8; border-color: #8b95a3; border-bottom-color: #b4bdc8; }
   :root:not([data-theme="light"]) kbd.k-pad { background: color-mix(in srgb, var(--paper) 72%, var(--accent)); color: #fff; border-color: var(--accent); border-bottom-color: var(--accent); }
 }
+
+/* main menu: docked as a sidebar, or tucked behind the hamburger as a pop-up (phones always use the pop-up) */
+.side-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 4px 8px; padding: 0 0 4px; border-bottom: 1px solid var(--line); font-weight: 700; }
+.menu-dock { margin: 0; padding: 0 2px; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; font-weight: 400; cursor: pointer; }
+.menu-dock:hover { text-decoration: underline; }
+.menu-dock .md-dock, html[data-menu="popover"] .menu-dock .md-hide { display: none; }
+html[data-menu="popover"] .menu-dock .md-dock { display: inline; }
+#menu:hover, body.menu-open #menu { background: var(--soft); }
+#menu { border-radius: 3px; line-height: 1; padding: 4px 8px; margin-right: 6px; }
+@media (min-width: 861px) and (min-height: 501px), (min-width: 1101px) {
+  html[data-menu="popover"] #menu { display: block; }
+  html[data-menu="popover"] #page, html[data-menu="popover"] body.settings-open #page { grid-template-columns: minmax(0, 70rem); }
+  html[data-menu="popover"][data-width="wide"] #page, html[data-menu="popover"][data-width="wide"] body.settings-open #page { grid-template-columns: minmax(0, 1fr); }
+  html[data-menu="popover"] .head-in, html[data-menu="popover"] body.settings-open .head-in { max-width: 70rem; }
+  html[data-menu="popover"][data-width="wide"] .head-in, html[data-menu="popover"][data-width="wide"] body.settings-open .head-in { max-width: none; }
+  html[data-menu="popover"] #logo { width: auto; }
+  html[data-menu="popover"] #side { display: none; position: fixed; top: var(--head-h, 3.6rem); left: max(8px, calc(50vw - 35rem)); height: auto; align-self: auto;
+    max-height: calc(100vh - var(--head-h, 3.6rem) - 12px); width: 16em; z-index: 15; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+  html[data-menu="popover"][data-width="wide"] #side { left: 8px; }
+  html[data-menu="popover"] body.menu-open #side { display: block; }
+}
+@media (min-width: 1101px) {
+  html[data-menu="popover"] body.settings-open #page { grid-template-columns: minmax(0, 70rem) 19rem; }
+  html[data-menu="popover"][data-width="wide"] body.settings-open #page { grid-template-columns: minmax(0, 1fr) 19rem; }
+  html[data-menu="popover"] #settings-panel { grid-column: 2; }
+  html[data-menu="popover"] body.settings-open .head-in { max-width: calc(70rem + 19rem); }
+  html[data-menu="popover"][data-width="wide"] body.settings-open .head-in { max-width: none; }
+}
+@media (max-width: 860px), (max-height: 500px) and (max-width: 1100px) { .side-head { display: none; } }
