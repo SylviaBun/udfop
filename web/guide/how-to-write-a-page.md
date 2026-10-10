@@ -46,7 +46,7 @@ Here is where each part shows up on the site:
 | In the file | What it does on the site |
 |---|---|
 | `title` | The page heading and the browser tab. It is also the name other pages use to link to this one: `[[Party rest]]`. Titles must be unique, and link matching is case-insensitive, so `[[how to write a guide page]]` works too. |
-| `category` (Optional) | Puts the page in a group. The group appears on the **Guide Pages** page, as its own page listing, and in the breadcrumb at the top of the page. |
+| `category` (Optional) | Puts the page in a group. The group appears on the **Game Guide** page, as its own page listing, and in the breadcrumb at the top of the page. |
 | `summary` (Optional) | The one-line description shown next to the page's name in lists and in search results. |
 | `related` (Optional) | Pages and topics to list in the References section even though the text does not link them. In the example it adds the Patch Notes topic Resting and the guide page Camping. See "The References section" below. |
 | `## Heading` lines (Optional) | Section headings. Every heading is listed in the page's **Contents** list, which is added automatically, like the one beside this page (in the left sidebar, or behind the ☰ button next to the title). The page title is added for you, so do not repeat it. |
@@ -66,10 +66,10 @@ The site has two parts that are built differently. Knowing which is which explai
 | When you... | ...this happens | Automatic? |
 |---|---|---|
 | Add a guide page | It appears on the Game Guide index under its category, on that category's page, and in search. | Yes, after the next deploy |
-| Use a category name no page has used before | A new group appears on the **Guide Pages** page. | Yes. Check the groups listed there first and reuse an existing name, or you will create a near-duplicate (such as "Combat" and "Combat system"). |
+| Use a category name no page has used before | A new group appears on the **Game Guide** page. | Yes. Check the groups listed there first and reuse an existing name, or you will create a near-duplicate (such as "Combat" and "Combat system"). |
 | Link with `[[Page title]]` | A normal link if that page exists. A **red** link if it does not. Clicking a red link starts that page. | Yes |
 | Link with `[[topic:Name]]` | A link to the Patch Notes topic with its full change history. | You add the link by hand |
-| Want your page listed in the main menu by name | The main menu has only a few fixed links, not individual pages. People find pages from the Guide Pages index, the category page, search and links. | No. Link to your page from related pages. |
+| Want your page listed in the main menu by name | The main menu has only a few fixed links, not individual pages. People find pages from the Game Guide index, the category page, search and links. | No. Link to your page from related pages. |
 | Want a Patch Notes topic page to show your guide page | Topic pages do not list guide pages. | No. The connection is only the links you write. |
 
 In short: **a guide page is found through its category, its title, search and the links other pages make to it.** The patch notes are connected only by links you choose to add.
@@ -382,7 +382,7 @@ Keycaps work in tables and in captions, but not inside the text of a link. Put t
 
 ### What the site does for you
 
-You do not write these. They come from what you wrote: a **Contents** list built from the page's headings (docked in the left sidebar by default, where it follows the section being read; subsections are listed under their section behind a small arrow that the reader opens; readers can hide it behind a ☰ button beside the page title that floats at the top left of the window once they scroll past the title, and the site remembers their choice; on a narrow screen such as a phone there is no Contents list: each section and subsection folds instead, closed to begin with, and a reader taps a heading to open it), the page's place in the Guide Pages index and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
+You do not write these. They come from what you wrote: a **Contents** list built from the page's headings (docked in the left sidebar by default, where it follows the section being read; subsections are listed under their section behind a small arrow that the reader opens; readers can hide it behind a ☰ button beside the page title that floats at the top left of the window once they scroll past the title, and the site remembers their choice; on a narrow screen such as a phone there is no Contents list: each section and subsection folds instead, closed to begin with, and a reader taps a heading to open it), the page's place in the Game Guide index and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
 
 ## Not supported
 
@@ -401,8 +401,8 @@ Raw HTML (it is shown as plain text, which keeps pages safe and consistent), str
 Once your page is live, look for these:
 
 1. It is listed on the Game Guide index, under its category, with its summary beside the name.
-2. If you used a new category, it appears as a group on the **Guide Pages** page.
-3. The breadcrumb at the top reads Main page › Game Guide › your category.
+2. If you used a new category, it appears as a group on the **Game Guide** page.
+3. The breadcrumb at the top reads Main Page › Game Guide › your category.
 4. Searching for a word from its title finds it.
 5. Pictures appear, and any red link opens GitHub's editor with a new page ready.
 

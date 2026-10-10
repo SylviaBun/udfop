@@ -1,6 +1,6 @@
 ---
 title: Page title
-# category: reuse a group name from the Guide Pages page, or leave empty for "General"
+# category: reuse a group name from the Game Guide page, or leave empty for "General"
 category:
 summary: One line saying what this page covers.
 ---
