@@ -26,7 +26,7 @@ The **Edit this page** link and the red links to missing pages open the same edi
 
 This is a whole page file. It is named `party-rest.md`. The top block between the `---` lines is the page's *front matter*: a few labelled settings. Everything below it is the page text.
 
-```
+``` md
 ---
 title: Party rest
 category: Survival
@@ -82,7 +82,7 @@ These are plain Markdown, the same on any site that uses it. Each one has the ru
 
 A blank line starts a new paragraph. A single line break inside a paragraph is only a space.
 
-```
+``` md
 First line
 second line, same paragraph
 
@@ -102,7 +102,7 @@ If you want something on its own line, make it its own paragraph, or use a list.
 
 Start a line with `##` and a space for a section heading, `###` for a sub-section, and `####` to `######` for deeper levels. The page title is added for you, so start at `##`.
 
-```
+``` md
 ## A section
 ### A smaller section
 ```
@@ -125,7 +125,7 @@ This is **bold**, this is *italic*, and this is _also italic_.
 
 Start lines with `- ` or `* ` for bullets and `1. ` for numbers. Indent a line two spaces more than the item above it to nest it one level deeper. There is no limit on the number of levels, but a list reads best with no more than three.
 
-```
+``` md
 - A bullet
 - Another bullet
   - A nested bullet
@@ -151,7 +151,7 @@ Rendered:
 
 Start a line with `>` for a quotation, which suits in-game text or developer statements. Say where it came from.
 
-```
+```md
 > Quotations are set off from the text.
 ```
 
@@ -163,7 +163,7 @@ Rendered:
 
 Three dashes on a line of their own draw a divider.
 
-```
+```md
 ---
 ```
 
@@ -175,7 +175,7 @@ Rendered:
 
 Put a short stretch between single backticks to show it exactly as typed. This is also how to show markup literally, so it is not turned into a link or bold. Inline code is shown in an accent colour on a faint background, so it stands out from plain text and is never mistaken for a link: amber on the default and Iliac Bay themes, green on Parchment and blue on Oblivion.
 
-```
+```md
 Press `Jump` to climb, and write `[[a page]]` to link.
 ```
 
@@ -284,7 +284,7 @@ Some **bold** words, a `code` word, a [[Guide page]] link and a {{W}} key.
 
 Write the words in square brackets and the address in round brackets.
 
-```
+```md
 [a link to GitHub](https://github.com)
 ```
 
@@ -296,7 +296,7 @@ Rendered:
 
 A header row, a line of three dashes per column under it, then one row per line, with `|` between the cells. Put a backslash before any `|` that belongs inside a cell. Cells can hold bold text, links and code. Colons in the line of dashes set each column's alignment: a colon on the left (`:---`) aligns left, which is the default, a colon on both sides (`:---:`) centers, and a colon on the right (`---:`) aligns right. Right alignment suits numbers.
 
-```
+```md
 | Item | Where it goes | Count |
 |:---|:---:|---:|
 | Rows | one per line | 12 |
@@ -314,7 +314,7 @@ Rendered:
 
 An exclamation mark, the description in square brackets, and the picture's path in round brackets. How to add the picture file itself is in the next section.
 
-```
+```md
 ![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg)
 ```
 
@@ -395,7 +395,7 @@ Each link appears once, in the order it first appears in the text. A page is "no
 
 **`related:` (Optional).** To list a page, topic or patch that does not belong in a sentence, add a `related:` line to the front matter at the top of the page, with names separated by commas. Start each name with `guide:`, `topic:` or `patch:` to say which kind it is:
 
-```
+```md
 related: guide:Party rest, topic:Resting, patch:0.1.6656
 ```
 
@@ -435,7 +435,7 @@ And centered, 300 pixels wide, standing alone on its line:
 
 To show a keyboard key, a mouse button or a gamepad button, put its name between double braces. It is drawn as a small keycap, so readers can see at a glance what to press. Use this for things you **press**. Use bold for buttons and menu labels you **click on screen**, such as **Rest**, so the two are never mixed up.
 
-```
+```md
 Press {{W}} to move forward and hold {{Left Shift}} to run.
 {{Shift+Right click}} draws the bow, and {{Mouse 4}} switches the view.
 On a controller, hold {{pad:RT}}.
@@ -501,7 +501,7 @@ Once your page is live, look for these:
 
 You do not need this to contribute. To see a page before proposing it, run these from the project folder, then open <http://localhost:8000>:
 
-```
+```py
 python tools/guide.py --check
 python -m http.server 8000 --directory web
 ```

@@ -35,7 +35,7 @@ Acquire the official [AppImage](https://github.com/Lattymoy/daggerfall-js-source
 
 Move the AppImage into an easy to remember directory, such as a folder in your Home directory named "AppImages"
 
-```
+```bash
 mkdir ~/AppImages
 
 mv ~/Downloads/DaggerfallOnline-linux-x86_64.AppImage ~/AppImages
@@ -44,7 +44,7 @@ mv ~/Downloads/DaggerfallOnline-linux-x86_64.AppImage ~/AppImages
 **Step 3**
 
 Mark the file as executable
-```
+```bash
 chmod +x ~/AppImages/DaggerfallOnline-linux-x86_64.AppImage
 ```
 
@@ -52,7 +52,7 @@ chmod +x ~/AppImages/DaggerfallOnline-linux-x86_64.AppImage
 
 Run the launcher from the terminal
 
-```
+```bash
 ~/AppImages/DaggerfallOnline-linux-x86_64.AppImage
 ```
 
