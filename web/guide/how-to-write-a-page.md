@@ -364,7 +364,7 @@ Press {{W}} to move forward and hold {{Left Shift}} to run. {{Shift+Right click}
 - **Arrow keys** are typed as words, `{{Up}}`, `{{Down}}`, `{{Left}}` and `{{Right}}`, and shown as arrows, ↑ ↓ ← →, which read faster. The words are only for the four arrow keys: `{{Left Shift}}` and `{{Left click}}` are not affected.
 - **Combinations** are joined with `+`, and each key gets its own cap, as in `{{Ctrl+Shift+K}}`. For a plus key itself, write `{{+}}`.
 - **Mouse buttons** are recognised by name (`Left click`, `Right click`, `Middle click`, `Mouse 3`, `Mouse 4`, `Mouse 5` and `Scroll`) and drawn with rounder corners than keyboard keys.
-- **Gamepad buttons** start with `pad:`, as in `{{pad:A}}`, and are drawn round. The prefix is not shown. Use the name printed on the button: A, B, X, Y, LB, RB, LT, RT, D-pad, Start.
+- **Gamepad buttons** start with `pad:`, as in `{{pad:A}}`, and are drawn round. The prefix is not shown. Use the name printed on the button; the table below lists the Xbox names, which are the game's own, and the PlayStation ones. When a page gives both for one button, put the Xbox name first and the PlayStation name second, such as `{{pad:RB}}, {{pad:R1}}`, and say so once on the page so readers know they are the same button on two controllers.
 - **Keys with symbols** are written as the character and named in plain words after it, so readers who do not know the symbol can find it: `{{;}} (semicolon)`, `{{,}} (comma)` or `{{[}} (left bracket)`.
 - **Use the same names everywhere** so pages agree. Use these:
 
@@ -374,6 +374,8 @@ Press {{W}} to move forward and hold {{Left Shift}} to run. {{Shift+Right click}
 | Function and editing | `F1` to `F12`, `Esc`, `Tab`, `Enter`, `Space`, `Backspace`, `Insert`, `Delete`, `Home`, `End`, `PgUp`, `PgDn` |
 | Arrows | `Up`, `Down`, `Left`, `Right` (shown as ↑ ↓ ← →) |
 | Modifiers | `Shift`, `Left Shift`, `Right Shift`, `Ctrl`, `Alt`, and `Left` or `Right` in front of each |
+| Gamepad (Xbox) | `A`, `B`, `X`, `Y`, `LB`, `RB`, `LT`, `RT`, `LSB` (left stick button), `RSB` (right stick button), `D-pad`, `D-pad Up`, `D-pad Down`, `D-pad Left`, `D-pad Right`, `Start`, `Back` |
+| Gamepad (PlayStation) | `Cross`, `Circle`, `Square`, `Triangle`, `L1`, `R1`, `L2`, `R2`, `L3`, `R3`, `D-pad`, `Start`, `Select` |
 | Number pad | `Numpad 0` to `Numpad 9`, `Numpad +`, `Numpad -`, `Numpad *`, `Numpad /`, `Numpad Enter` |
 
 Keycaps work in tables and in captions, but not inside the text of a link. Put the example in single backticks, as the code boxes on this page do, when you want to show the braces themselves.
