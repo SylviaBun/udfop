@@ -9,8 +9,8 @@
 
   /* ---------- display settings (saved in this browser only) ---------- */
   var SETTINGS_KEY = "udfop.settings";
-  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"], toc: ["article", "side"], tocbox: ["open", "closed"], menu: ["sidebar", "popover"] };
-  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on", toc: "article", tocbox: "open", menu: "sidebar" };
+  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"], toc: ["article", "side"], tocbox: ["open", "closed"], menu: ["sidebar", "popover"], panel: ["popover", "sidebar"] };
+  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on", toc: "article", tocbox: "open", menu: "sidebar", panel: "popover" };
   function loadSettings() {
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {}; } catch (e) {}
@@ -23,7 +23,7 @@
   }
   function applySettings(st) {
     var d = document.documentElement;
-    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"], ["toc", "article"], ["tocbox", "open"], ["menu", "sidebar"]].forEach(function (p) {
+    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"], ["toc", "article"], ["tocbox", "open"], ["menu", "sidebar"], ["panel", "popover"]].forEach(function (p) {
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
     if (typeof syncFold === "function") syncFold();
@@ -825,6 +825,7 @@
       { key: "size", legend: "Text size", help: "Scales all text and spacing.", labels: ["Small", "Medium", "Large"] },
       { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] },
       { key: "menu", legend: "Main menu", help: "Docked in a sidebar beside the page, or tucked behind the ☰ button as a pop-up. On a phone it is always the pop-up.", labels: ["In the sidebar", "As a pop-up"] },
+      { key: "panel", legend: "Settings panel", help: "A pop-up under the gear, or docked as a sidebar on the right (wide windows only).", labels: ["As a pop-up", "In the sidebar"] },
       { key: "toc", legend: "Contents", help: "Where the list of sections sits. In the sidebar it stays beside the article and highlights where you are; on a phone it is in the menu.", labels: ["In the article", "In the sidebar"] },
       { key: "previews", legend: "Link previews", help: "A short preview appears when you point at a link to a page or topic. Not shown on touch screens.", labels: ["On", "Off"] }
     ];
@@ -861,10 +862,14 @@
       gear.setAttribute("aria-expanded", "false"); panel.setAttribute("aria-hidden", "true");
       if (returnFocus) gear.focus();
     }
+    function docked() { return document.documentElement.getAttribute("data-panel") === "sidebar" && window.matchMedia("(min-width: 1101px)").matches; }
     gear.addEventListener("click", function () { if (isOpen()) close(true); else open(); });
+    document.querySelector(".panel-dock").addEventListener("click", function () {
+      updateSetting("panel", document.documentElement.getAttribute("data-panel") === "sidebar" ? "popover" : "sidebar"); st = loadSettings(); sync(); close(false);
+    });
     document.getElementById("settings-close").addEventListener("click", function () { close(true); });
     document.addEventListener("click", function (e) {
-      if (isOpen() && window.matchMedia("(max-width: 1100px)").matches && !e.target.closest("#settings-panel") && !e.target.closest("#gear")) close(false);
+      if (isOpen() && !docked() && !e.target.closest("#settings-panel") && !e.target.closest("#gear")) close(false);
     });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && isOpen()) close(true); });
     sync();

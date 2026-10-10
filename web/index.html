@@ -17,6 +17,7 @@
     if (s.theme === "light" || s.theme === "dark") d.setAttribute("data-theme", s.theme);
     if (["parchment", "iliac", "oblivion"].indexOf(s.skin) >= 0) d.setAttribute("data-skin", s.skin);
     if (s.toc === "side") d.setAttribute("data-toc", "side");
+    if (s.panel === "sidebar") d.setAttribute("data-panel", "sidebar");
     if (s.menu === "popover") d.setAttribute("data-menu", "popover");
     if (s.tocbox === "closed") d.setAttribute("data-tocbox", "closed");
   } catch (e) {}
@@ -90,7 +91,7 @@
     </footer>
   </main>
   <aside id="settings-panel" aria-label="Display settings" aria-hidden="true">
-    <div class="sp-head"><h2>Settings</h2><button id="settings-close" type="button" aria-label="Close settings">&times;</button></div>
+    <div class="sp-head"><h2>Settings</h2><span class="sp-actions"><button class="panel-dock" type="button"><span class="pd-hide">hide</span><span class="pd-dock">move to sidebar</span></button><button id="settings-close" type="button" aria-label="Close settings">&times;</button></span></div>
     <div id="settings-body"></div>
   </aside>
 </div>

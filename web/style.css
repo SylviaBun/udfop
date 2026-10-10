@@ -104,8 +104,6 @@ html[data-width="wide"] #page { grid-template-columns: 14.5em minmax(0, 1fr); }
 /* the inner bar is exactly as wide as the nav + article block below, so the logo sits over the nav and the search starts at the article text */
 .head-in { display: flex; align-items: center; padding: 8px 16px 8px 12px; max-width: calc(14.5em + 70rem); margin: 0 auto; }
 html[data-width="wide"] .head-in { max-width: none; }
-body.settings-open .head-in { max-width: calc(14.5em + 70rem + 19rem); }
-html[data-width="wide"] body.settings-open .head-in { max-width: none; }
 #menu { display: none; border: 0; background: none; font-size: 1.4rem; color: var(--fg); cursor: pointer; padding: 0 6px; }
 #logo { display: flex; align-items: center; gap: 10px; color: var(--fg); width: calc(14.5em - 12px); flex: none; }
 #logo:hover { text-decoration: none; }
@@ -230,12 +228,14 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
 #gear { flex: none; margin-left: auto; border: 0; background: none; cursor: pointer; color: var(--fg); font: inherit; font-size: 1.35rem; line-height: 1; padding: 4px 6px; border-radius: 3px; }
 #gear:hover, body.settings-open #gear { background: var(--soft); }
 #gear:focus-visible { outline: 2px solid var(--link); }
-#settings-panel { display: none; grid-column: 3; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem);
-  height: calc(100vh - var(--head-h, 3.6rem)); overflow-y: auto; width: 19rem; background: var(--paper);
-  border: 1px solid var(--line); border-bottom: 0; padding: 0 18px 24px; }
-body.settings-open #page { grid-template-columns: 14.5em minmax(0, 70rem) 19rem; }
-html[data-width="wide"] body.settings-open #page { grid-template-columns: 14.5em minmax(0, 1fr) 19rem; }
+#settings-panel { display: none; position: fixed; top: var(--head-h, 3.6rem); right: 8px; z-index: 15; max-height: calc(100vh - var(--head-h, 3.6rem) - 12px);
+  overflow-y: auto; width: 19rem; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); padding: 0 18px 24px; }
 body.settings-open #settings-panel { display: block; }
+.sp-actions { display: flex; align-items: center; gap: 8px; }
+.panel-dock { margin: 0; padding: 0 2px; border: 0; background: none; color: var(--link); font: inherit; font-size: .85rem; cursor: pointer; }
+.panel-dock:hover { text-decoration: underline; }
+.panel-dock .pd-hide, html[data-panel="sidebar"] .panel-dock .pd-dock { display: none; }
+html[data-panel="sidebar"] .panel-dock .pd-hide { display: inline; }
 .sp-head { display: flex; align-items: center; justify-content: space-between; margin: 0 -18px; padding: 10px 18px; background: var(--soft); border-bottom: 1px solid var(--line); }
 .sp-head h2 { margin: 0; font: 700 1.05rem var(--sans); border: 0; }
 #settings-close { border: 0; background: none; color: var(--fg); font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 6px; border-radius: 3px; }
@@ -266,12 +266,9 @@ body.settings-open #settings-panel { display: block; }
 
 /* below 1100px a docked column would squeeze the page, so the panel becomes a drawer like the nav */
 @media (max-width: 1100px) {
-  body.settings-open .head-in { max-width: calc(14.5em + 70rem); }
-  html[data-width="wide"] body.settings-open .head-in { max-width: none; }
-  body.settings-open #page { grid-template-columns: 14.5em minmax(0, 70rem); }
-  html[data-width="wide"] body.settings-open #page { grid-template-columns: 14.5em minmax(0, 1fr); }
-  #settings-panel { grid-column: auto; grid-row: auto; align-self: stretch; position: fixed; top: 0; right: 0; bottom: 0; z-index: 15; width: 17rem; max-width: 90vw;
-    height: auto; border: 0; border-left: 1px solid var(--line); padding-top: var(--head-h, 7.5rem); }
+  #settings-panel { top: 0; right: 0; bottom: 0; width: 17rem; max-width: 90vw; max-height: none;
+    border: 0; border-left: 1px solid var(--line); padding-top: var(--head-h, 7.5rem); }
+  .panel-dock { display: none; }
 }
 @media (max-width: 860px), (max-height: 500px) and (max-width: 1100px) {
   .head-in, html[data-width="wide"] .head-in, body.settings-open .head-in, html[data-width="wide"] body.settings-open .head-in { max-width: none; }
@@ -421,9 +418,16 @@ html[data-menu="popover"] .menu-dock .md-dock { display: inline; }
     max-height: calc(100vh - var(--head-h, 3.6rem) - 12px); width: 16em; z-index: 15; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
   html[data-menu="popover"] body.menu-open #side { display: block; }
 }
+/* settings: a pop-up under the gear, or docked as a sidebar on the right (wide windows only) */
 @media (min-width: 1101px) {
-  html[data-menu="popover"] body.settings-open #page { grid-template-columns: minmax(0, 70rem) 19rem; }
-  html[data-menu="popover"][data-width="wide"] body.settings-open #page { grid-template-columns: minmax(0, 1fr) 19rem; }
-  html[data-menu="popover"] #settings-panel { grid-column: 2; }
+  html[data-panel="sidebar"] #page { grid-template-columns: 14.5em minmax(0, 70rem) 19rem; }
+  html[data-panel="sidebar"][data-width="wide"] #page { grid-template-columns: 14.5em minmax(0, 1fr) 19rem; }
+  html[data-panel="sidebar"][data-menu="popover"] #page { grid-template-columns: minmax(0, 70rem) 19rem; }
+  html[data-panel="sidebar"][data-menu="popover"][data-width="wide"] #page { grid-template-columns: minmax(0, 1fr) 19rem; }
+  html[data-panel="sidebar"] .head-in { max-width: calc(14.5em + 70rem + 19rem); }
+  html[data-panel="sidebar"][data-width="wide"] .head-in, html[data-panel="sidebar"][data-menu="popover"] .head-in { max-width: none; }
+  html[data-panel="sidebar"] #settings-panel { display: block; grid-column: -2 / -1; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem); right: auto; z-index: auto;
+    height: calc(100vh - var(--head-h, 3.6rem)); max-height: none; box-shadow: none; border-bottom: 0; }
+  html[data-panel="sidebar"] #gear, html[data-panel="sidebar"] #settings-close { display: none; }
 }
 @media (max-width: 860px), (max-height: 500px) and (max-width: 1100px) { .side-head { display: none; } }
