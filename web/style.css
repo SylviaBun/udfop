@@ -102,7 +102,8 @@ html:not([data-menu="popover"]) { --cl: 14.5em; }
 html.has-toc[data-contents="sidebar"] { --cl: 14.5em; }
 #page { display: grid; grid-template-columns: var(--cl) minmax(0, 70rem) var(--cr); justify-content: center; grid-template-rows: 1fr; min-height: calc(100vh - var(--head-h, 3.6rem)); }
 html[data-width="wide"] #page { grid-template-columns: var(--cl) minmax(0, 1fr) var(--cr); }
-#rail { grid-column: 1; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem); height: calc(100vh - var(--head-h, 3.6rem));
+/* the rail is a sticky box and so its own stacking layer: it needs the pop-up level so the menu and Contents pop-ups inside it sit above the floating Contents button */
+#rail { grid-column: 1; grid-row: 1; align-self: start; position: sticky; z-index: 15; top: var(--head-h, 3.6rem); height: calc(100vh - var(--head-h, 3.6rem));
   overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; min-width: 0; }
 #content { grid-column: 2; grid-row: 1; }
 
