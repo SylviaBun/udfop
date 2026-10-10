@@ -300,6 +300,18 @@ body.settings-open #settings-panel { display: block; }
 a.missing, a.missing:visited { color: var(--nerf); }
 .editline { margin-top: 2em; padding-top: .6em; border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); }
 #app blockquote { margin: 0 0 1em; padding: .1em 1em; border-left: 3px solid var(--line); background: var(--softer); }
+/* notice boxes: > [!NOTE] and friends. One colour per type, checked against every theme's page colour in light and dark */
+:root { --al-note: #0550ae; --al-tip: #116329; --al-important: #6639ba; --al-warning: #7d5200; --al-caution: #b81f29; }
+:root[data-theme="dark"] { --al-note: #79c0ff; --al-tip: #7ee787; --al-important: #c2a8ff; --al-warning: #e3b341; --al-caution: #ff7b72; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --al-note: #79c0ff; --al-tip: #7ee787; --al-important: #c2a8ff; --al-warning: #e3b341; --al-caution: #ff7b72; }
+}
+.alert { margin: 0 0 1em; padding: 8px 14px 8px 12px; border-left: 4px solid var(--ac); background: color-mix(in srgb, var(--ac) 11%, var(--paper)); }
+.alert-note { --ac: var(--al-note); } .alert-tip { --ac: var(--al-tip); } .alert-important { --ac: var(--al-important); }
+.alert-warning { --ac: var(--al-warning); } .alert-caution { --ac: var(--al-caution); }
+.alert-label { display: block; margin: 0 0 2px; font: 700 .85rem var(--sans); color: var(--ac); }
+.alert > :nth-child(2) { margin-top: .2em; }
+.alert > :last-child { margin-bottom: .1em; }
 #app pre { overflow-x: auto; padding: 8px 12px; border: 1px solid var(--line); background: var(--softer); font-size: .85rem; }
 #app code { font-size: .88em; color: var(--code); background: color-mix(in srgb, var(--code) 12%, transparent); padding: 1px 5px; border-radius: 3px; }
 #app pre code { color: inherit; background: none; padding: 0; }

@@ -159,6 +159,8 @@ Rendered:
 
 > Quotations are set off from the text.
 
+A quotation whose first line is a tag such as `[!NOTE]` becomes a notice box instead. See **Notice boxes** under Extended features.
+
 ### Horizontal divider
 
 Three dashes on a line of their own draw a divider.
@@ -430,6 +432,46 @@ Here the text carries on beside the left-hand picture for a few more lines, so y
 And centered, 300 pixels wide, standing alone on its line:
 
 ![Sarsaparilla looking majestic](images/sarsaparilla-01s.jpg "Centered, 300 wide."){center 300}
+
+### Notice boxes
+
+(Optional) A notice box sets a tip, a warning or an extra fact apart from the text around it. Start a quotation with a tag on a line of its own, then write the text of the box on the lines after it:
+
+```markdown
+> [!WARNING]
+> Quicksaving during a quest can break it.
+```
+
+Choose one of five tags. The tag is not case sensitive.
+
+| You write | The box is labelled | Use it for |
+|:---|:---|:---|
+| `[!NOTE]` | Note | extra information |
+| `[!TIP]` | Tip | helpful advice |
+| `[!IMPORTANT]` | Important | something readers must know |
+| `[!WARNING]` | Warning | something that can go wrong |
+| `[!CAUTION]` | Caution | something that can lose progress or data |
+
+Rendered, one of each:
+
+> [!NOTE]
+> Resting is only possible when no enemies are nearby.
+
+> [!TIP]
+> Press {{R}} to rest, then pick how many hours.
+
+> [!IMPORTANT]
+> Your character sheet saves with the game, not with the server.
+
+> [!WARNING]
+> Resting inside a dungeon can wake monsters that were asleep.
+
+> [!CAUTION]
+> Deleting a save in the `saves` folder cannot be undone.
+
+Anything you can write in a page also works inside a box: several paragraphs, lists, links, keys and code boxes. Put `>` at the start of every line of the box, including blank lines between paragraphs. Keep each box short, and use them sparingly, since a page full of boxes stops anything standing out.
+
+A tag the site does not know, such as `[!DANGER]`, leaves an ordinary quotation, and the page check mentions it. When you edit on GitHub, its preview draws these boxes too, in its own colours.
 
 ### Keys and buttons
 

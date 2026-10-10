@@ -578,6 +578,12 @@
       if (/^>/.test(l)) {
         var q = [];
         while (i < lines.length && /^>/.test(lines[i])) q.push(lines[i++].replace(/^>\s?/, ""));
+        /* a quote whose first line is [!NOTE], [!TIP], [!IMPORTANT], [!WARNING] or [!CAUTION] is a notice box (GitHub's alert syntax); any other quote stays a quote */
+        var al = /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*$/i.exec(q[0]);
+        if (al) {
+          var kind = al[1].toLowerCase();
+          out.push('<div class="alert alert-' + kind + '" role="note"><span class="alert-label">' + kind.charAt(0).toUpperCase() + kind.slice(1) + "</span>" + markdown(q.slice(1).join("\n")) + "</div>"); continue;
+        }
         out.push("<blockquote>" + markdown(q.join("\n")) + "</blockquote>"); continue;
       }
       if (l.indexOf("|") >= 0 && i + 1 < lines.length && /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(lines[i + 1])) {

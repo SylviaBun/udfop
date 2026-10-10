@@ -38,6 +38,7 @@ def plain(md):
     t = re.sub(r'```.*?```', ' ', md, flags=re.S)
     t = re.sub(r'!\[[^\]]*\]\([^)]*\)(\{[^}]*\})?', ' ', t)
     t = re.sub(r'\[\[([^\]\|]+)(?:\|([^\]]*))?\]\]', lambda m: m.group(2) or m.group(1), t)
+    t = re.sub(r'\[!(?:NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]', ' ', t, flags=re.I)
     t = re.sub(r'\{\{(?:pad\s*:\s*)?([^{}]+)\}\}', r'\1', t)
     t = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', t)
     t = re.sub(r'[#>*_`|~-]+', ' ', t)
@@ -155,6 +156,18 @@ def check_code_languages(pages, problems):
                 problems.append(('warn', p['slug'] + '.md', 'the code box language "%s" is not one the site colours, so it will be shown plain (see "Code blocks" in the how-to page for the names)' % lang))
 
 
+ALERTS = ('note', 'tip', 'important', 'warning', 'caution')
+
+
+def check_alerts(pages, problems):
+    """A quote that starts [!SOMETHING] is a notice box only for the five known names; any other name stays a plain quote, so say so."""
+    for p in pages:
+        body = re.sub(r'```.*?```', ' ', p['_body'], flags=re.S)
+        for name in re.findall(r'^>[ \t]*\[!([A-Za-z]+)\][ \t]*$', body, flags=re.M):
+            if name.lower() not in ALERTS:
+                problems.append(('warn', p['slug'] + '.md', 'the notice box type "[!%s]" is not one the site knows, so it will show as an ordinary quote (use NOTE, TIP, IMPORTANT, WARNING or CAUTION)' % name))
+
+
 def patch_versions():
     try:
         raw = open(os.path.join('web', 'data.js'), encoding='utf-8').read()
@@ -177,6 +190,7 @@ def main():
         seen.setdefault(p['slug'].lower(), p['slug'])
     check_images(pages, problems)
     check_code_languages(pages, problems)
+    check_alerts(pages, problems)
     topics = topic_names()
     for p in pages:
         for target in LINK.findall(re.sub(r'```.*?```|`[^`\n]*`', ' ', p['_body'], flags=re.S)):
