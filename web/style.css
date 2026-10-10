@@ -366,11 +366,11 @@ html:not([data-contents="sidebar"]) #side-toc { position: fixed; z-index: 15; to
   background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
 html:not([data-contents="sidebar"]) body.toc-open #side-toc:not([hidden]) { display: block; }
 #side-toc ol { margin: 0; padding: 0; list-style: none; }
-#side-toc ol ol { display: none; margin-left: 10px; }
+#side-toc ol ol { display: none; margin-left: 28px; }
 #side-toc li.open > ol { display: block; }
 #side-toc li.has-sub { position: relative; }
-#side-toc li.has-sub > a { padding-right: 28px; }
-#side-toc .exp { position: absolute; right: 2px; top: 1px; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 3px; background: none; color: var(--muted); cursor: pointer; line-height: 1; }
+#side-toc-list > ol > li > a { padding-left: 28px; }   /* room for the expander arrow, so every section lines up */
+#side-toc .exp { position: absolute; left: 4px; top: 1px; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 3px; background: none; color: var(--muted); cursor: pointer; line-height: 1; }
 #side-toc .exp::before { content: "\25B8"; }
 #side-toc .exp[aria-expanded="true"]::before { content: "\25BE"; }
 #side-toc .exp:hover { background: var(--soft); color: var(--fg); }
