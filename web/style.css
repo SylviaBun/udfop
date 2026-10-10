@@ -233,7 +233,7 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
 #gear { flex: none; margin-left: auto; border: 0; background: none; cursor: pointer; color: var(--fg); font: inherit; font-size: 1.35rem; line-height: 1; padding: 4px 6px; border-radius: 3px; }
 #gear:hover, body.settings-open #gear { background: var(--soft); }
 #gear:focus-visible { outline: 2px solid var(--link); }
-#settings-panel { display: none; position: fixed; top: var(--head-h, 3.6rem); right: 8px; z-index: 15; max-height: calc(100vh - var(--head-h, 3.6rem) - 12px);
+#settings-panel { display: none; position: fixed; top: var(--head-h, 3.6rem); right: var(--gear-right, 8px); z-index: 15; max-height: calc(100vh - var(--head-h, 3.6rem) - 12px);
   overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; width: 19rem; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25);
   padding: 16px 8px 24px 12px; font-size: .85rem; }
 body.settings-open #settings-panel { display: block; }
@@ -421,7 +421,7 @@ kbd.k-pad { border-radius: 999px; border-color: var(--accent); }
 @media (min-width: 861px) and (min-height: 501px), (min-width: 1101px) {
   html[data-menu="popover"] #menu { display: block; }
   html:not([data-menu="popover"]) #logo { width: calc(14.5em - 12px); }
-  html[data-menu="popover"] #side { display: none; position: fixed; top: var(--head-h, 3.6rem); left: 8px; max-height: calc(100vh - var(--head-h, 3.6rem) - 12px);
+  html[data-menu="popover"] #side { display: none; position: fixed; top: var(--head-h, 3.6rem); left: var(--menu-left, 8px); max-height: calc(100vh - var(--head-h, 3.6rem) - 12px);
     overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; width: 16em; z-index: 15; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
   html[data-menu="popover"] body.menu-open #side { display: block; }
 }

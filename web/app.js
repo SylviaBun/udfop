@@ -27,6 +27,7 @@
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
     syncDocks(st);
+    syncAnchors();
     syncTocBtn();   /* docking or undocking a panel moves where the Contents button belongs */
   }
   /* the dock buttons: "hide" while a panel is docked in a sidebar, "move to sidebar" while it is a pop-up */
@@ -38,6 +39,13 @@
   function syncHeadH() {
     var h = document.getElementById("head");
     if (h) document.documentElement.style.setProperty("--head-h", h.offsetHeight + "px");
+    syncAnchors();
+  }
+  /* the main menu and Settings pop-ups hang from their buttons: the menu from the left edge of the ☰, Settings from the right edge of the gear */
+  function syncAnchors() {
+    var d = document.documentElement, m = document.getElementById("menu"), g = document.getElementById("gear");
+    if (m && m.offsetWidth) d.style.setProperty("--menu-left", Math.max(8, Math.round(m.getBoundingClientRect().left)) + "px");
+    if (g && g.offsetWidth) d.style.setProperty("--gear-right", Math.max(8, Math.round(d.clientWidth - g.getBoundingClientRect().right)) + "px");
   }
   window.addEventListener("resize", syncHeadH);
   if (window.ResizeObserver) new ResizeObserver(syncHeadH).observe(document.getElementById("head"));
@@ -867,7 +875,7 @@
 
   function setMenu(on) {
     if (on && typeof settingsPanel !== "undefined" && settingsPanel) settingsPanel.close(false);
-    if (on) setToc(false);
+    if (on) { setToc(false); syncAnchors(); }
     document.body.classList.toggle("menu-open", on); document.getElementById("menu").setAttribute("aria-expanded", on ? "true" : "false"); }
   document.getElementById("menu").addEventListener("click", function () { setMenu(!document.body.classList.contains("menu-open")); });
   document.addEventListener("keydown", function (e) {
@@ -945,7 +953,7 @@
     document.getElementById("reset-settings").addEventListener("click", function () { change(JSON.parse(JSON.stringify(SETTING_DEFAULTS))); });
     function isOpen() { return document.body.classList.contains("settings-open"); }
     function open() {
-      st = loadSettings(); sync();
+      st = loadSettings(); sync(); syncAnchors();
       document.body.classList.remove("menu-open"); setToc(false);
       document.body.classList.add("settings-open");
       gear.setAttribute("aria-expanded", "true"); panel.setAttribute("aria-hidden", "false");
@@ -1077,6 +1085,7 @@
     } else if (name === "hub") keys = ["hub:" + arg, nav];
     else if (name === "topic" && D.hubs[arg]) keys = ["hub:" + D.hubs[arg], nav];
     setNav(keys);
+    syncAnchors();   /* a page with or without a scrollbar moves the header buttons a little */
     Array.prototype.forEach.call(app.querySelectorAll("a[data-issue]"), function (a) { a.href = issueUrl(a.getAttribute("data-issue"), a.getAttribute("data-prefix")); });
     document.getElementById("side-toc").hidden = true; tocSpy = []; document.documentElement.classList.remove("has-toc"); setToc(false);
     if (res.toc !== false) buildToc();
