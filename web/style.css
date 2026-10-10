@@ -427,5 +427,6 @@ html[data-menu="popover"] .menu-dock .md-dock { display: inline; }
   html[data-panel="sidebar"][data-width="wide"] .head-in, html[data-panel="sidebar"][data-menu="popover"] .head-in { max-width: none; }
   html[data-panel="sidebar"] #settings-panel { display: block; grid-column: -2 / -1; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem); right: auto; z-index: auto;
     height: calc(100vh - var(--head-h, 3.6rem)); max-height: none; box-shadow: none; background: none; border: 0; }
-  html[data-panel="sidebar"] #gear, html[data-panel="sidebar"] }
+  html[data-panel="sidebar"] #gear { display: none; }
+}
 @media (max-width: 860px), (max-height: 500px) and (max-width: 1100px) { .side-head { display: none; } }
