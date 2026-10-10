@@ -169,7 +169,7 @@
       return "<li>" + hlink(n) + " <small>(" + hubs[n].length + ")</small></li>"; }).join("") + "</ul>";
     h += sec("Browse by game system", "Browse by game system", 2) + '<ul class="cols">' + systems.map(function (s) {
       return "<li>" + slink(s) + " <small>(" + bySystem[s].length + ")</small></li>"; }).join("") + "</ul>";
-    return { title: "Patch Notes", html: page("Patch Notes", h) };
+    return { title: "Patch Notes", html: page("Patch Notes", h, { hat: '<a href="#/">Main Page</a> › Patch Notes' }) };
   };
 
   views.recent = function () {
@@ -332,7 +332,7 @@
       "<p>Started and maintained by <b>tau</b>, with Game Guide pages written by their contributors. The site code is released under the MIT licence and the topic descriptions and other original text are licensed CC BY 4.0. The change data is derived from the developer's release notes, and the game and its names belong to their owners.</p>";
     h += sec("Feedback", "Feedback", 2) + '<p>Found a mistake or a bug? See <a href="#/feedback">Feedback &amp; Bugs</a>. Pages are written by their contributors, may be wrong or out of date, and carry no warranty.</p>';
     h += sec("Coverage", "Coverage", 2) + "<p>" + rows.length.toLocaleString() + " changes in " + topics.length + " topics across " + versions.length + " patches, from " + esc(versions[versions.length - 1]) + " (" + esc(dateOf(versions[versions.length - 1])) + ") to " + esc(latest) + " (" + esc(dateOf(latest)) + ").</p>";
-    return { title: "About UDFOP", html: page("About UDFOP", h) };
+    return { title: "About UDFOP", html: page("About UDFOP", h, { hat: '<a href="#/">Main Page</a> › About UDFOP' }) };
   };
 
   /* ---------- Game Guide: Markdown pages in web/guide/, listed by guide/index.json ---------- */
@@ -608,6 +608,7 @@
     return { meta: meta, body: body };
   }
 
+  var GUIDE_HAT = '<a href="#/">Main Page</a> › <a href="#/guide">Game Guide</a>';
   function guideUnavailable() {
     return '<div class="mbox">The Game Guide could not be loaded. If you opened <code>index.html</code> straight from a folder, the browser blocks it: serve the <code>web</code> folder instead (for example <code>python -m http.server --directory web</code>) or use the published site. If you just added pages, run <code>python tools/guide.py</code> to refresh the list.</div>';
   }
@@ -625,25 +626,25 @@
         h += sec(c, c, 2) + guideCards(cats[c]);
       });
     }
-    return { title: "Game Guide", html: page("Game Guide", h) };
+    return { title: "Game Guide", html: page("Game Guide", h, { hat: '<a href="#/">Main Page</a> › Game Guide' }) };
   };
   views.guidecat = function (c) {
     var list = (guide || []).filter(function (p) { return p.category === c; });
     var h = guide === null ? "<p>Loading…</p>" : list.length ? categoryList(list) : "<p>No pages in this category.</p>";
-    return { title: c, html: page(esc(c), h), toc: false };
+    return { title: c, html: page(esc(c), h, { hat: GUIDE_HAT + " › " + esc(c) }), toc: false };
   };
   views.guidepage = function (slug) {
     var entry = guideBySlug[slug.toLowerCase()] || guideByTitle[slug.toLowerCase()];
     var title = entry ? entry.title : slug.split("/").pop();
     var slugPath = (entry ? entry.slug : slug).split("/").map(enc).join("/");
-    return { title: title, html: page(esc(title), '<div id="gp"><p>Loading…</p></div>', { hat: "&nbsp;" }), after: function () {
+    return { title: title, html: page(esc(title), '<div id="gp"><p>Loading…</p></div>', { hat: GUIDE_HAT }), after: function () {
       var box = document.getElementById("gp");
       fetch("guide/" + slugPath + ".md").then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); }).then(function (raw) {
         var fm = frontMatter(raw), t = fm.meta.title || title, cat = fm.meta.category || (entry && entry.category) || "General";
         document.title = t + " – " + SHORT;
         setNav(["page:" + slug.toLowerCase(), "guide"]);
         document.querySelector("h1.title").textContent = t;
-        document.querySelector(".hat").innerHTML = '<a href="#/guide/category/' + enc(cat) + '">' + esc(cat) + "</a>";
+        document.querySelector(".hat").innerHTML = GUIDE_HAT + ' › <a href="#/guide/category/' + enc(cat) + '">' + esc(cat) + "</a>";
         mdBase = (entry ? entry.slug : slug).indexOf("/") >= 0 ? (entry ? entry.slug : slug).replace(/[^/]*$/, "") : "";
         refs = newRefs(entry ? entry.slug : slug);
         var rendered = markdown(fm.body, t); mdBase = "";
@@ -682,7 +683,7 @@
       "</div>";
     h += sec("Rather fix it yourself?", "Rather fix it yourself?", 2) +
       '<p>Anyone can correct or add a Game Guide page: <a href="#/guide/how-to-write-a-page">how to write a guide page</a>. Please do not put personal details in a report, since it is public.</p>';
-    return { title: "Feedback & Bugs", html: page("Feedback &amp; Bugs", h), toc: false };
+    return { title: "Feedback & Bugs", html: page("Feedback &amp; Bugs", h, { hat: '<a href="#/">Main Page</a> › Feedback &amp; Bugs' }), toc: false };
   };
 
   views.random = function () {
