@@ -213,6 +213,12 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
   #content { grid-column: 1; }
   #side-toc, .toc-btn { display: none !important; }
   h1.title.has-toc-btn { padding-left: 0 !important; }
+  /* sections fold: tap a heading to open its text; subsections fold inside it. Everything starts closed */
+  h2.foldable, h3.foldable { position: relative; padding-left: 1.05em; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  h2.foldable::before, h3.foldable::before { content: "\25B8"; position: absolute; left: 0; top: .12em; color: var(--muted); font-size: .65em; line-height: inherit; }
+  h2.foldable[aria-expanded="true"]::before, h3.foldable[aria-expanded="true"]::before { content: "\25BE"; }
+  h2.foldable:focus-visible, h3.foldable:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  .fold-hide { display: none !important; }
   #menu { display: block; }
   #logo { width: auto; } .name small { display: none; }
   #side { display: none; position: fixed; top: 0; left: 0; bottom: 0; height: auto; align-self: auto; width: 15em; z-index: 15; background: var(--paper);

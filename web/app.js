@@ -713,6 +713,7 @@
   /* Contents: a list-button beside the page title opens it as a pop-up, or it can be docked in the left column under the main menu */
   var tocSpy = [], tocTop = null;   /* [{el: heading, a: link in the list, li: its item, top: true for a main section}] */
   function buildToc() {
+    buildFolds();
     var side = document.getElementById("side-toc"), list = document.getElementById("side-toc-list");
     tocSpy = []; tocTop = null; side.hidden = true; list.innerHTML = ""; setToc(false);
     document.documentElement.classList.remove("has-toc");
@@ -744,6 +745,56 @@
     tocTop = links[0];
     spyToc();
   }
+  /* Narrow screens: Contents is replaced by folding sections. Tapping a section heading opens its text, and its subsections fold inside it.
+     Everything starts closed. On a wide screen the same markup is simply ignored. */
+  var COMPACT_Q = "(max-width: 860px), (max-height: 500px) and (max-width: 1100px)";
+  function isCompact() { return !!(window.matchMedia && window.matchMedia(COMPACT_Q).matches); }
+  var folds = [];   /* [{h: heading, members: [elements it hides while closed], closed: true}] */
+  function buildFolds() {
+    folds = [];
+    var hs = app.querySelectorAll("h2.sec[data-toc], h3.sec[data-toc]"), parents = [];
+    Array.prototype.forEach.call(hs, function (h) { if (parents.indexOf(h.parentNode) < 0) parents.push(h.parentNode); });
+    parents.forEach(function (par) {
+      var cur2 = null, cur3 = null;
+      Array.prototype.forEach.call(par.children, function (el) {
+        if (el.matches("h2.sec[data-toc]")) { cur2 = { h: el, members: [], closed: true }; cur3 = null; folds.push(cur2); }
+        else if (el.matches("h3.sec[data-toc]")) { cur3 = { h: el, members: [], closed: true }; folds.push(cur3); if (cur2) cur2.members.push(el); }
+        else if (el.classList.contains("editline") || el.classList.contains("cats")) { cur2 = cur3 = null; }   /* the page's footer stays visible */
+        else { if (cur3) cur3.members.push(el); if (cur2) cur2.members.push(el); }
+      });
+    });
+    folds.forEach(function (f) {
+      f.h.classList.add("foldable");
+      f.members.forEach(function (el) { el.__fh = (el.__fh || 0) + 1; el.classList.add("fold-hide"); });
+    });
+    syncFoldMode();
+  }
+  function toggleFold(f, open) {
+    if (open === undefined) open = f.closed;
+    if (open !== f.closed) return;
+    f.closed = !open;
+    f.members.forEach(function (el) { el.__fh = (el.__fh || 0) + (open ? -1 : 1); el.classList.toggle("fold-hide", el.__fh > 0); });
+    f.h.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  /* headings only behave like buttons while the screen is narrow */
+  function syncFoldMode() {
+    var on = isCompact();
+    folds.forEach(function (f) {
+      if (on) { f.h.setAttribute("role", "button"); f.h.tabIndex = 0; f.h.setAttribute("aria-expanded", f.closed ? "false" : "true"); }
+      else { f.h.removeAttribute("role"); f.h.removeAttribute("tabindex"); f.h.removeAttribute("aria-expanded"); }
+    });
+  }
+  if (window.matchMedia) { var fmq = window.matchMedia(COMPACT_Q); if (fmq.addEventListener) fmq.addEventListener("change", syncFoldMode); else if (fmq.addListener) fmq.addListener(syncFoldMode); }
+  function foldFor(h) { for (var k = 0; k < folds.length; k++) if (folds[k].h === h) return folds[k]; return null; }
+  /* open whatever is hiding an element, so a link into the page can show it */
+  function revealFolds(el) { folds.forEach(function (f) { if (f.closed && (f.members.indexOf(el) >= 0)) toggleFold(f, true); }); }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target : e.target.parentNode, h = t.closest("h2.foldable, h3.foldable");
+    if (h && isCompact() && !t.closest("a")) { var f = foldFor(h); if (f) toggleFold(f); }
+  });
+  document.addEventListener("keydown", function (e) {
+    if ((e.key === "Enter" || e.key === " ") && isCompact() && e.target.classList && e.target.classList.contains("foldable")) { e.preventDefault(); var f = foldFor(e.target); if (f) toggleFold(f); }
+  });
   /* highlight the section being read, and open its sub-list */
   function spyToc() {
     if (!tocSpy.length) return;
@@ -796,7 +847,7 @@
 
   function scrollTo(id) {
     if (id === "top") { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
-    var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    var el = document.getElementById(id); if (el && isCompact()) { revealFolds(el); var fo = foldFor(el); if (fo) toggleFold(fo, true); } if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }
   document.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest("[data-scroll]");
     if (a) { e.preventDefault(); scrollTo(a.getAttribute("data-scroll")); if (a.closest("#side")) setMenu(false); }
