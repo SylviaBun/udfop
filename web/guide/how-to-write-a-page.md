@@ -49,7 +49,7 @@ Here is where each part shows up on the site:
 | `category` (Optional) | Puts the page in a group. The group appears in the **Game Guide** part of the main menu, as its own page listing, and in the breadcrumb at the top of the page. |
 | `summary` (Optional) | The one-line description shown next to the page's name in lists and in search results. |
 | `related` (Optional) | Pages and topics to list in the References section even though the text does not link them. In the example it adds the Patch Notes topic Resting and the guide page Camping. See "The References section" below. |
-| `## Heading` lines (Optional) | Section headings. When a page has three or more, a **Contents** list is added automatically, like the one beside this page (in the left sidebar, or behind the ☰ button next to the title). The page title is added for you, so do not repeat it. |
+| `## Heading` lines (Optional) | Section headings. Every heading is listed in the page's **Contents** list, which is added automatically, like the one beside this page (in the left sidebar, or behind the ☰ button next to the title). The page title is added for you, so do not repeat it. |
 | The file name | The page's web address. The example file `party-rest.md` becomes `#/guide/party-rest`. Use lower case and hyphens. |
 | `[[Another page]]` | A link to another guide page, by its title. |
 | `[[topic:Name]]` | A link to a Patch Notes topic page (see below). |
@@ -382,7 +382,7 @@ Keycaps work in tables and in captions, but not inside the text of a link. Put t
 
 ### What the site does for you
 
-You do not write these. They come from what you wrote: a **Contents** list on any page with three or more headings (docked in the left sidebar by default, where it follows the section being read; readers can hide it behind a ☰ button beside the page title, and the site remembers their choice; on a narrow screen such as a phone it is not shown yet), the page's place in the main menu and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
+You do not write these. They come from what you wrote: a **Contents** list built from the page's headings (docked in the left sidebar by default, where it follows the section being read; readers can hide it behind a ☰ button beside the page title, and the site remembers their choice; on a narrow screen such as a phone it is not shown yet), the page's place in the main menu and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
 
 ## Not supported
 

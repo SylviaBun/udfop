@@ -289,7 +289,7 @@
     names.forEach(function (t) { h += sec("p-" + t, t, 2).replace(">" + esc(t) + "</h2>", ">" + tlink(t) + "</h2>") + bullets(g[t], false); });
     if (rel && rel.prs.length) h += sec("Pull requests", "Source pull requests", 2) + '<ul class="bul">' + rel.prs.map(function (p) {
       return '<li><a href="' + esc(p.u) + '" rel="noopener">#' + p.n + "</a> " + esc(p.t) + "</li>"; }).join("") + "</ul>";
-    return { title: "Patch " + v, html: page("Patch " + esc(v), h, { hat: '<a href="#/patches">Patch index</a> › ' + esc(v) }), toc: names.length > 3 };
+    return { title: "Patch " + v, html: page("Patch " + esc(v), h, { hat: '<a href="#/patches">Patch index</a> › ' + esc(v) }) };
   };
 
   views.search = function (q) {
@@ -716,7 +716,7 @@
     tocSpy = []; side.hidden = true; list.innerHTML = ""; setToc(false);
     document.documentElement.classList.remove("has-toc");
     var hs = app.querySelectorAll("h2.sec[data-toc], h3.sec[data-toc]");
-    if (hs.length < 3) return;
+    if (!hs.length) return;
     var h = "<ol>", open = false;
     Array.prototype.forEach.call(hs, function (el) {
       var link = '<a href="' + location.hash + '" data-scroll="' + el.id + '">' + esc(el.getAttribute("data-toc")) + "</a>";
@@ -994,7 +994,7 @@
     setNav(keys);
     Array.prototype.forEach.call(app.querySelectorAll("a[data-issue]"), function (a) { a.href = issueUrl(a.getAttribute("data-issue"), a.getAttribute("data-prefix")); });
     document.getElementById("side-toc").hidden = true; tocSpy = []; document.documentElement.classList.remove("has-toc"); setToc(false);
-    if (res.toc === true) buildToc();
+    if (res.toc !== false) buildToc();
     if (res.after) res.after();
     setMenu(false); sug.hidden = true;
     window.scrollTo(0, 0);
