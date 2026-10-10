@@ -111,7 +111,7 @@ html[data-width="wide"] #page { grid-template-columns: var(--cl) minmax(0, 1fr) 
 #head { position: sticky; top: 0; z-index: 20; background: var(--head); border-bottom: 1px solid var(--line); }
 /* the inner bar is exactly as wide as the nav + article block below, so the logo sits over the nav and the search starts at the article text */
 .head-in { display: flex; align-items: center; padding: 8px 16px 8px 12px; max-width: calc(var(--cl) + 70rem + var(--cr)); margin: 0 auto; }
-html[data-width="wide"] .head-in, html[data-menu="popover"] .head-in { max-width: none; }
+html[data-width="wide"] .head-in { max-width: none; }   /* only Wide mode runs the bar to the window edges; otherwise it lines up with the page block below */
 #menu { display: none; border: 0; background: none; font-size: 1.4rem; color: var(--fg); cursor: pointer; padding: 0 6px; }
 #logo { display: flex; align-items: center; gap: 10px; color: var(--fg); width: auto; flex: none; }
 #logo:hover { text-decoration: none; }
