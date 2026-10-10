@@ -824,8 +824,6 @@
       { key: "theme", legend: "Color", help: "Auto follows your device's light or dark setting.", labels: ["Auto", "Light", "Dark"] },
       { key: "size", legend: "Text size", help: "Scales all text and spacing.", labels: ["Small", "Medium", "Large"] },
       { key: "width", legend: "Page width", help: "Standard keeps lines comfortable to read; Wide uses the whole window.", labels: ["Standard", "Wide"] },
-      { key: "menu", legend: "Main menu", help: "Docked in a sidebar beside the page, or tucked behind the ☰ button as a pop-up. On a phone it is always the pop-up.", labels: ["In the sidebar", "As a pop-up"] },
-      { key: "panel", legend: "Settings panel", help: "A pop-up under the gear, or docked as a sidebar on the right (wide windows only).", labels: ["As a pop-up", "In the sidebar"] },
       { key: "toc", legend: "Contents", help: "Where the list of sections sits. In the sidebar it stays beside the article and highlights where you are; on a phone it is in the menu.", labels: ["In the article", "In the sidebar"] },
       { key: "previews", legend: "Link previews", help: "A short preview appears when you point at a link to a page or topic. Not shown on touch screens.", labels: ["On", "Off"] }
     ];
