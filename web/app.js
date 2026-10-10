@@ -799,7 +799,7 @@
     var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }
   document.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest("[data-scroll]");
-    if (a) { e.preventDefault(); scrollTo(a.getAttribute("data-scroll")); if (a.closest("#side")) setMenu(false); if (a.closest("#side-toc")) setToc(false); }
+    if (a) { e.preventDefault(); scrollTo(a.getAttribute("data-scroll")); if (a.closest("#side")) setMenu(false); }
     if (document.body.classList.contains("menu-open") && !e.target.closest("#side") && !e.target.closest("#menu")) setMenu(false);
   });
 
