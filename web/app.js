@@ -865,7 +865,7 @@
       }
     }
     Array.prototype.forEach.call(inputs, function (i) {
-      i.addEventListener("change", function () { var n = {}; Object.keys(st).forEach(function (k) { n[k] = st[k]; }); n[i.name] = i.value; change(n); });
+      i.addEventListener("change", function () { var n = loadSettings(); n[i.name] = i.value; change(n); });   /* start from what is saved: docking and the dock buttons change settings outside this panel */
     });
     document.getElementById("reset-settings").addEventListener("click", function () { change(JSON.parse(JSON.stringify(SETTING_DEFAULTS))); });
     function isOpen() { return document.body.classList.contains("settings-open"); }
