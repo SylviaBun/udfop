@@ -156,6 +156,7 @@
     var h = '<p>The patch notes record what has changed in Daggerfall Online, patch by patch and topic by topic. They cover <b>' +
       rows.length.toLocaleString() + "</b> recorded changes to <b>" + topics.length + '</b> topics across <b>' + versions.length + "</b> patches, from version " +
       esc(versions[versions.length - 1]) + " (" + esc(dateOf(versions[versions.length - 1])) + ") to " + esc(latest) + " (" + esc(dateOf(latest)) + ").</p>";
+    h += '<p class="browse"><b>Browse:</b> <a href="#/recent">Recent changes</a> · <a href="#/topics">All topics</a> · <a href="#/hubs">Categories</a> · <a href="#/systems">Game systems</a> · <a href="#/patches">Patch index</a> · <a href="#/random">Random topic</a></p>';
     h += '<div class="portals">';
     h += '<div class="portal"><h3>Latest patch</h3><div><p><b>' + vlink(latest) + "</b> – " + esc(dateOf(latest)) + "<br>" + plural(lrows.length, "change") + " to " +
       plural(uniq(lrows.map(function (r) { return r.e; })).length, "topic") + ".</p><ul>" +
@@ -343,9 +344,6 @@
   function guideLoaded(list) {
     guide = list || []; guideBySlug = {}; guideByTitle = {};
     guide.forEach(function (p) { guideBySlug[p.slug.toLowerCase()] = p; guideByTitle[p.title.toLowerCase()] = p; });
-    var cats = guideCategories();
-    document.getElementById("side-guide").innerHTML = Object.keys(cats).map(function (c) {
-      return '<li><a href="#/guide/category/' + enc(c) + '" data-nav="cat:' + esc(c) + '">' + esc(c) + " <small>(" + cats[c].length + ")</small></a></li>"; }).join("");
   }
   function guideCategories() {
     var m = {};
@@ -644,7 +642,7 @@
       fetch("guide/" + slugPath + ".md").then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); }).then(function (raw) {
         var fm = frontMatter(raw), t = fm.meta.title || title, cat = fm.meta.category || (entry && entry.category) || "General";
         document.title = t + " – " + SHORT;
-        setNav(["page:" + slug.toLowerCase(), "cat:" + cat]);
+        setNav(["page:" + slug.toLowerCase(), "guide"]);
         document.querySelector("h1.title").textContent = t;
         document.querySelector(".hat").innerHTML = GUIDE_HAT + ' › <a href="#/guide/category/' + enc(cat) + '">' + esc(cat) + "</a>";
         mdBase = (entry ? entry.slug : slug).indexOf("/") >= 0 ? (entry ? entry.slug : slug).replace(/[^/]*$/, "") : "";
@@ -864,11 +862,7 @@
     if (e.key === "Escape" && document.body.classList.contains("toc-open")) { var tb = document.querySelector(".toc-btn"); setToc(false); if (tb) tb.focus(); }
   });
 
-  /* sidebar */
-  document.getElementById("side-patches").innerHTML = versions.slice(0, 6).map(function (v) { return "<li>" + vlink(v) + "</li>"; }).join("") +
-    '<li><a href="#/patches">More…</a></li>';
-  document.getElementById("side-hubs").innerHTML = hubNames.map(function (n) { return '<li><a href="#/hub/' + enc(n) + '" data-nav="hub:' + esc(n) + '">' + esc(n) + "</a></li>"; }).join("");
-  fetch("guide/index.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(guideLoaded)
+    fetch("guide/index.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(guideLoaded)
     .catch(function () { guideFailed = true; guideLoaded([]); })
     .then(function () { if (/^#\/(guide|search)?(\/|$)/.test(location.hash) || location.hash === "" || location.hash === "#") route(); });
   document.getElementById("foot-stats").textContent = rows.length.toLocaleString() + " changes · " + topics.length + " topics · " + versions.length + " patches · latest " + versions[0] + " (" + dateOf(versions[0]) + ")";
@@ -1062,11 +1056,11 @@
     if (name !== "feedback") feedbackPage = location.href;
     var fr = document.getElementById("foot-report");
     if (fr) { fr.href = "#/feedback"; }
-    var nav = { home: "home", feedback: "feedback", guide: "guide", patchnotes: "patchnotes", recent: "recent", topics: "topics", topic: "topics", hubs: "hubs", hub: "hubs", systems: "systems", system: "systems", patches: "patches", patch: "patches", about: "about" }[name];
+    var nav = { home: "home", feedback: "feedback", guide: "guide", patchnotes: "patchnotes", recent: "patchnotes", topics: "patchnotes", topic: "patchnotes", hubs: "patchnotes", hub: "patchnotes", systems: "patchnotes", system: "patchnotes", patches: "patchnotes", patch: "patchnotes", about: "about" }[name];
     var keys = [nav];
     if (name === "guide") {
-      if (arg.indexOf("category/") === 0) keys = ["cat:" + arg.slice(9)];
-      else if (arg) { var ge = guideBySlug[arg.toLowerCase()] || guideByTitle[arg.toLowerCase()]; keys = ge ? ["page:" + ge.slug.toLowerCase(), "cat:" + ge.category] : ["page:" + arg.toLowerCase()]; }
+      if (arg.indexOf("category/") === 0) keys = ["guide"];
+      else if (arg) { var ge = guideBySlug[arg.toLowerCase()] || guideByTitle[arg.toLowerCase()]; keys = ge ? ["page:" + ge.slug.toLowerCase(), "guide"] : ["page:" + arg.toLowerCase(), "guide"]; }
     } else if (name === "hub") keys = ["hub:" + arg, nav];
     else if (name === "topic" && D.hubs[arg]) keys = ["hub:" + D.hubs[arg], nav];
     setNav(keys);
