@@ -27,6 +27,7 @@
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
     syncDocks(st);
+    syncTocBtn();   /* docking or undocking a panel moves where the Contents button belongs */
   }
   /* the dock buttons: "hide" while a panel is docked in a sidebar, "move to sidebar" while it is a pop-up */
   function syncDocks(st) {
@@ -759,6 +760,7 @@
   function syncTocBtn() {
     var a = document.querySelector(".toc-anchor"), b = document.querySelector(".toc-btn");
     if (!a || !b) return;
+    if (getComputedStyle(a).display === "none") { b.classList.remove("floating"); b.style.left = ""; return; }   /* hidden (docked or narrow): nothing to measure */
     var fl = a.getBoundingClientRect().top <= (document.getElementById("head").offsetHeight || 60) + 11;
     b.classList.toggle("floating", fl);
     b.style.left = fl ? (document.getElementById("rail").getBoundingClientRect().width + 8) + "px" : "";   /* clear of a docked main menu */
