@@ -758,7 +758,10 @@
   /* the button sits beside the title; once the page scrolls past that spot it floats at the top left. The pop-up stays anchored under it */
   function syncTocBtn() {
     var a = document.querySelector(".toc-anchor"), b = document.querySelector(".toc-btn");
-    if (a && b) b.classList.toggle("floating", a.getBoundingClientRect().top <= (document.getElementById("head").offsetHeight || 60) + 11);
+    if (!a || !b) return;
+    var fl = a.getBoundingClientRect().top <= (document.getElementById("head").offsetHeight || 60) + 11;
+    b.classList.toggle("floating", fl);
+    b.style.left = fl ? (document.getElementById("rail").getBoundingClientRect().width + 8) + "px" : "";   /* clear of a docked main menu */
   }
   function placeToc() {
     var panel = document.getElementById("side-toc"), btn = document.querySelector(".toc-btn");
