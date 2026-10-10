@@ -717,14 +717,17 @@
     document.documentElement.classList.remove("has-toc");
     var hs = app.querySelectorAll("h2.sec[data-toc], h3.sec[data-toc]");
     if (!hs.length) return;
-    var h = '<ol><li><a href="' + location.hash + '" data-scroll="top">(Top)</a></li>', open = false;
+    /* sections, each with its subsections folded behind an expander that the reader opens (it is never opened for them) */
+    var items = [], meta = [];
     Array.prototype.forEach.call(hs, function (el) {
-      var link = '<a href="' + location.hash + '" data-scroll="' + el.id + '">' + esc(el.getAttribute("data-toc")) + "</a>";
-      if (el.tagName === "H2") { if (open) { h += "</ol></li>"; open = false; } h += "<li>" + link + "</li>"; }
-      else { if (!open) { h = h.replace(/<\/li>$/, "") + "<ol>"; open = true; } h += "<li>" + link + "</li>"; }
+      var text = el.getAttribute("data-toc"), link = '<a href="' + location.hash + '" data-scroll="' + el.id + '">' + esc(text) + "</a>";
+      if (el.tagName === "H3" && items.length) { items[items.length - 1].subs.push(link); meta.push(false); }
+      else { items.push({ text: text, link: link, subs: [] }); meta.push(true); }
     });
-    if (open) h += "</ol></li>";
-    h += "</ol>";
+    var h = '<ol><li><a href="' + location.hash + '" data-scroll="top">(Top)</a></li>' + items.map(function (it) {
+      return it.subs.length ? '<li class="has-sub"><button type="button" class="exp" aria-expanded="false" aria-label="Show the subsections of ' + esc(it.text) + '"></button>' + it.link +
+        "<ol>" + it.subs.map(function (l) { return "<li>" + l + "</li>"; }).join("") + "</ol></li>" : "<li>" + it.link + "</li>";
+    }).join("") + "</ol>";
     list.innerHTML = h; side.hidden = false; document.documentElement.classList.add("has-toc");
     var title = app.querySelector("h1.title");
     if (title && !title.querySelector(".toc-btn")) {
@@ -734,7 +737,7 @@
       title.insertBefore(btn, title.firstChild);
     }
     var links = list.querySelectorAll("a");
-    Array.prototype.forEach.call(hs, function (el, k) { tocSpy.push({ el: el, a: links[k + 1], li: links[k + 1].parentNode, top: el.tagName === "H2" }); });
+    Array.prototype.forEach.call(hs, function (el, k) { tocSpy.push({ el: el, a: links[k + 1], li: links[k + 1].parentNode, top: meta[k] }); });
     tocTop = links[0];
     spyToc();
   }
@@ -743,9 +746,10 @@
     if (!tocSpy.length) return;
     var line = (document.getElementById("head").offsetHeight || 60) + 24, cur = -1;
     tocSpy.forEach(function (t, k) { if (t.el.getBoundingClientRect().top <= line) cur = k; });
-    var parent = cur >= 0 ? (tocSpy[cur].top ? tocSpy[cur].li : (function () { for (var k = cur; k >= 0; k--) if (tocSpy[k].top) return tocSpy[k].li; })()) : null;
+    var parent = null;
+    if (cur >= 0) for (var k = cur; k >= 0; k--) if (tocSpy[k].top) { parent = tocSpy[k]; break; }
     if (tocTop) tocTop.classList.toggle("on", cur < 0);
-    tocSpy.forEach(function (t, k) { t.a.classList.toggle("on", k === cur); if (t.top) t.li.classList.toggle("open", t.li === parent); });
+    tocSpy.forEach(function (t, k) { t.a.classList.toggle("on", k === cur || (t === parent && tocSpy[cur] !== t && !t.li.classList.contains("open"))); });
   }
   var spyBusy = false;
   window.addEventListener("scroll", function () { if (!spyBusy) { spyBusy = true; requestAnimationFrame(function () { spyBusy = false; spyToc(); }); } }, { passive: true });
@@ -762,6 +766,8 @@
   }
   document.addEventListener("click", function (e) {
     var t = e.target.closest ? e.target : e.target.parentNode;
+    var x = t.closest(".exp");
+    if (x) { var open = !x.parentNode.classList.contains("open"); x.parentNode.classList.toggle("open", open); x.setAttribute("aria-expanded", open ? "true" : "false"); spyToc(); return; }
     if (t.closest(".toc-btn")) setToc(!document.body.classList.contains("toc-open"));
     else if (document.body.classList.contains("toc-open") && !t.closest("#side-toc")) setToc(false);
     var d = t.closest("[data-dock]");
