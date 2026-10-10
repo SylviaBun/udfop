@@ -350,7 +350,8 @@ figure.fig-right { float: right; clear: right; margin-left: 1.1em; }
 figure.fig-left { float: left; clear: left; margin-right: 1.1em; }
 figure.fig-center { margin-left: auto; margin-right: auto; clear: both; }
 figure.fig-center figcaption { text-align: center; }
-#gp h2.sec, #gp h3.sec { display: flow-root; }
+/* a heading beside a floated infobox or picture keeps its underline beside it, not running underneath */
+h2.sec, h3.sec { display: flow-root; }
 #gp h2.cl, #gp h3.cl { clear: both; }
 /* tables and code boxes sit beside the Contents box, and only step below a right-hand picture */
 #gp figure.fig-right ~ .wrap, #gp figure.fig-right ~ pre { clear: right; }
