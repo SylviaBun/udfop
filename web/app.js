@@ -725,10 +725,6 @@
     h += "</ol>";
     var compact = window.matchMedia && window.matchMedia("(max-width: 860px), (max-height: 500px) and (max-width: 1100px)").matches;
     box.innerHTML = "<b>Contents</b>" + h + '<button type="button" class="toc-pin">Move to ' + (compact ? "the menu" : "the sidebar") + "</button>";
-    if (hs.length > 10 && n2 > 1 && box.classList.contains("gtoc")) {
-      box.classList.add("toc-long");
-      box.querySelector(".toc-pin").insertAdjacentHTML("beforebegin", '<button type="button" class="toc-toggle" aria-expanded="false">Show subsections</button>');
-    }
     sideList.innerHTML = h; side.hidden = false;
     var links = sideList.querySelectorAll("a");
     Array.prototype.forEach.call(hs, function (el, k) { tocSpy.push({ el: el, a: links[k], li: links[k].parentNode, top: el.tagName === "H2" }); });
@@ -747,11 +743,6 @@
   document.addEventListener("click", function (e) {
     if (e.target.closest && e.target.closest(".toc-pin")) updateSetting("toc", "side");
     if (e.target.closest && e.target.closest(".toc-unpin")) updateSetting("toc", "article");
-  });
-  document.addEventListener("click", function (e) {
-    var b = e.target.closest && e.target.closest(".toc-toggle"); if (!b) return;
-    var box = b.parentNode, on = box.classList.toggle("toc-open");
-    b.textContent = on ? "Hide subsections" : "Show subsections"; b.setAttribute("aria-expanded", on ? "true" : "false");
   });
 
   function scrollTo(id) { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }

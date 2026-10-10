@@ -360,9 +360,6 @@ html[data-skin="oblivion"] { --code: var(--new); }
 
 /* the Contents box on a guide page floats beside the opening paragraphs */
 #toc.float { float: right; clear: right; display: block; width: 15.5em; max-width: 42%; min-width: 0; margin: .2em 0 1em 1.3em; }
-#toc.toc-long:not(.toc-open) ol ol { display: none; }
-#toc .toc-toggle { display: block; margin: 6px auto 0; padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; cursor: pointer; }
-#toc .toc-toggle:hover { text-decoration: underline; }
 @media (max-width: 600px) { #toc.float { float: none; width: auto; max-width: none; margin: .4em 0 1em; } }
 
 /* Contents in the sidebar: the same panel that docks on a desktop and becomes the menu drawer on a phone */
