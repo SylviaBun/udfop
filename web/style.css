@@ -239,9 +239,6 @@ body.settings-open #settings-panel { display: block; }
 html[data-panel="sidebar"] .panel-dock .pd-hide { display: inline; }
 .sp-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 4px 8px; padding: 0 0 4px; border-bottom: 1px solid var(--line); }
 .sp-head h2 { margin: 0; font: 700 1em var(--sans); border: 0; padding: 0; }
-#settings-close { border: 0; background: none; color: var(--fg); font-size: 1.3rem; line-height: 1; cursor: pointer; padding: 0 4px; border-radius: 3px; }
-#settings-close:hover { background: var(--line); }
-#settings-close:focus-visible { outline: 2px solid var(--link); }
 #settings-note { font-size: .8rem; margin-left: 8px; }
 .setting { margin: 0 0 8px 8px; padding: 0; border: 0; min-width: 0; }
 .setting legend { padding: 0; margin: 14px 0 4px; font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
@@ -430,6 +427,5 @@ html[data-menu="popover"] .menu-dock .md-dock { display: inline; }
   html[data-panel="sidebar"][data-width="wide"] .head-in, html[data-panel="sidebar"][data-menu="popover"] .head-in { max-width: none; }
   html[data-panel="sidebar"] #settings-panel { display: block; grid-column: -2 / -1; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem); right: auto; z-index: auto;
     height: calc(100vh - var(--head-h, 3.6rem)); max-height: none; box-shadow: none; background: none; border: 0; }
-  html[data-panel="sidebar"] #gear, html[data-panel="sidebar"] #settings-close { display: none; }
-}
+  html[data-panel="sidebar"] #gear, html[data-panel="sidebar"] }
 @media (max-width: 860px), (max-height: 500px) and (max-width: 1100px) { .side-head { display: none; } }

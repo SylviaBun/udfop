@@ -864,7 +864,6 @@
     document.querySelector(".panel-dock").addEventListener("click", function () {
       updateSetting("panel", document.documentElement.getAttribute("data-panel") === "sidebar" ? "popover" : "sidebar"); st = loadSettings(); sync(); close(false);
     });
-    document.getElementById("settings-close").addEventListener("click", function () { close(true); });
     document.addEventListener("click", function (e) {
       if (isOpen() && !docked() && !e.target.closest("#settings-panel") && !e.target.closest("#gear")) close(false);
     });
