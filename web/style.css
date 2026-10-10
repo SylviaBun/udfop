@@ -355,10 +355,11 @@ html[data-skin="parchment"] { --code: var(--buff); }
 html[data-skin="oblivion"] { --code: var(--new); }
 
 /* Contents: a pop-up under the list-button beside the page title, or docked in the left column below the main menu */
-.toc-btn { margin: 0 .5em 0 0; padding: 0 .35em; border: 0; border-radius: 3px; background: none; color: var(--fg); font: inherit; font-size: .6em; line-height: 1.5; cursor: pointer; vertical-align: middle; }
+.toc-anchor { position: sticky; top: calc(var(--head-h, 3.6rem) + 10px); height: 0; z-index: 6; }
+.toc-btn { position: absolute; left: -26px; top: 6px; width: 24px; height: 26px; padding: 0; border: 1px solid var(--line); border-radius: 3px; background: var(--softer); color: var(--fg); font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
 .toc-btn:hover, body.toc-open .toc-btn { background: var(--soft); }
 .toc-btn:focus-visible { outline: 2px solid var(--link); }
-html[data-contents="sidebar"] .toc-btn { display: none; }
+html[data-contents="sidebar"] .toc-anchor { display: none; }
 #side-toc { display: none; font-size: .85rem; padding: 16px 8px 24px 12px; }
 html[data-contents="sidebar"] #side-toc:not([hidden]) { display: block; }
 html:not([data-menu="popover"])[data-contents="sidebar"] #side-toc:not([hidden]) { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 16px; }

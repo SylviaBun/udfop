@@ -729,12 +729,12 @@
         "<ol>" + it.subs.map(function (l) { return "<li>" + l + "</li>"; }).join("") + "</ol></li>" : "<li>" + it.link + "</li>";
     }).join("") + "</ol>";
     list.innerHTML = h; side.hidden = false; document.documentElement.classList.add("has-toc");
-    var title = app.querySelector("h1.title");
-    if (title && !title.querySelector(".toc-btn")) {
-      var btn = document.createElement("button");
+    if (!app.querySelector(".toc-btn")) {   /* the button sits in the article's left margin and follows the scroll, so Contents is always one click away */
+      var anchor = document.createElement("div"), btn = document.createElement("button");
+      anchor.className = "toc-anchor";
       btn.type = "button"; btn.className = "toc-btn"; btn.title = "Contents"; btn.setAttribute("aria-label", "Contents");
       btn.setAttribute("aria-controls", "side-toc"); btn.setAttribute("aria-expanded", "false"); btn.textContent = "☰";
-      title.insertBefore(btn, title.firstChild);
+      anchor.appendChild(btn); app.insertBefore(anchor, app.firstChild);
     }
     var links = list.querySelectorAll("a");
     Array.prototype.forEach.call(hs, function (el, k) { tocSpy.push({ el: el, a: links[k + 1], li: links[k + 1].parentNode, top: meta[k] }); });

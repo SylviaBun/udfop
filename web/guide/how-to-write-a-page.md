@@ -382,7 +382,7 @@ Keycaps work in tables and in captions, but not inside the text of a link. Put t
 
 ### What the site does for you
 
-You do not write these. They come from what you wrote: a **Contents** list built from the page's headings (docked in the left sidebar by default, where it follows the section being read; subsections are listed under their section behind a small arrow that the reader opens; readers can hide it behind a ☰ button beside the page title, and the site remembers their choice; on a narrow screen such as a phone it is not shown yet), the page's place in the main menu and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
+You do not write these. They come from what you wrote: a **Contents** list built from the page's headings (docked in the left sidebar by default, where it follows the section being read; subsections are listed under their section behind a small arrow that the reader opens; readers can hide it behind a ☰ button that stays at the top left of the article as they scroll, and the site remembers their choice; on a narrow screen such as a phone it is not shown yet), the page's place in the main menu and breadcrumb from its `category`, its entry in the Game Guide index and in search, the **References** section, and the **PN** and **↗** markers on links.
 
 ## Not supported
 
