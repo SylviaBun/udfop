@@ -400,8 +400,9 @@ kbd.k-pad { border-radius: 999px; border-color: var(--accent); }
 
 /* main menu: docked in the left column, or tucked behind the hamburger as a pop-up (phones always use the pop-up) */
 .side-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 4px 8px; padding: 0 0 4px; border-bottom: 1px solid var(--line); font-weight: 700; }
-.dock { margin: 0; padding: 0 2px; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; font-weight: 400; cursor: pointer; }
-.dock:hover { text-decoration: underline; }
+.dock { margin: 0; padding: 1px 8px; border: 1px solid var(--line); border-radius: 3px; background: var(--soft); color: var(--fg); font: inherit; font-size: .8em; font-weight: 400; white-space: nowrap; cursor: pointer; }
+.dock:hover { background: color-mix(in srgb, var(--accent) 22%, var(--soft)); border-color: var(--accent); }
+.dock:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
 #menu:hover, body.menu-open #menu { background: var(--soft); }
 #menu { border-radius: 3px; line-height: 1; padding: 4px 8px; margin-right: 6px; }
 @media (min-width: 861px) and (min-height: 501px), (min-width: 1101px) {
