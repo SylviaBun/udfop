@@ -16,10 +16,10 @@
     if (s.width === "wide") d.setAttribute("data-width", "wide");
     if (s.theme === "light" || s.theme === "dark") d.setAttribute("data-theme", s.theme);
     if (["parchment", "iliac", "oblivion"].indexOf(s.skin) >= 0) d.setAttribute("data-skin", s.skin);
-    if (s.toc === "side") d.setAttribute("data-toc", "side");
-    if (s.panel === "sidebar") d.setAttribute("data-panel", "sidebar");
-    if (s.menu === "popover") d.setAttribute("data-menu", "popover");
-    if (s.tocbox === "closed") d.setAttribute("data-tocbox", "closed");
+    /* defaults: the main menu is hidden behind the button, Settings and Contents are docked */
+    if (s.menu !== "sidebar") d.setAttribute("data-menu", "popover");
+    if (s.panel !== "popover") d.setAttribute("data-panel", "sidebar");
+    if (s.contents !== "popover") d.setAttribute("data-contents", "sidebar");
   } catch (e) {}
 })();
 </script>
@@ -38,13 +38,9 @@
   </div>
 </header>
 <div id="page">
+  <div id="rail">
   <aside id="side">
-    <div class="side-head"><span>Main menu</span><button type="button" class="menu-dock"><span class="md-hide">hide</span><span class="md-dock">move to sidebar</span></button></div>
-    <nav aria-label="Contents of this page" id="side-toc" hidden>
-      <h3>Contents</h3>
-      <div id="side-toc-list"></div>
-      <p><button type="button" class="toc-unpin">Move back to the article</button></p>
-    </nav>
+    <div class="side-head"><span>Main menu</span><button type="button" class="dock" data-dock="menu"></button></div>
     <nav aria-label="Navigation">
       <h3>Navigation</h3>
       <ul>
@@ -82,6 +78,11 @@
       <ul id="side-hubs"></ul>
     </nav>
   </aside>
+  <nav id="side-toc" aria-label="Contents of this page" hidden>
+    <div class="side-head"><span>Contents</span><button type="button" class="dock" data-dock="contents"></button></div>
+    <div id="side-toc-list"></div>
+  </nav>
+  </div>
   <main id="content">
     <article id="app"><noscript><p>This wiki needs JavaScript enabled.</p></noscript></article>
     <footer id="foot">
@@ -91,7 +92,7 @@
     </footer>
   </main>
   <aside id="settings-panel" aria-label="Display settings" aria-hidden="true">
-    <div class="sp-head"><h2>Settings</h2><span class="sp-actions"><button class="panel-dock" type="button"><span class="pd-hide">hide</span><span class="pd-dock">move to sidebar</span></button></span></div>
+    <div class="sp-head"><h2>Settings</h2><span class="sp-actions"><button class="dock" type="button" data-dock="panel"></button></span></div>
     <div id="settings-body"></div>
   </aside>
 </div>

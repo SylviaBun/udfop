@@ -96,16 +96,23 @@ body { margin: 0; background: var(--page); color: var(--fg); font: .9375rem/1.6 
 a { color: var(--link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 a:visited { color: var(--visited); }
-#page { display: grid; grid-template-columns: 14.5em minmax(0, 70rem); justify-content: center; grid-template-rows: 1fr; min-height: calc(100vh - var(--head-h, 3.6rem)); }
-html[data-width="wide"] #page { grid-template-columns: 14.5em minmax(0, 1fr); }
+/* widths of the docked columns: left (main menu and/or Contents) and right (Settings); 0 when nothing is docked there */
+:root { --cl: 0px; --cr: 0px; }
+html:not([data-menu="popover"]) { --cl: 14.5em; }
+html.has-toc[data-contents="sidebar"] { --cl: 14.5em; }
+#page { display: grid; grid-template-columns: var(--cl) minmax(0, 70rem) var(--cr); justify-content: center; grid-template-rows: 1fr; min-height: calc(100vh - var(--head-h, 3.6rem)); }
+html[data-width="wide"] #page { grid-template-columns: var(--cl) minmax(0, 1fr) var(--cr); }
+#rail { grid-column: 1; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem); height: calc(100vh - var(--head-h, 3.6rem));
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; min-width: 0; }
+#content { grid-column: 2; grid-row: 1; }
 
 /* header */
 #head { position: sticky; top: 0; z-index: 20; background: var(--head); border-bottom: 1px solid var(--line); }
 /* the inner bar is exactly as wide as the nav + article block below, so the logo sits over the nav and the search starts at the article text */
-.head-in { display: flex; align-items: center; padding: 8px 16px 8px 12px; max-width: calc(14.5em + 70rem); margin: 0 auto; }
-html[data-width="wide"] .head-in { max-width: none; }
+.head-in { display: flex; align-items: center; padding: 8px 16px 8px 12px; max-width: calc(var(--cl) + 70rem + var(--cr)); margin: 0 auto; }
+html[data-width="wide"] .head-in, html[data-menu="popover"] .head-in { max-width: none; }
 #menu { display: none; border: 0; background: none; font-size: 1.4rem; color: var(--fg); cursor: pointer; padding: 0 6px; }
-#logo { display: flex; align-items: center; gap: 10px; color: var(--fg); width: calc(14.5em - 12px); flex: none; }
+#logo { display: flex; align-items: center; gap: 10px; color: var(--fg); width: auto; flex: none; }
 #logo:hover { text-decoration: none; }
 #logo:visited { color: var(--fg); }
 .mark { display: grid; place-items: center; width: 2.875rem; height: 2.875rem; border-radius: 50%; background: var(--accent); color: #fff;
@@ -122,8 +129,7 @@ html[data-width="wide"] .head-in { max-width: none; }
 #suggest small { color: var(--muted); }
 
 /* sidebar */
-#side { padding: 16px 8px 24px 12px; font-size: .85rem; position: sticky; top: var(--head-h, 3.6rem); align-self: start;
-  height: calc(100vh - var(--head-h, 3.6rem)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+#side { padding: 16px 8px 8px 12px; font-size: .85rem; }
 #side h3 { margin: 14px 0 4px 8px; font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
 #side ul { list-style: none; margin: 0; padding: 0; }
 #side li a { display: block; padding: 2px 8px; border-left: 3px solid transparent; }
@@ -157,18 +163,6 @@ ul.cols small { color: var(--muted); }
 .infobox .sub { padding: 3px 8px; background: var(--soft); text-align: center; font-weight: 600; }
 .bar { display: flex; height: 10px; margin: 6px 8px 8px; border: 1px solid var(--line); }
 .bar i { display: block; height: 100%; }
-#toc { display: inline-block; min-width: 14em; border: 1px solid var(--line); background: var(--softer); padding: 8px 14px 8px 12px; margin: .4em 0 1em; font-size: .88rem; }
-#toc b { display: block; text-align: center; margin-bottom: 4px; }
-.toc-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 6px; padding-bottom: 5px; border-bottom: 1px solid var(--line); }
-.toc-title { font-weight: 700; }
-#toc .toc-fold { margin: 0; padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; cursor: pointer; white-space: nowrap; }
-#toc .toc-fold:hover { text-decoration: underline; }
-#toc .fold-closed, html[data-tocbox="closed"] #toc .fold-open { display: none; }
-html[data-tocbox="closed"] #toc .fold-closed { display: inline; }
-html[data-tocbox="closed"] #toc #toc-list, html[data-tocbox="closed"] #toc .toc-pin { display: none; }
-html[data-tocbox="closed"] #toc .toc-head { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
-#toc ol { margin: 0; padding-left: 1.4em; }
-#toc ol ol { margin-left: .2em; }
 .clear { clear: both; }
 
 /* tables */
@@ -213,7 +207,10 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
 
 /* small screens */
 @media (max-width: 860px), (max-height: 500px) and (max-width: 1100px) {
-  #page { grid-template-columns: 1fr; }
+  #page, html[data-width="wide"] #page { grid-template-columns: 1fr; }
+  #rail { display: contents; }
+  #content { grid-column: 1; }
+  #side-toc, .toc-btn { display: none !important; }
   #menu { display: block; }
   #logo { width: auto; } .name small { display: none; }
   #side { display: none; position: fixed; top: 0; left: 0; bottom: 0; height: auto; align-self: auto; width: 15em; z-index: 15; background: var(--paper);
@@ -233,10 +230,6 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
   padding: 16px 8px 24px 12px; font-size: .85rem; }
 body.settings-open #settings-panel { display: block; }
 .sp-actions { display: flex; align-items: center; gap: 8px; }
-.panel-dock { margin: 0; padding: 0 2px; border: 0; background: none; color: var(--link); font: inherit; font-size: .85rem; cursor: pointer; }
-.panel-dock:hover { text-decoration: underline; }
-.panel-dock .pd-hide, html[data-panel="sidebar"] .panel-dock .pd-dock { display: none; }
-html[data-panel="sidebar"] .panel-dock .pd-hide { display: inline; }
 .sp-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 4px 8px; padding: 0 0 4px; border-bottom: 1px solid var(--line); }
 .sp-head h2 { margin: 0; font: 700 1em var(--sans); border: 0; padding: 0; }
 #settings-note { font-size: .8rem; margin-left: 8px; }
@@ -267,11 +260,10 @@ html[data-panel="sidebar"] .panel-dock .pd-hide { display: inline; }
 @media (max-width: 1100px) {
   #settings-panel { top: 0; right: 0; bottom: 0; width: 17rem; max-width: 90vw; max-height: none;
     border: 0; border-left: 1px solid var(--line); padding-top: var(--head-h, 7.5rem); }
-  .panel-dock { display: none; }
+  .dock[data-dock="panel"] { display: none; }
 }
 @media (max-width: 860px), (max-height: 500px) and (max-width: 1100px) {
-  .head-in, html[data-width="wide"] .head-in, body.settings-open .head-in, html[data-width="wide"] body.settings-open .head-in { max-width: none; }
-  #page, html[data-width="wide"] #page, body.settings-open #page, html[data-width="wide"] body.settings-open #page { grid-template-columns: 1fr; }
+  .head-in, html[data-width="wide"] .head-in { max-width: none; }
 }
 
 /* theme picker: a 2 x 2 grid with a small color dot */
@@ -362,22 +354,22 @@ figure.fig-center figcaption { text-align: center; }
 html[data-skin="parchment"] { --code: var(--buff); }
 html[data-skin="oblivion"] { --code: var(--new); }
 
-/* the Contents box on a guide page floats beside the opening paragraphs */
-#toc.float { float: right; clear: right; display: block; width: 15.5em; max-width: 42%; min-width: 0; margin: .2em 0 1em 1.3em; }
-@media (max-width: 600px) { #toc.float { float: none; width: auto; max-width: none; margin: .4em 0 1em; } }
-
-/* Contents in the sidebar: the same panel that docks on a desktop and becomes the menu drawer on a phone */
-html:not([data-toc="side"]) #side-toc { display: none; }
-html[data-toc="side"] #toc { display: none; }
-#toc .toc-pin, #side-toc .toc-unpin { display: block; margin: 6px auto 0; padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; cursor: pointer; }
-#toc .toc-pin:hover, #side-toc .toc-unpin:hover { text-decoration: underline; }
-#side-toc { padding-bottom: 6px; border-bottom: 1px solid var(--line); margin-bottom: 6px; }
+/* Contents: a pop-up under the list-button beside the page title, or docked in the left column below the main menu */
+.toc-btn { margin: 0 .5em 0 0; padding: 0 .35em; border: 0; border-radius: 3px; background: none; color: var(--fg); font: inherit; font-size: .6em; line-height: 1.5; cursor: pointer; vertical-align: middle; }
+.toc-btn:hover, body.toc-open .toc-btn { background: var(--soft); }
+.toc-btn:focus-visible { outline: 2px solid var(--link); }
+html[data-contents="sidebar"] .toc-btn { display: none; }
+#side-toc { display: none; font-size: .85rem; padding: 16px 8px 24px 12px; }
+html[data-contents="sidebar"] #side-toc:not([hidden]) { display: block; }
+html:not([data-menu="popover"])[data-contents="sidebar"] #side-toc:not([hidden]) { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 16px; }
+html:not([data-contents="sidebar"]) #side-toc { position: fixed; z-index: 15; top: var(--head-h, 3.6rem); left: 8px; width: 17em; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+html:not([data-contents="sidebar"]) body.toc-open #side-toc:not([hidden]) { display: block; }
 #side-toc ol { margin: 0; padding: 0; list-style: none; }
 #side-toc ol ol { display: none; margin-left: 10px; }
 #side-toc li.open > ol { display: block; }
 #side-toc li a { display: block; padding: 2px 8px; border-left: 3px solid transparent; }
 #side-toc li a.on { border-color: var(--accent); background: var(--soft); color: var(--fg); font-weight: 600; }
-#side-toc p { margin: 4px 0 0; text-align: center; }
 
 /* keys and buttons: {{W}}, {{Shift+Right click}}, {{Mouse 4}}, {{pad:RT}} */
 kbd.k { display: inline-block; min-width: 1.5em; padding: 0 .5em; margin: 0 1px; text-align: center; white-space: nowrap; line-height: 1.5;
@@ -399,33 +391,23 @@ kbd.k-pad { border-radius: 999px; border-color: var(--accent); }
   :root:not([data-theme="light"]) kbd.k-pad { background: color-mix(in srgb, var(--paper) 72%, var(--accent)); color: #fff; border-color: var(--accent); border-bottom-color: var(--accent); }
 }
 
-/* main menu: docked as a sidebar, or tucked behind the hamburger as a pop-up (phones always use the pop-up) */
+/* main menu: docked in the left column, or tucked behind the hamburger as a pop-up (phones always use the pop-up) */
 .side-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 4px 8px; padding: 0 0 4px; border-bottom: 1px solid var(--line); font-weight: 700; }
-.menu-dock { margin: 0; padding: 0 2px; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; font-weight: 400; cursor: pointer; }
-.menu-dock:hover { text-decoration: underline; }
-.menu-dock .md-dock, html[data-menu="popover"] .menu-dock .md-hide { display: none; }
-html[data-menu="popover"] .menu-dock .md-dock { display: inline; }
+.dock { margin: 0; padding: 0 2px; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; font-weight: 400; cursor: pointer; }
+.dock:hover { text-decoration: underline; }
 #menu:hover, body.menu-open #menu { background: var(--soft); }
 #menu { border-radius: 3px; line-height: 1; padding: 4px 8px; margin-right: 6px; }
 @media (min-width: 861px) and (min-height: 501px), (min-width: 1101px) {
   html[data-menu="popover"] #menu { display: block; }
-  html[data-menu="popover"] #page, html[data-menu="popover"] body.settings-open #page { grid-template-columns: minmax(0, 70rem); }
-  html[data-menu="popover"][data-width="wide"] #page, html[data-menu="popover"][data-width="wide"] body.settings-open #page { grid-template-columns: minmax(0, 1fr); }
-  html[data-menu="popover"] .head-in, html[data-menu="popover"] body.settings-open .head-in { max-width: none; }
-  html[data-menu="popover"] #logo { width: auto; }
-  html[data-menu="popover"] #side { display: none; position: fixed; top: var(--head-h, 3.6rem); left: 8px; height: auto; align-self: auto;
-    max-height: calc(100vh - var(--head-h, 3.6rem) - 12px); width: 16em; z-index: 15; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+  html:not([data-menu="popover"]) #logo { width: calc(14.5em - 12px); }
+  html[data-menu="popover"] #side { display: none; position: fixed; top: var(--head-h, 3.6rem); left: 8px; max-height: calc(100vh - var(--head-h, 3.6rem) - 12px);
+    overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; width: 16em; z-index: 15; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
   html[data-menu="popover"] body.menu-open #side { display: block; }
 }
 /* settings: a pop-up under the gear, or docked as a sidebar on the right (wide windows only) */
 @media (min-width: 1101px) {
-  html[data-panel="sidebar"] #page { grid-template-columns: 14.5em minmax(0, 70rem) 19rem; }
-  html[data-panel="sidebar"][data-width="wide"] #page { grid-template-columns: 14.5em minmax(0, 1fr) 19rem; }
-  html[data-panel="sidebar"][data-menu="popover"] #page { grid-template-columns: minmax(0, 70rem) 19rem; }
-  html[data-panel="sidebar"][data-menu="popover"][data-width="wide"] #page { grid-template-columns: minmax(0, 1fr) 19rem; }
-  html[data-panel="sidebar"] .head-in { max-width: calc(14.5em + 70rem + 19rem); }
-  html[data-panel="sidebar"][data-width="wide"] .head-in, html[data-panel="sidebar"][data-menu="popover"] .head-in { max-width: none; }
-  html[data-panel="sidebar"] #settings-panel { display: block; grid-column: -2 / -1; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem); right: auto; z-index: auto;
+  html[data-panel="sidebar"] { --cr: 19rem; }
+  html[data-panel="sidebar"] #settings-panel { display: block; grid-column: 3; grid-row: 1; align-self: start; position: sticky; top: var(--head-h, 3.6rem); right: auto; z-index: auto;
     height: calc(100vh - var(--head-h, 3.6rem)); max-height: none; box-shadow: none; background: none; border: 0; }
   html[data-panel="sidebar"] #gear { display: none; }
 }

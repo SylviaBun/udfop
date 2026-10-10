@@ -9,7 +9,7 @@ UDFOP has two parts:
 
 ## Game Guide pages
 
-**The full instructions are on the site:** [How to write a guide page](https://tau-samsara.github.io/udfop/#/guide/how-to-write-a-page). They cover the page format, links, how a page connects to the sidebar, search and the patch notes, and a formatting cheat sheet.
+**The full instructions are on the site:** [How to write a guide page](https://tau-samsara.github.io/udfop/#/guide/how-to-write-a-page). They cover the page format, links, how a page connects to the main menu, search and the patch notes, and a formatting cheat sheet.
 
 The short version: **fork the project first, on its GitHub page** ([github.com/tau-samsara/udfop](https://github.com/tau-samsara/udfop) → **Fork** → **Create fork**), then in your copy open `web/guide`, choose **Add file → Create new file**, paste the template, write your page, and **Commit changes** on a new branch to start a pull request. Click **Create pull request** (twice) to send it to the maintainers. You need a free GitHub account with a verified email, and nothing installed.
 

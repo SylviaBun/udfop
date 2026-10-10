@@ -9,8 +9,8 @@
 
   /* ---------- display settings (saved in this browser only) ---------- */
   var SETTINGS_KEY = "udfop.settings";
-  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"], toc: ["article", "side"], tocbox: ["open", "closed"], menu: ["sidebar", "popover"], panel: ["popover", "sidebar"] };
-  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on", toc: "article", tocbox: "open", menu: "sidebar", panel: "popover" };
+  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"], menu: ["sidebar", "popover"], panel: ["popover", "sidebar"], contents: ["popover", "sidebar"] };
+  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on", menu: "popover", panel: "sidebar", contents: "sidebar" };
   function loadSettings() {
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {}; } catch (e) {}
@@ -23,10 +23,16 @@
   }
   function applySettings(st) {
     var d = document.documentElement;
-    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"], ["toc", "article"], ["tocbox", "open"], ["menu", "sidebar"], ["panel", "popover"]].forEach(function (p) {
+    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"], ["menu", "sidebar"], ["panel", "popover"], ["contents", "popover"]].forEach(function (p) {
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
-    if (typeof syncFold === "function") syncFold();
+    syncDocks(st);
+  }
+  /* the dock buttons: "hide" while a panel is docked in a sidebar, "move to sidebar" while it is a pop-up */
+  function syncDocks(st) {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-dock]"), function (b) {
+      b.textContent = st[b.getAttribute("data-dock")] === "sidebar" ? "hide" : "move to sidebar";
+    });
   }
   function syncHeadH() {
     var h = document.getElementById("head");
@@ -233,7 +239,7 @@
       (vs.length > 1 ? " to " + vlink(vs[vs.length - 1]) : "") + ". " +
       (order.length > 1 ? "Most of them are " + esc(TYPE_LABEL[top] ? TYPE_LABEL[top].toLowerCase() : top.toLowerCase()) + " (" + g[top].length + ")." : "") + "</p>";
 
-    var h = ib + lead + '<div id="toc"></div>';
+    var h = ib + lead;
     h += sec("Latest changes", "Latest changes", 2) + bullets(l.slice().sort(newest).slice(0, Math.min(5, l.length)), false);
     h += sec("History", "History", 2) + table(l, ["Patch", "Date", "System", "Type", "Direction", "Change"]);
     if (order.length > 1) {
@@ -280,7 +286,6 @@
     var h = '<div class="pager">' + (i < versions.length - 1 ? '<a href="#/patch/' + enc(versions[i + 1]) + '">← Older: ' + esc(versions[i + 1]) + "</a>" : "") +
       (i > 0 ? '<a href="#/patch/' + enc(versions[i - 1]) + '">Newer: ' + esc(versions[i - 1]) + " →</a>" : "") + "</div>";
     h += "<p><b>Patch " + esc(v) + "</b> was released on " + esc(dateOf(v)) + ". It records " + plural(l.length, "change") + " to " + plural(names.length, "topic") + ".</p>";
-    h += '<div id="toc"></div>';
     names.forEach(function (t) { h += sec("p-" + t, t, 2).replace(">" + esc(t) + "</h2>", ">" + tlink(t) + "</h2>") + bullets(g[t], false); });
     if (rel && rel.prs.length) h += sec("Pull requests", "Source pull requests", 2) + '<ul class="bul">' + rel.prs.map(function (p) {
       return '<li><a href="' + esc(p.u) + '" rel="noopener">#' + p.n + "</a> " + esc(p.t) + "</li>"; }).join("") + "</ul>";
@@ -645,11 +650,6 @@
         refs = newRefs(entry ? entry.slug : slug);
         var rendered = markdown(fm.body, t); mdBase = "";
         rendered += buildReferences(refs, (fm.meta.related || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean)); refs = null;
-        /* the first paragraph stays above the Contents box. The box floats right only when text follows it to wrap around it;
-           when a heading, table or code box comes next there is nothing to fill the space, so it stays a normal left-aligned block */
-        var lead = /^<p>[\s\S]*?<\/p>/.exec(rendered), rest = lead ? rendered.slice(lead[0].length) : rendered;
-        var flows = /^\s*<(p|ul|ol|blockquote)[ >]/.test(rest);
-        rendered = (lead ? lead[0] : "") + '<div id="toc" class="toc gtoc' + (flows ? " float" : "") + '"></div>' + rest;
         box.innerHTML = rendered +
           '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> (fork the project first) · <a href="#/guide/how-to-write-a-page">How to contribute</a></p>';
         buildToc();
@@ -706,42 +706,40 @@
     });
   }
 
-  /* the Contents box can be folded to its title row; the choice is remembered like the display settings */
-  function syncFold() {
-    var closed = document.documentElement.getAttribute("data-tocbox") === "closed", b = document.querySelector("#toc .toc-fold");
-    if (!b) return;
-    b.setAttribute("aria-expanded", closed ? "false" : "true"); b.setAttribute("aria-label", closed ? "Show the contents" : "Hide the contents");
-  }
   function updateSetting(key, value) {
     var st = loadSettings(); st[key] = value; saveSettings(st); applySettings(st);
   }
-  var tocSpy = [];   /* [{el: heading, a: link in the side list, li: its item, top: true for a main section}] */
+  /* Contents: a list-button beside the page title opens it as a pop-up, or it can be docked in the left column under the main menu */
+  var tocSpy = [];   /* [{el: heading, a: link in the list, li: its item, top: true for a main section}] */
   function buildToc() {
-    var box = document.getElementById("toc"), side = document.getElementById("side-toc"), sideList = document.getElementById("side-toc-list");
-    tocSpy = []; side.hidden = true; sideList.innerHTML = "";
-    if (!box) return;
+    var side = document.getElementById("side-toc"), list = document.getElementById("side-toc-list");
+    tocSpy = []; side.hidden = true; list.innerHTML = ""; setToc(false);
+    document.documentElement.classList.remove("has-toc");
     var hs = app.querySelectorAll("h2.sec[data-toc], h3.sec[data-toc]");
-    if (hs.length < 3) { box.remove(); return; }
-    var h = "<ol>", n2 = 0, n3 = 0, open = false;
+    if (hs.length < 3) return;
+    var h = "<ol>", open = false;
     Array.prototype.forEach.call(hs, function (el) {
       var link = '<a href="' + location.hash + '" data-scroll="' + el.id + '">' + esc(el.getAttribute("data-toc")) + "</a>";
-      if (el.tagName === "H2") { if (open) { h += "</ol></li>"; open = false; } n2++; n3 = 0; h += "<li>" + link; h += "</li>"; }
-      else { if (!open) { h = h.replace(/<\/li>$/, "") + "<ol>"; open = true; } n3++; h += "<li>" + link + "</li>"; }
+      if (el.tagName === "H2") { if (open) { h += "</ol></li>"; open = false; } h += "<li>" + link + "</li>"; }
+      else { if (!open) { h = h.replace(/<\/li>$/, "") + "<ol>"; open = true; } h += "<li>" + link + "</li>"; }
     });
     if (open) h += "</ol></li>";
     h += "</ol>";
-    var compact = window.matchMedia && window.matchMedia("(max-width: 860px), (max-height: 500px) and (max-width: 1100px)").matches;
-    box.innerHTML = '<div class="toc-head"><span class="toc-title">Contents</span><button type="button" class="toc-fold" aria-controls="toc-list" aria-expanded="true" aria-label="Hide the contents"><span class="fold-open">[hide]</span><span class="fold-closed">[show]</span></button></div>' +
-      '<div id="toc-list">' + h + '</div><button type="button" class="toc-pin">Move to ' + (compact ? "the menu" : "the sidebar") + "</button>";
-    syncFold();
-    sideList.innerHTML = h; side.hidden = false;
-    var links = sideList.querySelectorAll("a");
+    list.innerHTML = h; side.hidden = false; document.documentElement.classList.add("has-toc");
+    var title = app.querySelector("h1.title");
+    if (title && !title.querySelector(".toc-btn")) {
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.className = "toc-btn"; btn.title = "Contents"; btn.setAttribute("aria-label", "Contents");
+      btn.setAttribute("aria-controls", "side-toc"); btn.setAttribute("aria-expanded", "false"); btn.textContent = "☰";
+      title.insertBefore(btn, title.firstChild);
+    }
+    var links = list.querySelectorAll("a");
     Array.prototype.forEach.call(hs, function (el, k) { tocSpy.push({ el: el, a: links[k], li: links[k].parentNode, top: el.tagName === "H2" }); });
     spyToc();
   }
-  /* highlight the section being read, and open its sub-list in the side Contents */
+  /* highlight the section being read, and open its sub-list */
   function spyToc() {
-    if (!tocSpy.length || document.getElementById("side-toc").hidden) return;
+    if (!tocSpy.length) return;
     var line = (document.getElementById("head").offsetHeight || 60) + 24, cur = -1;
     tocSpy.forEach(function (t, k) { if (t.el.getBoundingClientRect().top <= line) cur = k; });
     var parent = cur >= 0 ? (tocSpy[cur].top ? tocSpy[cur].li : (function () { for (var k = cur; k >= 0; k--) if (tocSpy[k].top) return tocSpy[k].li; })()) : null;
@@ -749,29 +747,43 @@
   }
   var spyBusy = false;
   window.addEventListener("scroll", function () { if (!spyBusy) { spyBusy = true; requestAnimationFrame(function () { spyBusy = false; spyToc(); }); } }, { passive: true });
+  /* the pop-up version: opens under the button, and closes like the menu and Settings do */
+  function setToc(on) {
+    var panel = document.getElementById("side-toc"), btn = document.querySelector(".toc-btn");
+    if (on) {
+      setMenu(false); if (typeof settingsPanel !== "undefined" && settingsPanel) settingsPanel.close(false);
+      var r = btn ? btn.getBoundingClientRect() : { left: 8, bottom: 0 }, top = Math.max(r.bottom + 6, (document.getElementById("head").offsetHeight || 60) + 6);
+      panel.style.top = top + "px"; panel.style.left = Math.max(8, r.left) + "px"; panel.style.maxHeight = "calc(100vh - " + (top + 12) + "px)";
+    } else { panel.style.top = panel.style.left = panel.style.maxHeight = ""; }
+    document.body.classList.toggle("toc-open", on);
+    if (btn) btn.setAttribute("aria-expanded", on ? "true" : "false");
+  }
   document.addEventListener("click", function (e) {
-    if (e.target.closest && e.target.closest(".toc-fold")) {
-      updateSetting("tocbox", document.documentElement.getAttribute("data-tocbox") === "closed" ? "open" : "closed"); syncFold();
+    var t = e.target.closest ? e.target : e.target.parentNode;
+    if (t.closest(".toc-btn")) setToc(!document.body.classList.contains("toc-open"));
+    else if (document.body.classList.contains("toc-open") && !t.closest("#side-toc")) setToc(false);
+    var d = t.closest("[data-dock]");
+    if (d) {
+      var k = d.getAttribute("data-dock");
+      updateSetting(k, loadSettings()[k] === "sidebar" ? "popover" : "sidebar"); setMenu(false); setToc(false); settingsPanel.close(false);
     }
-    if (e.target.closest && e.target.closest(".menu-dock")) {
-      updateSetting("menu", document.documentElement.getAttribute("data-menu") === "popover" ? "sidebar" : "popover"); setMenu(false);
-    }
-    if (e.target.closest && e.target.closest(".toc-pin")) updateSetting("toc", "side");
-    if (e.target.closest && e.target.closest(".toc-unpin")) updateSetting("toc", "article");
   });
 
   function scrollTo(id) { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }
   document.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest("[data-scroll]");
-    if (a) { e.preventDefault(); scrollTo(a.getAttribute("data-scroll")); if (a.closest("#side")) setMenu(false); }
+    if (a) { e.preventDefault(); scrollTo(a.getAttribute("data-scroll")); if (a.closest("#side")) setMenu(false); if (a.closest("#side-toc")) setToc(false); }
     if (document.body.classList.contains("menu-open") && !e.target.closest("#side") && !e.target.closest("#menu")) setMenu(false);
   });
 
   function setMenu(on) {
-    if (on && typeof settingsPanel !== "undefined" && settingsPanel) settingsPanel.close(false); document.body.classList.toggle("menu-open", on); document.getElementById("menu").setAttribute("aria-expanded", on ? "true" : "false"); }
+    if (on && typeof settingsPanel !== "undefined" && settingsPanel) settingsPanel.close(false);
+    if (on) setToc(false);
+    document.body.classList.toggle("menu-open", on); document.getElementById("menu").setAttribute("aria-expanded", on ? "true" : "false"); }
   document.getElementById("menu").addEventListener("click", function () { setMenu(!document.body.classList.contains("menu-open")); });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && document.body.classList.contains("menu-open")) { setMenu(false); document.getElementById("menu").focus(); }
+    if (e.key === "Escape" && document.body.classList.contains("toc-open")) { var tb = document.querySelector(".toc-btn"); setToc(false); if (tb) tb.focus(); }
   });
 
   /* sidebar */
@@ -849,7 +861,7 @@
     function isOpen() { return document.body.classList.contains("settings-open"); }
     function open() {
       st = loadSettings(); sync();
-      document.body.classList.remove("menu-open");
+      document.body.classList.remove("menu-open"); setToc(false);
       document.body.classList.add("settings-open");
       gear.setAttribute("aria-expanded", "true"); panel.setAttribute("aria-hidden", "false");
       var first = body.querySelector("input:checked"); if (first) first.focus();
@@ -861,9 +873,6 @@
     }
     function docked() { return document.documentElement.getAttribute("data-panel") === "sidebar" && window.matchMedia("(min-width: 1101px)").matches; }
     gear.addEventListener("click", function () { if (isOpen()) close(true); else open(); });
-    document.querySelector(".panel-dock").addEventListener("click", function () {
-      updateSetting("panel", document.documentElement.getAttribute("data-panel") === "sidebar" ? "popover" : "sidebar"); st = loadSettings(); sync(); close(false);
-    });
     document.addEventListener("click", function (e) {
       if (isOpen() && !docked() && !e.target.closest("#settings-panel") && !e.target.closest("#gear")) close(false);
     });
@@ -984,8 +993,8 @@
     else if (name === "topic" && D.hubs[arg]) keys = ["hub:" + D.hubs[arg], nav];
     setNav(keys);
     Array.prototype.forEach.call(app.querySelectorAll("a[data-issue]"), function (a) { a.href = issueUrl(a.getAttribute("data-issue"), a.getAttribute("data-prefix")); });
-    document.getElementById("side-toc").hidden = true; tocSpy = [];
-    if (res.toc !== false) buildToc();
+    document.getElementById("side-toc").hidden = true; tocSpy = []; document.documentElement.classList.remove("has-toc"); setToc(false);
+    if (res.toc === true) buildToc();
     if (res.after) res.after();
     setMenu(false); sug.hidden = true;
     window.scrollTo(0, 0);
