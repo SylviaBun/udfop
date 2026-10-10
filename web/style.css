@@ -415,19 +415,15 @@ html[data-menu="popover"] .menu-dock .md-dock { display: inline; }
   html[data-menu="popover"] #menu { display: block; }
   html[data-menu="popover"] #page, html[data-menu="popover"] body.settings-open #page { grid-template-columns: minmax(0, 70rem); }
   html[data-menu="popover"][data-width="wide"] #page, html[data-menu="popover"][data-width="wide"] body.settings-open #page { grid-template-columns: minmax(0, 1fr); }
-  html[data-menu="popover"] .head-in, html[data-menu="popover"] body.settings-open .head-in { max-width: 70rem; }
-  html[data-menu="popover"][data-width="wide"] .head-in, html[data-menu="popover"][data-width="wide"] body.settings-open .head-in { max-width: none; }
+  html[data-menu="popover"] .head-in, html[data-menu="popover"] body.settings-open .head-in { max-width: none; }
   html[data-menu="popover"] #logo { width: auto; }
-  html[data-menu="popover"] #side { display: none; position: fixed; top: var(--head-h, 3.6rem); left: max(8px, calc(50vw - 35rem)); height: auto; align-self: auto;
+  html[data-menu="popover"] #side { display: none; position: fixed; top: var(--head-h, 3.6rem); left: 8px; height: auto; align-self: auto;
     max-height: calc(100vh - var(--head-h, 3.6rem) - 12px); width: 16em; z-index: 15; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
-  html[data-menu="popover"][data-width="wide"] #side { left: 8px; }
   html[data-menu="popover"] body.menu-open #side { display: block; }
 }
 @media (min-width: 1101px) {
   html[data-menu="popover"] body.settings-open #page { grid-template-columns: minmax(0, 70rem) 19rem; }
   html[data-menu="popover"][data-width="wide"] body.settings-open #page { grid-template-columns: minmax(0, 1fr) 19rem; }
   html[data-menu="popover"] #settings-panel { grid-column: 2; }
-  html[data-menu="popover"] body.settings-open .head-in { max-width: calc(70rem + 19rem); }
-  html[data-menu="popover"][data-width="wide"] body.settings-open .head-in { max-width: none; }
 }
 @media (max-width: 860px), (max-height: 500px) and (max-width: 1100px) { .side-head { display: none; } }
