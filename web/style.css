@@ -161,6 +161,14 @@ ul.cols small { color: var(--muted); }
 .bar i { display: block; height: 100%; }
 #toc { display: inline-block; min-width: 14em; border: 1px solid var(--line); background: var(--softer); padding: 8px 14px 8px 12px; margin: .4em 0 1em; font-size: .88rem; }
 #toc b { display: block; text-align: center; margin-bottom: 4px; }
+.toc-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.toc-title { font-weight: 700; }
+#toc .toc-fold { margin: 0; padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-size: .85em; cursor: pointer; white-space: nowrap; }
+#toc .toc-fold:hover { text-decoration: underline; }
+#toc .fold-closed, html[data-tocbox="closed"] #toc .fold-open { display: none; }
+html[data-tocbox="closed"] #toc .fold-closed { display: inline; }
+html[data-tocbox="closed"] #toc #toc-list, html[data-tocbox="closed"] #toc .toc-pin { display: none; }
+html[data-tocbox="closed"] #toc .toc-head { margin-bottom: 0; }
 #toc ol { margin: 0; padding-left: 1.4em; }
 #toc ol ol { margin-left: .2em; }
 .clear { clear: both; }

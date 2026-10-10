@@ -17,6 +17,7 @@
     if (s.theme === "light" || s.theme === "dark") d.setAttribute("data-theme", s.theme);
     if (["parchment", "iliac", "oblivion"].indexOf(s.skin) >= 0) d.setAttribute("data-skin", s.skin);
     if (s.toc === "side") d.setAttribute("data-toc", "side");
+    if (s.tocbox === "closed") d.setAttribute("data-tocbox", "closed");
   } catch (e) {}
 })();
 </script>

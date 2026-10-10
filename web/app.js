@@ -9,8 +9,8 @@
 
   /* ---------- display settings (saved in this browser only) ---------- */
   var SETTINGS_KEY = "udfop.settings";
-  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"], toc: ["article", "side"] };
-  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on", toc: "article" };
+  var SETTING_OPTIONS = { skin: ["default", "parchment", "iliac", "oblivion"], size: ["small", "medium", "large"], width: ["standard", "wide"], theme: ["auto", "light", "dark"], previews: ["on", "off"], toc: ["article", "side"], tocbox: ["open", "closed"] };
+  var SETTING_DEFAULTS = { skin: "default", size: "medium", width: "standard", theme: "auto", previews: "on", toc: "article", tocbox: "open" };
   function loadSettings() {
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {}; } catch (e) {}
@@ -23,9 +23,10 @@
   }
   function applySettings(st) {
     var d = document.documentElement;
-    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"], ["toc", "article"]].forEach(function (p) {
+    [["skin", "default"], ["size", "medium"], ["width", "standard"], ["theme", "auto"], ["previews", "on"], ["toc", "article"], ["tocbox", "open"]].forEach(function (p) {
       if (st[p[0]] === p[1]) d.removeAttribute("data-" + p[0]); else d.setAttribute("data-" + p[0], st[p[0]]);
     });
+    if (typeof syncFold === "function") syncFold();
   }
   function syncHeadH() {
     var h = document.getElementById("head");
@@ -705,6 +706,12 @@
     });
   }
 
+  /* the Contents box can be folded to its title row; the choice is remembered like the display settings */
+  function syncFold() {
+    var closed = document.documentElement.getAttribute("data-tocbox") === "closed", b = document.querySelector("#toc .toc-fold");
+    if (!b) return;
+    b.setAttribute("aria-expanded", closed ? "false" : "true"); b.setAttribute("aria-label", closed ? "Show the contents" : "Hide the contents");
+  }
   function updateSetting(key, value) {
     var st = loadSettings(); st[key] = value; saveSettings(st); applySettings(st);
   }
@@ -724,7 +731,9 @@
     if (open) h += "</ol></li>";
     h += "</ol>";
     var compact = window.matchMedia && window.matchMedia("(max-width: 860px), (max-height: 500px) and (max-width: 1100px)").matches;
-    box.innerHTML = "<b>Contents</b>" + h + '<button type="button" class="toc-pin">Move to ' + (compact ? "the menu" : "the sidebar") + "</button>";
+    box.innerHTML = '<div class="toc-head"><span class="toc-title">Contents</span><button type="button" class="toc-fold" aria-controls="toc-list" aria-expanded="true" aria-label="Hide the contents"><span class="fold-open">[hide]</span><span class="fold-closed">[show]</span></button></div>' +
+      '<div id="toc-list">' + h + '</div><button type="button" class="toc-pin">Move to ' + (compact ? "the menu" : "the sidebar") + "</button>";
+    syncFold();
     sideList.innerHTML = h; side.hidden = false;
     var links = sideList.querySelectorAll("a");
     Array.prototype.forEach.call(hs, function (el, k) { tocSpy.push({ el: el, a: links[k], li: links[k].parentNode, top: el.tagName === "H2" }); });
@@ -741,6 +750,9 @@
   var spyBusy = false;
   window.addEventListener("scroll", function () { if (!spyBusy) { spyBusy = true; requestAnimationFrame(function () { spyBusy = false; spyToc(); }); } }, { passive: true });
   document.addEventListener("click", function (e) {
+    if (e.target.closest && e.target.closest(".toc-fold")) {
+      updateSetting("tocbox", document.documentElement.getAttribute("data-tocbox") === "closed" ? "open" : "closed"); syncFold();
+    }
     if (e.target.closest && e.target.closest(".toc-pin")) updateSetting("toc", "side");
     if (e.target.closest && e.target.closest(".toc-unpin")) updateSetting("toc", "article");
   });
