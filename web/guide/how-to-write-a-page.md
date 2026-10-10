@@ -354,12 +354,14 @@ To show a keyboard key, a mouse button or a gamepad button, put its name between
 Press {{W}} to move forward and hold {{Left Shift}} to run.
 {{Shift+Right click}} draws the bow, and {{Mouse 4}} switches the view.
 On a controller, hold {{pad:RT}}.
+Turn with {{Left}} and {{Right}}, or look with {{Up}} and {{Down}}.
 ```
 
 Rendered:
 
-Press {{W}} to move forward and hold {{Left Shift}} to run. {{Shift+Right click}} draws the bow, and {{Mouse 4}} switches the view. On a controller, hold {{pad:RT}}.
+Press {{W}} to move forward and hold {{Left Shift}} to run. {{Shift+Right click}} draws the bow, and {{Mouse 4}} switches the view. On a controller, hold {{pad:RT}}. Turn with {{Left}} and {{Right}}, or look with {{Up}} and {{Down}}.
 
+- **Arrow keys** are typed as words, `{{Up}}`, `{{Down}}`, `{{Left}}` and `{{Right}}`, and shown as arrows, ↑ ↓ ← →, which read faster. The words are only for the four arrow keys: `{{Left Shift}}` and `{{Left click}}` are not affected.
 - **Combinations** are joined with `+`, and each key gets its own cap, as in `{{Ctrl+Shift+K}}`. For a plus key itself, write `{{+}}`.
 - **Mouse buttons** are recognised by name (`Left click`, `Right click`, `Middle click`, `Mouse 3`, `Mouse 4`, `Mouse 5` and `Scroll`) and drawn with rounder corners than keyboard keys.
 - **Gamepad buttons** start with `pad:`, as in `{{pad:A}}`, and are drawn round. The prefix is not shown. Use the name printed on the button: A, B, X, Y, LB, RB, LT, RT, D-pad, Start.
@@ -370,7 +372,7 @@ Press {{W}} to move forward and hold {{Left Shift}} to run. {{Shift+Right click}
 |---|---|
 | Letters and digits | `A` to `Z` and `0` to `9`, as the character |
 | Function and editing | `F1` to `F12`, `Esc`, `Tab`, `Enter`, `Space`, `Backspace`, `Insert`, `Delete`, `Home`, `End`, `PgUp`, `PgDn` |
-| Arrows | `Up`, `Down`, `Left`, `Right` |
+| Arrows | `Up`, `Down`, `Left`, `Right` (shown as ↑ ↓ ← →) |
 | Modifiers | `Shift`, `Left Shift`, `Right Shift`, `Ctrl`, `Alt`, and `Left` or `Right` in front of each |
 | Number pad | `Numpad 0` to `Numpad 9`, `Numpad +`, `Numpad -`, `Numpad *`, `Numpad /`, `Numpad Enter` |
 

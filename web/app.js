@@ -450,6 +450,8 @@
   }
 
   /* Keys and buttons: {{W}}, {{Shift+Right click}}, {{Mouse 4}}, {{pad:RT}} become keycaps */
+  /* the four arrow keys are written as words and shown as arrows */
+  var ARROW_KEYS = { up: ["↑", "Up"], down: ["↓", "Down"], left: ["←", "Left"], right: ["→", "Right"] };
   var MOUSE_KEY = /^(mouse\s*\d|(left|right|middle)\s*click|click|scroll(\s*(up|down|wheel))?|wheel)$/i;
   function keycaps(text) {
     /* a "+" joins keys only when a key follows it directly, so "Shift+F10" is two caps while "Numpad +" and "{{+}}" are one */
@@ -457,7 +459,9 @@
     if (!parts.length) return esc(text);
     var caps = parts.map(function (k) {
       var own = /^pad\s*:/i.test(k); k = k.replace(/^pad\s*:\s*/i, "");
-      var cls = all || own ? "k k-pad" : MOUSE_KEY.test(k) ? "k k-mouse" : "k";
+      var pad = all || own, arrow = !pad && ARROW_KEYS[k.toLowerCase()];
+      var cls = pad ? "k k-pad" : MOUSE_KEY.test(k) ? "k k-mouse" : "k";
+      if (arrow) return '<kbd class="' + cls + '" aria-label="' + arrow[1] + ' arrow key" title="' + arrow[1] + ' arrow key">' + arrow[0] + "</kbd>";
       return '<kbd class="' + cls + '">' + esc(k) + "</kbd>";
     });
     return caps.length === 1 ? caps[0] : '<span class="keys">' + caps.join('<span class="kplus">+</span>') + "</span>";
