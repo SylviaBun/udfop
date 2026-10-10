@@ -623,7 +623,7 @@
     else {
       var cats = guideCategories();
       Object.keys(cats).forEach(function (c) {
-        h += sec(c, c, 2) + guideCards(cats[c]);
+        h += sec(c, c, 2).replace(">" + esc(c) + "</h2>", '><a href="#/guide/category/' + enc(c) + '">' + esc(c) + "</a></h2>") + guideCards(cats[c]);   /* the section name opens that category's page */
       });
     }
     return { title: "Game Guide", html: page("Game Guide", h) };
