@@ -735,6 +735,8 @@
       btn.type = "button"; btn.className = "toc-btn"; btn.title = "Contents"; btn.setAttribute("aria-label", "Contents");
       btn.setAttribute("aria-controls", "side-toc"); btn.setAttribute("aria-expanded", "false"); btn.textContent = "☰";
       anchor.appendChild(btn); app.insertBefore(anchor, app.firstChild);
+      var h1 = app.querySelector("h1.title"); if (h1) h1.classList.add("has-toc-btn");   /* leaves room for the button beside the title */
+      syncTocBtn();
     }
     var links = list.querySelectorAll("a");
     Array.prototype.forEach.call(hs, function (el, k) { tocSpy.push({ el: el, a: links[k + 1], li: links[k + 1].parentNode, top: meta[k] }); });
@@ -753,14 +755,24 @@
   }
   var spyBusy = false;
   window.addEventListener("scroll", function () { if (!spyBusy) { spyBusy = true; requestAnimationFrame(function () { spyBusy = false; spyToc(); }); } }, { passive: true });
+  /* the button sits beside the title; once the page scrolls past that spot it floats at the top left. The pop-up stays anchored under it */
+  function syncTocBtn() {
+    var a = document.querySelector(".toc-anchor"), b = document.querySelector(".toc-btn");
+    if (a && b) b.classList.toggle("floating", a.getBoundingClientRect().top <= (document.getElementById("head").offsetHeight || 60) + 11);
+  }
+  function placeToc() {
+    var panel = document.getElementById("side-toc"), btn = document.querySelector(".toc-btn");
+    var r = btn ? btn.getBoundingClientRect() : { left: 8, bottom: 0 }, top = Math.max(r.bottom + 6, (document.getElementById("head").offsetHeight || 60) + 6);
+    panel.style.top = top + "px"; panel.style.left = Math.max(8, r.left) + "px"; panel.style.maxHeight = "calc(100vh - " + (top + 12) + "px)";
+  }
+  function followToc() { syncTocBtn(); if (document.body.classList.contains("toc-open")) placeToc(); }
+  window.addEventListener("scroll", followToc, { passive: true });
+  window.addEventListener("resize", followToc);
   /* the pop-up version: opens under the button, and closes like the menu and Settings do */
   function setToc(on) {
     var panel = document.getElementById("side-toc"), btn = document.querySelector(".toc-btn");
-    if (on) {
-      setMenu(false); if (typeof settingsPanel !== "undefined" && settingsPanel) settingsPanel.close(false);
-      var r = btn ? btn.getBoundingClientRect() : { left: 8, bottom: 0 }, top = Math.max(r.bottom + 6, (document.getElementById("head").offsetHeight || 60) + 6);
-      panel.style.top = top + "px"; panel.style.left = Math.max(8, r.left) + "px"; panel.style.maxHeight = "calc(100vh - " + (top + 12) + "px)";
-    } else { panel.style.top = panel.style.left = panel.style.maxHeight = ""; }
+    if (on) { setMenu(false); if (typeof settingsPanel !== "undefined" && settingsPanel) settingsPanel.close(false); placeToc(); }
+    else { panel.style.top = panel.style.left = panel.style.maxHeight = ""; }
     document.body.classList.toggle("toc-open", on);
     if (btn) btn.setAttribute("aria-expanded", on ? "true" : "false");
   }

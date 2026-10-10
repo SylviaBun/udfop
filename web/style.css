@@ -211,6 +211,7 @@ details { margin: .4em 0; } summary { cursor: pointer; font-weight: 600; }
   #rail { display: contents; }
   #content { grid-column: 1; }
   #side-toc, .toc-btn { display: none !important; }
+  h1.title.has-toc-btn { padding-left: 0 !important; }
   #menu { display: block; }
   #logo { width: auto; } .name small { display: none; }
   #side { display: none; position: fixed; top: 0; left: 0; bottom: 0; height: auto; align-self: auto; width: 15em; z-index: 15; background: var(--paper);
@@ -356,8 +357,10 @@ html[data-skin="oblivion"] { --code: var(--new); }
 
 /* Contents: a pop-up under the list-button beside the page title, or docked in the left column below the main menu */
 .toc-anchor { position: sticky; top: calc(var(--head-h, 3.6rem) + 10px); height: 0; z-index: 6; }
-.toc-btn { position: absolute; left: -26px; top: 6px; width: 24px; height: 26px; padding: 0; border: 1px solid var(--line); border-radius: 3px; background: var(--softer); color: var(--fg); font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
+.toc-btn { position: absolute; left: 0; top: 6px; width: 24px; height: 26px; padding: 0; border: 1px solid var(--line); border-radius: 3px; background: var(--softer); color: var(--fg); font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
 .toc-btn:hover, body.toc-open .toc-btn { background: var(--soft); }
+.toc-btn.floating { left: -26px; }   /* once the page has scrolled past the title, the button floats in the article's left margin */
+html:not([data-contents="sidebar"]) h1.title.has-toc-btn { padding-left: 32px; }
 .toc-btn:focus-visible { outline: 2px solid var(--link); }
 html[data-contents="sidebar"] .toc-anchor { display: none; }
 #side-toc { display: none; font-size: .85rem; padding: 16px 8px 24px 12px; }
