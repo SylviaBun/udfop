@@ -357,9 +357,9 @@ html[data-skin="oblivion"] { --code: var(--new); }
 
 /* Contents: a pop-up under the list-button beside the page title, or docked in the left column below the main menu */
 .toc-anchor { position: sticky; top: calc(var(--head-h, 3.6rem) + 10px); height: 0; z-index: 6; }
-.toc-btn { position: absolute; left: 0; top: 6px; width: 24px; height: 26px; padding: 0; border: 1px solid var(--line); border-radius: 3px; background: var(--softer); color: var(--fg); font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
+.toc-btn { position: absolute; left: 0; top: 6px; width: 24px; height: 26px; padding: 0; border: 1px solid transparent; border-radius: 3px; background: none; color: var(--fg); font: inherit; font-size: 1rem; line-height: 1; cursor: pointer; }
+.toc-btn.floating { border-color: var(--line); background: var(--softer); position: fixed; top: calc(var(--head-h, 3.6rem) + 10px); left: 8px; z-index: 6; }   /* once the page has scrolled past the title, the button floats at the top left of the window, under the header */
 .toc-btn:hover, body.toc-open .toc-btn { background: var(--soft); }
-.toc-btn.floating { position: fixed; top: calc(var(--head-h, 3.6rem) + 10px); left: 8px; z-index: 6; }   /* once the page has scrolled past the title, the button floats at the top left of the window, under the header */
 html:not([data-contents="sidebar"]) h1.title.has-toc-btn { padding-left: 32px; }
 .toc-btn:focus-visible { outline: 2px solid var(--link); }
 html[data-contents="sidebar"] .toc-anchor { display: none; }
