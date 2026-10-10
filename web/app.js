@@ -86,6 +86,7 @@
   function dir(r) { return r.r === "+" ? " (increase)" : r.r === "−" ? " (decrease)" : ""; }
   function text(r) { return esc(cap(r.x)) + (r.n ? '<span class="dev">Developer note: ' + esc(r.n) + "</span>" : ""); }
 
+  var PN_HAT = '<a href="#/patchnotes">Patch Notes</a> › ';   /* every patch-notes page starts its breadcrumb here */
   function page(title, body, opts) {
     opts = opts || {};
     return '<h1 class="title">' + title + '</h1><div class="tagline">From ' + SITE + "</div>" +
@@ -174,7 +175,7 @@
 
   views.recent = function () {
     var shown = 8;
-    var html = page("Recent changes", '<p>The newest patches first. Each entry is one change recorded in the official release notes.</p><div id="rc"></div><p><button class="more" id="more">Show older patches</button></p>');
+    var html = page("Recent changes", '<p>The newest patches first. Each entry is one change recorded in the official release notes.</p><div id="rc"></div><p><button class="more" id="more">Show older patches</button></p>', { hat: PN_HAT + "Recent changes" });
     return { title: "Recent changes", html: html, after: function () {
       var box = document.getElementById("rc"), btn = document.getElementById("more"), n = 0;
       function more() {
@@ -198,13 +199,13 @@
     h += "<p>" + plural(topics.length, "topic") + ", listed alphabetically. The number in brackets is how many changes are recorded.</p>" + filterBox("Filter topics…");
     h += '<div class="alpha">' + all.map(function (c) { return letters[c] ? '<a href="#/topics" data-scroll="' + slugId("L" + c) + '">' + c + "</a>" : "<span>" + c + "</span>"; }).join(" ") + "</div>";
     all.forEach(function (c) { if (letters[c]) h += '<div class="letter"><h2 class="sec" id="' + slugId("L" + c) + '">' + c + "</h2>" + topicList(letters[c]) + "</div>"; });
-    return { title: "All topics", html: page("All topics", h), after: function () { wireFilter(".letter li", ".letter"); } };
+    return { title: "All topics", html: page("All topics", h, { hat: PN_HAT + "All topics" }), after: function () { wireFilter(".letter li", ".letter"); } };
   };
 
   views.hubs = function () {
     var h = "<p>Topics are grouped into categories by subject.</p>" + '<ul class="cols">' + hubNames.map(function (n) {
       return "<li>" + hlink(n) + " <small>(" + plural(hubs[n].length, "topic") + ")</small></li>"; }).join("") + "</ul>";
-    return { title: "Categories", html: page("Categories", h) };
+    return { title: "Categories", html: page("Categories", h, { hat: PN_HAT + "Categories" }) };
   };
 
   views.hub = function (n) {
@@ -213,7 +214,7 @@
     var h = "<p><b>" + esc(n) + "</b> contains " + plural(hubs[n].length, "topic") + " with " + plural(all.length, "recorded change") + ".</p>" +
       sec("Topics", "Topics", 2) + topicList(hubs[n]) + sec("Latest changes", "Latest changes", 2) + table(all, ["Patch", "Date", "Topic", "Type", "Change"], 25) +
       cats([ '<a href="#/hubs">All categories</a>' ]);
-    return { title: "Category: " + n, html: page("Category: " + esc(n), h, { hat: '<a href="#/hubs">Categories</a> › ' + esc(n) }) };
+    return { title: "Category: " + n, html: page("Category: " + esc(n), h, { hat: PN_HAT + '<a href="#/hubs">Categories</a> › ' + esc(n) }) };
   };
 
   views.topic = function (t) {
@@ -253,13 +254,13 @@
     h += cats((hub ? [hlink(hub)] : []).concat(sys.map(function (s) { return slink(s) + " system"; })).concat(
       Object.keys(tagIndex[t]).sort(function (a, b) { return tagIndex[t][b] - tagIndex[t][a]; }).slice(0, 4).map(function (g2) {
         return '<a href="#/search/' + enc(g2) + '">' + esc(g2) + "</a>"; })));
-    return { title: t, html: page(esc(t), h, { hat: hub ? '<a href="#/hubs">Categories</a> › ' + hlink(hub) + " › " + esc(t) : "" }), toc: true };
+    return { title: t, html: page(esc(t), h, { hat: PN_HAT + (hub ? '<a href="#/hubs">Categories</a> › ' + hlink(hub) : '<a href="#/topics">All topics</a>') + " › " + esc(t) }), toc: true };
   };
 
   views.systems = function () {
     var h = "<p>Each recorded change belongs to one of " + systems.length + " game systems.</p>" + '<ul class="cols">' + systems.map(function (s) {
       return "<li>" + slink(s) + " <small>(" + plural(uniq(bySystem[s].map(function (r) { return r.e; })).length, "topic") + ", " + plural(bySystem[s].length, "change") + ")</small></li>"; }).join("") + "</ul>";
-    return { title: "Game systems", html: page("Game systems", h) };
+    return { title: "Game systems", html: page("Game systems", h, { hat: PN_HAT + "Game systems" }) };
   };
 
   views.system = function (s) {
@@ -268,7 +269,7 @@
     var tp = uniq(l.map(function (r) { return r.e; })).sort();
     var h = "<p><b>" + esc(s) + "</b> has " + plural(l.length, "recorded change") + " across " + plural(tp.length, "topic") + ".</p>" +
       sec("Topics", "Topics", 2) + topicList(tp) + sec("Latest changes", "Latest changes", 2) + table(l, ["Patch", "Date", "Topic", "Type", "Direction", "Change"], 30);
-    return { title: s + " system", html: page(esc(s) + " system", h, { hat: '<a href="#/systems">Game systems</a> › ' + esc(s) }) };
+    return { title: s + " system", html: page(esc(s) + " system", h, { hat: PN_HAT + '<a href="#/systems">Game systems</a> › ' + esc(s) }) };
   };
 
   views.patches = function () {
@@ -278,7 +279,7 @@
         return "<tr><td>" + vlink(v) + "</td><td>" + esc(dateOf(v)) + "</td><td>" + byVersion[v].length + "</td><td>" +
           uniq(byVersion[v].map(function (r) { return r.e; })).length + "</td></tr>";
       }).join("") + "</tbody></table>";
-    return { title: "Patch index", html: page("Patch index", h), after: function () { wireFilter("tbody tr", "tbody tr"); } };
+    return { title: "Patch index", html: page("Patch index", h, { hat: PN_HAT + "Patch index" }), after: function () { wireFilter("tbody tr", "tbody tr"); } };
   };
 
   views.patch = function (v) {
@@ -291,7 +292,7 @@
     names.forEach(function (t) { h += sec("p-" + t, t, 2).replace(">" + esc(t) + "</h2>", ">" + tlink(t) + "</h2>") + bullets(g[t], false); });
     if (rel && rel.prs.length) h += sec("Pull requests", "Source pull requests", 2) + '<ul class="bul">' + rel.prs.map(function (p) {
       return '<li><a href="' + esc(p.u) + '" rel="noopener">#' + p.n + "</a> " + esc(p.t) + "</li>"; }).join("") + "</ul>";
-    return { title: "Patch " + v, html: page("Patch " + esc(v), h, { hat: '<a href="#/patches">Patch index</a> › ' + esc(v) }) };
+    return { title: "Patch " + v, html: page("Patch " + esc(v), h, { hat: PN_HAT + '<a href="#/patches">Patch index</a> › ' + esc(v) }) };
   };
 
   views.search = function (q) {
