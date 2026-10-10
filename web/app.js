@@ -644,8 +644,11 @@
         refs = newRefs(entry ? entry.slug : slug);
         var rendered = markdown(fm.body, t); mdBase = "";
         rendered += buildReferences(refs, (fm.meta.related || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean)); refs = null;
-        var lead = /^<p>[\s\S]*?<\/p>/.exec(rendered), toc = '<div id="toc" class="toc float"></div>';
-        if (lead) rendered = lead[0] + toc + rendered.slice(lead[0].length); else rendered = toc + rendered;
+        /* the first paragraph stays above the Contents box. The box floats right only when text follows it to wrap around it;
+           when a heading, table or code box comes next there is nothing to fill the space, so it stays a normal left-aligned block */
+        var lead = /^<p>[\s\S]*?<\/p>/.exec(rendered), rest = lead ? rendered.slice(lead[0].length) : rendered;
+        var flows = /^\s*<(p|ul|ol|blockquote)[ >]/.test(rest);
+        rendered = (lead ? lead[0] : "") + '<div id="toc" class="toc gtoc' + (flows ? " float" : "") + '"></div>' + rest;
         box.innerHTML = rendered +
           '<p class="editline"><a href="' + REPO + "/edit/main/web/guide/" + slugPath + '.md" rel="noopener">Edit this page</a> (fork the project first) · <a href="#/guide/how-to-write-a-page">How to contribute</a></p>';
         buildToc();
@@ -722,7 +725,7 @@
     h += "</ol>";
     var compact = window.matchMedia && window.matchMedia("(max-width: 860px), (max-height: 500px) and (max-width: 1100px)").matches;
     box.innerHTML = "<b>Contents</b>" + h + '<button type="button" class="toc-pin">Move to ' + (compact ? "the menu" : "the sidebar") + "</button>";
-    if (hs.length > 10 && n2 > 1 && box.classList.contains("float")) {
+    if (hs.length > 10 && n2 > 1 && box.classList.contains("gtoc")) {
       box.classList.add("toc-long");
       box.querySelector(".toc-pin").insertAdjacentHTML("beforebegin", '<button type="button" class="toc-toggle" aria-expanded="false">Show subsections</button>');
     }

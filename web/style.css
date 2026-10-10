@@ -348,7 +348,8 @@ figure.fig-center { margin-left: auto; margin-right: auto; clear: both; }
 figure.fig-center figcaption { text-align: center; }
 #gp h2.sec, #gp h3.sec { display: flow-root; }
 #gp h2.cl, #gp h3.cl { clear: both; }
-#gp .wrap, #gp pre { clear: right; }
+/* tables and code boxes sit beside the Contents box, and only step below a right-hand picture */
+#gp figure.fig-right ~ .wrap, #gp figure.fig-right ~ pre { clear: right; }
 @media (max-width: 600px) {
   figure.fig-left, figure.fig-right { float: none; width: auto !important; margin-left: 0; margin-right: 0; }
 }
