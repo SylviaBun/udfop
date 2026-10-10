@@ -449,11 +449,29 @@
       (cap ? "<figcaption>" + inline(cap) + "</figcaption>" : "") + "</figure>";
   }
 
+  /* Keys and buttons: {{W}}, {{Shift+Right click}}, {{Mouse 4}}, {{pad:RT}} become keycaps */
+  /* the four arrow keys are written as words and shown as arrows */
+  var ARROW_KEYS = { up: ["↑", "Up"], down: ["↓", "Down"], left: ["←", "Left"], right: ["→", "Right"] };
+  var MOUSE_KEY = /^(mouse\s*\d|(left|right|middle)\s*click|click|scroll(\s*(up|down|wheel))?|wheel)$/i;
+  function keycaps(text) {
+    /* a "+" joins keys only when a key follows it directly, so "Shift+F10" is two caps while "Numpad +" and "{{+}}" are one */
+    var all = /^pad\s*:/i.test(text), parts = text.trim().split(/\+(?=\S)/).map(function (x) { return x.trim(); }).filter(Boolean);
+    if (!parts.length) return esc(text);
+    var caps = parts.map(function (k) {
+      var own = /^pad\s*:/i.test(k); k = k.replace(/^pad\s*:\s*/i, "");
+      var pad = all || own, arrow = !pad && ARROW_KEYS[k.toLowerCase()];
+      var cls = pad ? "k k-pad" : MOUSE_KEY.test(k) ? "k k-mouse" : "k";
+      if (arrow) return '<kbd class="' + cls + '" aria-label="' + arrow[1] + ' arrow key" title="' + arrow[1] + ' arrow key">' + arrow[0] + "</kbd>";
+      return '<kbd class="' + cls + '">' + esc(k) + "</kbd>";
+    });
+    return caps.length === 1 ? caps[0] : '<span class="keys">' + caps.join('<span class="kplus">+</span>') + "</span>";
+  }
   function inline(s) {
     var stash = [];
     function keep(h) { stash.push(h); return "\u0000" + (stash.length - 1) + "\u0000"; }
     s = s.replace(/`([^`]+)`/g, function (m, c) { return keep("<code>" + esc(c) + "</code>"); });
     s = s.replace(/\[\[([^\]|]+?)(?:\|([^\]]*))?\]\]/g, function (m, t, l) { return keep(wikiLink(t, l)); });
+    s = s.replace(/\{\{([^{}]+)\}\}/g, function (m, t) { return keep(keycaps(t)); });
     s = s.replace(IMG_RE, function (m, alt, src) {
       src = imgSrc(src); if (!src) return "";
       return keep('<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">');
